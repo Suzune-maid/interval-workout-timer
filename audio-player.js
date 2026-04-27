@@ -8,36 +8,65 @@ export async function loadNarrationManifest(url = './audio/today/narration-manif
   return response.json();
 }
 
-export function createNarrationPlayer(manifest) {
+export function createNarrationPlayer(manifest, options = {}) {
   const entries = Array.isArray(manifest?.entries) ? manifest.entries : [];
-  const audio = typeof Audio !== 'undefined' ? new Audio() : null;
+  const narrationAudio = typeof Audio !== 'undefined' ? new Audio() : null;
+  const cueAudio = typeof Audio !== 'undefined' ? new Audio() : null;
+  const startCueFile = options.startCueFile ?? './audio/fx/countdown-start.wav';
+  const endCueFile = options.endCueFile ?? './audio/fx/countdown-end.wav';
   let lastPlayedId = null;
 
-  if (audio) {
-    audio.preload = 'auto';
+  if (narrationAudio) {
+    narrationAudio.preload = 'auto';
   }
 
-  async function playForPhase(phaseIndex) {
+  if (cueAudio) {
+    cueAudio.preload = 'auto';
+  }
+
+  async function playPhaseIntro(phaseIndex, playbackMode = 'full') {
     const entry = entries.find((item) => item.phaseIndex === phaseIndex);
 
-    if (!entry || !audio || lastPlayedId === entry.id) {
+    if (!entry || !narrationAudio || !cueAudio) {
       return entry ?? null;
     }
 
-    audio.pause();
-    audio.currentTime = 0;
-    audio.src = entry.audioFile;
-    lastPlayedId = entry.id;
+    if (playbackMode === 'full') {
+      if (lastPlayedId === entry.id) {
+        return entry;
+      }
 
-    await audio.play();
+      await playClip(narrationAudio, entry.audioFile);
+      lastPlayedId = entry.id;
+    }
+
+    if (startCueFile) {
+      await playClip(cueAudio, startCueFile);
+    }
+
     return entry;
   }
 
-  function reset() {
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
+  async function playPhaseEndCue() {
+    if (!cueAudio || !endCueFile) {
+      return null;
     }
+
+    await playClip(cueAudio, endCueFile);
+    return endCueFile;
+  }
+
+  function reset() {
+    if (narrationAudio) {
+      narrationAudio.pause();
+      narrationAudio.currentTime = 0;
+    }
+
+    if (cueAudio) {
+      cueAudio.pause();
+      cueAudio.currentTime = 0;
+    }
+
     lastPlayedId = null;
   }
 
@@ -46,8 +75,16 @@ export function createNarrationPlayer(manifest) {
   }
 
   return {
-    playForPhase,
+    playPhaseIntro,
+    playPhaseEndCue,
     reset,
     getEntryForPhase,
   };
+}
+
+async function playClip(audio, src) {
+  audio.pause();
+  audio.currentTime = 0;
+  audio.src = src;
+  await audio.play();
 }

@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-04-27T21:57:06+08:00",
+  "entries": [
+    {
+      "id": "countdown-start",
+      "file": "audio/fx/countdown-start.wav",
+      "usage": "倒數開始前，在階段說明播完後播放",
+      "durationSeconds": 0.18,
+      "sha256": "080f0c226fd1b2d15b63338118348f8d944ec6d9055a63df267c5a889233083e",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2
+    },
+    {
+      "id": "countdown-end",
+      "file": "audio/fx/countdown-end.wav",
+      "usage": "每段倒數結束後播放，再切換到下一段",
+      "durationSeconds": 0.28,
+      "sha256": "d191879f97473b7c9c28083489ce3c71a9e9fa0a64f844df2723b25a8dc30586",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2
+    }
+  ]
+}

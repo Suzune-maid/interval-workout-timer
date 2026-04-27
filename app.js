@@ -41,6 +41,8 @@ let state = createSessionStateFromPhases(todayEntry.session.phases);
 let timerId = null;
 let narrationPlayer = null;
 let narrationManifest = null;
+let isPreparingPhase = false;
+let phaseSequenceId = 0;
 
 renderStaticContent();
 renderTimer();
@@ -54,69 +56,49 @@ initializeNarration().catch((error) => {
 
 startButton.addEventListener('click', async () => {
   if (state.isComplete) {
+    cancelActiveTimeline({ resetNarration: true });
     state = createSessionStateFromPhases(todayEntry.session.phases);
+    renderTimer();
+    renderPhasePlan();
+    renderNarrationInfo();
   }
 
-  if (timerId) {
+  if (timerId || isPreparingPhase) {
     return;
   }
 
-  state = {
-    ...state,
-    isRunning: true,
-  };
-  statusMessage.textContent = `開始 ${currentPhase()?.label ?? todayEntry.session.title}。維持節奏，照著今天的課表走。`;
-  renderTimer();
-  renderPhasePlan();
-  await playNarrationForCurrentPhase();
-
-  timerId = window.setInterval(async () => {
-    if (state.remainingSeconds > 1) {
-      state = {
-        ...state,
-        remainingSeconds: state.remainingSeconds - 1,
-      };
-      renderTimer();
-      return;
-    }
-
-    state = advancePhase(state);
-
-    if (state.isComplete) {
-      stopTimer();
-      statusMessage.textContent = '今日課表已跑完。接下來只要做收尾放鬆與身體掃描就好。';
-      renderNarrationInfo();
-    } else {
-      state = {
-        ...state,
-        isRunning: true,
-      };
-      statusMessage.textContent = `切換到 ${currentPhase().label}。記得照著提示，不要急。`;
-      await playNarrationForCurrentPhase();
-    }
-
-    renderTimer();
-    renderPhasePlan();
-  }, 1000);
+  await beginPhaseCountdown({
+    playbackMode: shouldReplayNarrationForCurrentPhase() ? 'full' : 'cue-only',
+  });
 });
 
 pauseButton.addEventListener('click', () => {
+  if (isPreparingPhase) {
+    cancelActiveTimeline({ resetNarration: true });
+    state = {
+      ...state,
+      isRunning: false,
+    };
+    statusMessage.textContent = '已暫停，目前停在倒數開始前。';
+    renderTimer();
+    return;
+  }
+
   if (!timerId) {
     return;
   }
 
-  stopTimer();
+  cancelActiveTimeline();
   state = {
     ...state,
     isRunning: false,
   };
-  statusMessage.textContent = '已暫停。重新開始前，先把呼吸放慢。';
+  statusMessage.textContent = '已暫停。重新開始時會先播開始音效，再繼續倒數。';
   renderTimer();
 });
 
 resetButton.addEventListener('click', () => {
-  stopTimer();
-  narrationPlayer?.reset();
+  cancelActiveTimeline({ resetNarration: true });
   state = createSessionStateFromPhases(todayEntry.session.phases);
   statusMessage.textContent = '已重設為今天的起始課表。';
   renderTimer();
@@ -124,20 +106,19 @@ resetButton.addEventListener('click', () => {
   renderNarrationInfo();
 });
 
-skipButton.addEventListener('click', async () => {
-  stopTimer();
+skipButton.addEventListener('click', () => {
+  cancelActiveTimeline({ resetNarration: true });
   state = advancePhase(state);
 
   if (state.isComplete) {
     statusMessage.textContent = '已跳到今日課表最後。今天的主要流程完成。';
-    renderNarrationInfo();
   } else {
-    statusMessage.textContent = `已切換到 ${currentPhase().label}。`;
-    await playNarrationForCurrentPhase();
+    statusMessage.textContent = `已切換到 ${currentPhase().label}。按開始後會先播階段說明，再開始倒數。`;
   }
 
   renderTimer();
   renderPhasePlan();
+  renderNarrationInfo();
 });
 
 function renderStaticContent() {
@@ -170,7 +151,8 @@ function renderTimer() {
     : `第 ${state.currentPhaseIndex + 1} / ${totalPhases} 段`;
   phaseCue.textContent = phase?.cue ?? '今天的階段都已完成，最後做身體掃描即可。';
   timeDisplay.textContent = formatClock(state.remainingSeconds);
-  pauseButton.disabled = !state.isRunning;
+  startButton.disabled = state.isRunning || isPreparingPhase;
+  pauseButton.disabled = !state.isRunning && !isPreparingPhase;
 }
 
 function renderNarrationInfo() {
@@ -273,25 +255,143 @@ function currentNarrationEntry() {
   return findNarrationEntryByPhase(manifestEntries, phaseIndex);
 }
 
-async function playNarrationForCurrentPhase() {
-  renderNarrationInfo();
+async function beginPhaseCountdown({ playbackMode = 'full' } = {}) {
+  const phase = currentPhase();
 
-  if (!narrationPlayer) {
+  if (!phase || state.isComplete) {
     return;
   }
 
-  try {
-    const entry = await narrationPlayer.playForPhase(state.currentPhaseIndex);
-    if (entry) {
-      narrationStatusElement.textContent = `語音已播出：${entry.phaseLabel} ｜ 起點 ${formatClock(entry.startsAtSecond)}`;
-    }
-  } catch (error) {
-    narrationStatusElement.textContent = '語音播放失敗，請確認瀏覽器已允許音訊自動播放。';
+  const sequenceId = ++phaseSequenceId;
+  isPreparingPhase = true;
+  state = {
+    ...state,
+    isRunning: false,
+  };
+  statusMessage.textContent = playbackMode === 'full'
+    ? `先播放 ${phase.label} 的階段說明與開始音效，之後才會開始倒數。`
+    : `準備恢復 ${phase.label}，先播放開始音效。`;
+  renderTimer();
+  renderPhasePlan();
+
+  await playPhaseIntroForCurrentPhase(playbackMode);
+
+  if (sequenceId !== phaseSequenceId || state.isComplete) {
+    return;
   }
+
+  isPreparingPhase = false;
+  state = {
+    ...state,
+    isRunning: true,
+  };
+  statusMessage.textContent = playbackMode === 'full'
+    ? `${phase.label} 開始倒數。`
+    : `${phase.label} 已恢復倒數。`;
+  renderTimer();
+  renderPhasePlan();
+  startCountdownLoop(sequenceId);
+}
+
+function startCountdownLoop(sequenceId) {
+  stopTimer();
+  timerId = window.setInterval(async () => {
+    if (sequenceId !== phaseSequenceId) {
+      stopTimer();
+      return;
+    }
+
+    if (state.remainingSeconds > 1) {
+      state = {
+        ...state,
+        remainingSeconds: state.remainingSeconds - 1,
+      };
+      renderTimer();
+      return;
+    }
+
+    const finishedPhase = currentPhase();
+    stopTimer();
+    state = {
+      ...state,
+      remainingSeconds: 0,
+      isRunning: false,
+    };
+    renderTimer();
+    statusMessage.textContent = `${finishedPhase?.label ?? '目前段落'} 倒數結束，播放結束音效。`;
+    await playPhaseEndCue();
+
+    if (sequenceId !== phaseSequenceId) {
+      return;
+    }
+
+    state = advancePhase(state);
+    renderTimer();
+    renderPhasePlan();
+
+    if (state.isComplete) {
+      statusMessage.textContent = '今日課表已跑完。接下來只要做收尾放鬆與身體掃描就好。';
+      renderNarrationInfo();
+      return;
+    }
+
+    await beginPhaseCountdown({ playbackMode: 'full' });
+  }, 1000);
+}
+
+async function playPhaseIntroForCurrentPhase(playbackMode = 'full') {
+  renderNarrationInfo();
+
+  if (!narrationPlayer) {
+    return null;
+  }
+
+  try {
+    const entry = await narrationPlayer.playPhaseIntro(state.currentPhaseIndex, playbackMode);
+    if (entry) {
+      narrationStatusElement.textContent = playbackMode === 'full'
+        ? `階段說明與開始音效已播完：${entry.phaseLabel}`
+        : `開始音效已播完：${entry.phaseLabel}`;
+    }
+    return entry;
+  } catch (error) {
+    narrationStatusElement.textContent = '語音或開始音效播放失敗，仍會直接開始倒數。';
+    return null;
+  }
+}
+
+async function playPhaseEndCue() {
+  if (!narrationPlayer) {
+    return null;
+  }
+
+  try {
+    await narrationPlayer.playPhaseEndCue();
+    narrationStatusElement.textContent = '結束音效已播完，準備切換下一段。';
+    return true;
+  } catch (error) {
+    narrationStatusElement.textContent = '結束音效播放失敗，仍會繼續切換到下一段。';
+    return false;
+  }
+}
+
+function shouldReplayNarrationForCurrentPhase() {
+  const phase = currentPhase();
+  return Boolean(phase && state.remainingSeconds === phase.seconds);
 }
 
 function currentPhase() {
   return state.phases[state.currentPhaseIndex] ?? null;
+}
+
+function cancelActiveTimeline({ resetNarration = false } = {}) {
+  phaseSequenceId += 1;
+  isPreparingPhase = false;
+  stopTimer();
+
+  if (resetNarration) {
+    narrationPlayer?.reset();
+  }
 }
 
 function stopTimer() {
