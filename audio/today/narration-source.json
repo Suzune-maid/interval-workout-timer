@@ -360,7 +360,71 @@
       "phaseLabel": "收尾掃描",
       "startsAtSecond": 290,
       "durationSeconds": 60,
-      "text": "現在開始：收尾掃描。這一段約 1 分鐘。檢查會陰、臀部、大腿與排尿感是否有緊繃。"
+      "text": "現在開始：收尾掃描。這一段約 1 分鐘。檢查會陰、臀部、大腿與排尿感是否有緊繃。",
+      "countdownGuidance": {
+        "summary": "每 12 秒帶一次放鬆檢查，共 5 個提示",
+        "mode": "cooldown-body-scan",
+        "coachPrompt": "收尾掃描段落用溫和短句依序檢查腹部、臀部、大腿、會陰與排尿感，重點是確認有沒有殘留緊繃。",
+        "clips": [
+          {
+            "id": "abdomenRelax",
+            "text": "腹部，放鬆",
+            "textFile": "audio/today/texts/phase-05-abdomen-relax.txt",
+            "audioFile": "audio/today/guidance/phase-05-abdomen-relax.wav",
+            "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：腹部，放鬆。"
+          },
+          {
+            "id": "glutesRelease",
+            "text": "臀部，不要夾",
+            "textFile": "audio/today/texts/phase-05-glutes-release.txt",
+            "audioFile": "audio/today/guidance/phase-05-glutes-release.wav",
+            "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：臀部，不要夾。"
+          },
+          {
+            "id": "quadRelax",
+            "text": "大腿，放鬆",
+            "textFile": "audio/today/texts/phase-05-quad-relax.txt",
+            "audioFile": "audio/today/guidance/phase-05-quad-relax.wav",
+            "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：大腿，放鬆。"
+          },
+          {
+            "id": "pelvicFloorSoft",
+            "text": "會陰，鬆開",
+            "textFile": "audio/today/texts/phase-05-pelvic-floor-soft.txt",
+            "audioFile": "audio/today/guidance/phase-05-pelvic-floor-soft.wav",
+            "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：會陰，鬆開。"
+          },
+          {
+            "id": "urinaryCheck",
+            "text": "留意排尿感",
+            "textFile": "audio/today/texts/phase-05-urinary-check.txt",
+            "audioFile": "audio/today/guidance/phase-05-urinary-check.wav",
+            "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：留意排尿感。"
+          }
+        ],
+        "events": [
+          {
+            "elapsedSecond": 0,
+            "clipId": "abdomenRelax"
+          },
+          {
+            "elapsedSecond": 12,
+            "clipId": "glutesRelease"
+          },
+          {
+            "elapsedSecond": 24,
+            "clipId": "quadRelax"
+          },
+          {
+            "elapsedSecond": 36,
+            "clipId": "pelvicFloorSoft"
+          },
+          {
+            "elapsedSecond": 48,
+            "clipId": "urinaryCheck"
+          }
+        ]
+      }
     }
   ],
   "countdownGuidance": {

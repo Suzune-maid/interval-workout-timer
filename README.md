@@ -11,6 +11,7 @@
 - 第二階段支援慢速 Kegel 教練引導，會按 3 秒收、6 秒放的節奏帶 10 次
 - 第三階段支援快速 Kegel 節拍引導，會按 1 秒點收、1 秒全放的節奏帶 10 次
 - 第四階段支援反向 Kegel 呼吸引導，會按 4 秒吸氣下沉、8 秒吐氣保持鬆帶 10 輪
+- 第五階段支援收尾掃描引導，會每 12 秒帶一次腹部、臀部、大腿、會陰與排尿感檢查
 - 每段倒數結束時播放結束音效，再切到下一段
 - 支援開始 / 暫停 / 重設 / 跳到下一段
 - 顯示今日語音引導文本、起始時間與音檔長度
@@ -20,17 +21,18 @@
 
 - `audio/today/narration-manifest.json`
   - 今日要直接載入的語音清單
-  - `phase-01` 到 `phase-04` 目前都包含 `countdownGuidance`
+  - `phase-01` 到 `phase-05` 目前都包含 `countdownGuidance`
   - `phase-01` 記錄吸氣／吐氣 clip 與播放時間點
   - `phase-02` 記錄慢速 Kegel 的收／放 clip 與播放時間點
   - `phase-03` 記錄快速 Kegel 的點收／全放節拍 clip 與播放時間點
   - `phase-04` 記錄反向 Kegel 的吸氣下沉／吐氣保持鬆 clip 與播放時間點
+  - `phase-05` 記錄收尾掃描的身體檢查 clip 與播放時間點
 - `audio/library/index.json`
   - 已建立日期的語音索引
 - `audio/library/<date>/manifest.json`
   - 該日期每一段的文本、音檔、長度、sha256 與起始秒數
 - `audio/today/guidance/` 與 `audio/library/<date>/guidance/`
-  - 倒數中段引導的短語音，目前已實作第 1 階段呼吸節奏、第 2 階段慢速 Kegel、第 3 階段快速 Kegel 與第 4 階段反向 Kegel 呼吸引導
+  - 倒數中段引導的短語音，目前已實作第 1 階段呼吸節奏、第 2 階段慢速 Kegel、第 3 階段快速 Kegel、第 4 階段反向 Kegel 呼吸引導，以及第 5 階段收尾掃描引導
 
 ## 本機開發
 

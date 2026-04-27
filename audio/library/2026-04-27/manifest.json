@@ -488,7 +488,81 @@
       "audioSha256": "9fc91bee24a5e8b841217b6795e52a62760dc6d5547f2a1b2053a7505c1dc648",
       "ttsModel": "google/gemini-3.1-flash-tts-preview",
       "ttsVoice": "Leda",
-      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。"
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
+      "countdownGuidance": {
+        "summary": "每 12 秒帶一次放鬆檢查，共 5 個提示",
+        "mode": "cooldown-body-scan",
+        "coachPrompt": "收尾掃描段落用溫和短句依序檢查腹部、臀部、大腿、會陰與排尿感，重點是確認有沒有殘留緊繃。",
+        "clips": {
+          "abdomenRelax": {
+            "id": "abdomenRelax",
+            "text": "腹部，放鬆",
+            "textFile": "audio/library/2026-04-27/texts/phase-05-abdomen-relax.txt",
+            "audioFile": "audio/library/2026-04-27/guidance/phase-05-abdomen-relax.wav",
+            "audioDurationSeconds": 3.68,
+            "audioSha256": "684ad0078ec966d61e50dbeba70779792b1e5edbfd6be472638fcb3614bac27a",
+            "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：腹部，放鬆。"
+          },
+          "glutesRelease": {
+            "id": "glutesRelease",
+            "text": "臀部，不要夾",
+            "textFile": "audio/library/2026-04-27/texts/phase-05-glutes-release.txt",
+            "audioFile": "audio/library/2026-04-27/guidance/phase-05-glutes-release.wav",
+            "audioDurationSeconds": 2.96,
+            "audioSha256": "cc7e352f71652976653e8828246290c1082d1a2cb1d1715bf775bd616ace2c41",
+            "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：臀部，不要夾。"
+          },
+          "quadRelax": {
+            "id": "quadRelax",
+            "text": "大腿，放鬆",
+            "textFile": "audio/library/2026-04-27/texts/phase-05-quad-relax.txt",
+            "audioFile": "audio/library/2026-04-27/guidance/phase-05-quad-relax.wav",
+            "audioDurationSeconds": 3.28,
+            "audioSha256": "71912eca2e4c5079d2c865cfcc33d5e0a6962c9d966c76155743cc75467ef337",
+            "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：大腿，放鬆。"
+          },
+          "pelvicFloorSoft": {
+            "id": "pelvicFloorSoft",
+            "text": "會陰，鬆開",
+            "textFile": "audio/library/2026-04-27/texts/phase-05-pelvic-floor-soft.txt",
+            "audioFile": "audio/library/2026-04-27/guidance/phase-05-pelvic-floor-soft.wav",
+            "audioDurationSeconds": 3.2,
+            "audioSha256": "179d4aabfb805ccdbcc05bd2d9fdda21ecb3f58cc5b52da2f86fddf267920817",
+            "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：會陰，鬆開。"
+          },
+          "urinaryCheck": {
+            "id": "urinaryCheck",
+            "text": "留意排尿感",
+            "textFile": "audio/library/2026-04-27/texts/phase-05-urinary-check.txt",
+            "audioFile": "audio/library/2026-04-27/guidance/phase-05-urinary-check.wav",
+            "audioDurationSeconds": 2.12,
+            "audioSha256": "d5e19e7144dfe6fc6885c59960e98f07733be395df326238d667b53a063f2813",
+            "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：留意排尿感。"
+          }
+        },
+        "events": [
+          {
+            "elapsedSecond": 0,
+            "clipId": "abdomenRelax"
+          },
+          {
+            "elapsedSecond": 12,
+            "clipId": "glutesRelease"
+          },
+          {
+            "elapsedSecond": 24,
+            "clipId": "quadRelax"
+          },
+          {
+            "elapsedSecond": 36,
+            "clipId": "pelvicFloorSoft"
+          },
+          {
+            "elapsedSecond": 48,
+            "clipId": "urinaryCheck"
+          }
+        ]
+      }
     }
   ],
   "libraryKey": "2026-04-27"
