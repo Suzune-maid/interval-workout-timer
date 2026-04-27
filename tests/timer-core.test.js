@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {
   advancePhase,
   buildDailySession,
+  buildNarrationEntries,
+  findNarrationEntryByPhase,
   buildProgramCalendar,
   buildWorkoutPlan,
   createSessionState,
@@ -120,4 +122,37 @@ test('buildDailySession 會依週次與星期建立正式訓練內容', () => {
 
   assert.equal(advancedKegelDay.kind, 'kegel');
   assert.ok(advancedKegelDay.phases.some((phase) => phase.label.includes('波峰模擬')));
+});
+
+test('buildNarrationEntries 會為課表建立可重用語音腳本與對應起始時間', () => {
+  const session = {
+    title: '正式訓練日',
+    phases: [
+      { label: '準備期', seconds: 120, cue: '呼吸、放鬆與設定今天只做地圖建立。' },
+      { label: '第 1 回：到 5 分停', seconds: 180, cue: '穩定上升到 5 分後停止。' },
+      { label: '收尾放鬆', seconds: 60, cue: '可正常結束，最後做呼吸與反向 Kegel。' },
+    ],
+  };
+
+  const entries = buildNarrationEntries(session);
+
+  assert.equal(entries.length, 3);
+  assert.equal(entries[0].phaseIndex, 0);
+  assert.equal(entries[0].startsAtSecond, 0);
+  assert.equal(entries[1].phaseIndex, 1);
+  assert.equal(entries[1].startsAtSecond, 120);
+  assert.equal(entries[2].phaseIndex, 2);
+  assert.equal(entries[2].startsAtSecond, 300);
+  assert.match(entries[0].text, /現在開始：準備期/);
+  assert.match(entries[1].text, /第 1 回：到 5 分停/);
+});
+
+test('findNarrationEntryByPhase 會找出目前段落對應的語音素材', () => {
+  const entries = [
+    { id: 'phase-01', phaseIndex: 0, text: 'A' },
+    { id: 'phase-02', phaseIndex: 1, text: 'B' },
+  ];
+
+  assert.deepEqual(findNarrationEntryByPhase(entries, 1), { id: 'phase-02', phaseIndex: 1, text: 'B' });
+  assert.equal(findNarrationEntryByPhase(entries, 2), null);
 });

@@ -1,10 +1,13 @@
 import {
   advancePhase,
+  buildNarrationEntries,
   buildProgramCalendar,
   createSessionStateFromPhases,
+  findNarrationEntryByPhase,
   formatClock,
   resolveProgramDay,
 } from './timer-core.js';
+import { createNarrationPlayer, loadNarrationManifest } from './audio-player.js';
 
 const PROGRAM_START_DATE = '2026-04-27';
 
@@ -22,6 +25,8 @@ const timeDisplay = document.querySelector('#time-display');
 const statusMessage = document.querySelector('#status-message');
 const phasePlan = document.querySelector('#phase-plan');
 const scheduleGrid = document.querySelector('#schedule-grid');
+const narrationStatusElement = document.querySelector('#narration-status');
+const narrationTextElement = document.querySelector('#narration-text');
 const startButton = document.querySelector('#start-button');
 const pauseButton = document.querySelector('#pause-button');
 const resetButton = document.querySelector('#reset-button');
@@ -30,16 +35,24 @@ const skipButton = document.querySelector('#skip-button');
 const calendar = buildProgramCalendar(PROGRAM_START_DATE);
 const todayInfo = resolveProgramDay(PROGRAM_START_DATE, getLocalDateString(new Date()));
 const todayEntry = calendar[todayInfo.dayOffset];
+const fallbackNarrationEntries = buildNarrationEntries(todayEntry.session);
 
 let state = createSessionStateFromPhases(todayEntry.session.phases);
 let timerId = null;
+let narrationPlayer = null;
+let narrationManifest = null;
 
 renderStaticContent();
 renderTimer();
 renderPhasePlan();
 renderSchedule();
+renderNarrationInfo();
+initializeNarration().catch((error) => {
+  narrationStatusElement.textContent = '語音素材讀取失敗，先顯示腳本內容。';
+  narrationTextElement.textContent = error.message;
+});
 
-startButton.addEventListener('click', () => {
+startButton.addEventListener('click', async () => {
   if (state.isComplete) {
     state = createSessionStateFromPhases(todayEntry.session.phases);
   }
@@ -55,8 +68,9 @@ startButton.addEventListener('click', () => {
   statusMessage.textContent = `開始 ${currentPhase()?.label ?? todayEntry.session.title}。維持節奏，照著今天的課表走。`;
   renderTimer();
   renderPhasePlan();
+  await playNarrationForCurrentPhase();
 
-  timerId = window.setInterval(() => {
+  timerId = window.setInterval(async () => {
     if (state.remainingSeconds > 1) {
       state = {
         ...state,
@@ -71,12 +85,14 @@ startButton.addEventListener('click', () => {
     if (state.isComplete) {
       stopTimer();
       statusMessage.textContent = '今日課表已跑完。接下來只要做收尾放鬆與身體掃描就好。';
+      renderNarrationInfo();
     } else {
       state = {
         ...state,
         isRunning: true,
       };
       statusMessage.textContent = `切換到 ${currentPhase().label}。記得照著提示，不要急。`;
+      await playNarrationForCurrentPhase();
     }
 
     renderTimer();
@@ -100,20 +116,24 @@ pauseButton.addEventListener('click', () => {
 
 resetButton.addEventListener('click', () => {
   stopTimer();
+  narrationPlayer?.reset();
   state = createSessionStateFromPhases(todayEntry.session.phases);
   statusMessage.textContent = '已重設為今天的起始課表。';
   renderTimer();
   renderPhasePlan();
+  renderNarrationInfo();
 });
 
-skipButton.addEventListener('click', () => {
+skipButton.addEventListener('click', async () => {
   stopTimer();
   state = advancePhase(state);
 
   if (state.isComplete) {
     statusMessage.textContent = '已跳到今日課表最後。今天的主要流程完成。';
+    renderNarrationInfo();
   } else {
     statusMessage.textContent = `已切換到 ${currentPhase().label}。`;
+    await playNarrationForCurrentPhase();
   }
 
   renderTimer();
@@ -151,6 +171,19 @@ function renderTimer() {
   phaseCue.textContent = phase?.cue ?? '今天的階段都已完成，最後做身體掃描即可。';
   timeDisplay.textContent = formatClock(state.remainingSeconds);
   pauseButton.disabled = !state.isRunning;
+}
+
+function renderNarrationInfo() {
+  const entry = currentNarrationEntry();
+
+  if (!entry) {
+    narrationStatusElement.textContent = '目前沒有對應語音。';
+    narrationTextElement.textContent = '若之後要補更多日期，只要沿用同樣的 manifest 格式即可。';
+    return;
+  }
+
+  narrationStatusElement.textContent = `語音起點：${formatClock(entry.startsAtSecond)} ｜ 音檔長度：約 ${entry.audioDurationSeconds ?? '未記錄'} 秒`;
+  narrationTextElement.textContent = entry.text;
 }
 
 function renderPhasePlan() {
@@ -226,6 +259,35 @@ function renderSchedule() {
     weekCard.appendChild(list);
     scheduleGrid.appendChild(weekCard);
   });
+}
+
+async function initializeNarration() {
+  narrationManifest = await loadNarrationManifest();
+  narrationPlayer = createNarrationPlayer(narrationManifest);
+  renderNarrationInfo();
+}
+
+function currentNarrationEntry() {
+  const phaseIndex = state.currentPhaseIndex;
+  const manifestEntries = narrationManifest?.entries ?? fallbackNarrationEntries;
+  return findNarrationEntryByPhase(manifestEntries, phaseIndex);
+}
+
+async function playNarrationForCurrentPhase() {
+  renderNarrationInfo();
+
+  if (!narrationPlayer) {
+    return;
+  }
+
+  try {
+    const entry = await narrationPlayer.playForPhase(state.currentPhaseIndex);
+    if (entry) {
+      narrationStatusElement.textContent = `語音已播出：${entry.phaseLabel} ｜ 起點 ${formatClock(entry.startsAtSecond)}`;
+    }
+  } catch (error) {
+    narrationStatusElement.textContent = '語音播放失敗，請確認瀏覽器已允許音訊自動播放。';
+  }
 }
 
 function currentPhase() {

@@ -162,6 +162,32 @@ export function buildDailySession(weekNumber, dayNumber) {
   return buildRestSession(safeWeek);
 }
 
+export function buildNarrationEntries(session) {
+  const phases = Array.isArray(session?.phases) ? session.phases : [];
+  let startsAtSecond = 0;
+
+  return phases.map((phase, phaseIndex) => {
+    const durationSeconds = normalizePositiveSeconds(phase.seconds);
+    const entry = {
+      id: `phase-${String(phaseIndex + 1).padStart(2, '0')}`,
+      phaseIndex,
+      phaseLabel: phase.label,
+      startsAtSecond,
+      durationSeconds,
+      text: `現在開始：${phase.label}。這一段約 ${formatNarrationDuration(durationSeconds)}。${phase.cue ?? '請保持穩定節奏。'}`,
+    };
+
+    startsAtSecond += durationSeconds;
+    return entry;
+  });
+}
+
+export function findNarrationEntryByPhase(entries, phaseIndex) {
+  return Array.isArray(entries)
+    ? entries.find((entry) => entry.phaseIndex === phaseIndex) ?? null
+    : null;
+}
+
 function buildKegelSession(weekNumber, isAdaptiveDay) {
   const base = getKegelWeekConfig(weekNumber);
   const phases = [
@@ -412,6 +438,22 @@ function normalizePositiveSeconds(value) {
 
 function normalizePositiveInteger(value) {
   return Math.max(1, Math.floor(Number(value) || 0));
+}
+
+function formatNarrationDuration(totalSeconds) {
+  const seconds = normalizePositiveSeconds(totalSeconds);
+  const minutes = Math.floor(seconds / 60);
+  const remain = seconds % 60;
+
+  if (minutes > 0 && remain > 0) {
+    return `${minutes} 分 ${remain} 秒`;
+  }
+
+  if (minutes > 0) {
+    return `${minutes} 分鐘`;
+  }
+
+  return `${remain} 秒`;
 }
 
 function clamp(value, min, max) {

@@ -133,8 +133,28 @@ h1 {
 
 .today-session-card,
 .timer-card {
-  padding: 20px;
+  padding: 24px;
   background: var(--panel-strong);
+}
+
+.narration-card {
+  margin-top: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(126, 176, 255, 0.1);
+}
+
+.narration-status {
+  margin: 8px 0 10px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.narration-text {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .session-title {

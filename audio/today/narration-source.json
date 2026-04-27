@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-04-27T21:04:25+08:00",
+  "sourceDate": "2026-04-27",
+  "programStartDate": "2026-04-27",
+  "weekNumber": 1,
+  "dayNumber": 1,
+  "weekdayLabel": "一",
+  "sessionTitle": "Kegel 普通日",
+  "voiceTool": {
+    "command": "uv run gemini-tts",
+    "project": "gemini-tts-cli",
+    "model": "google/gemini-3.1-flash-tts-preview",
+    "voice": "Leda"
+  },
+  "entries": [
+    {
+      "id": "phase-01",
+      "phaseIndex": 0,
+      "phaseLabel": "準備放鬆",
+      "startsAtSecond": 0,
+      "durationSeconds": 60,
+      "text": "現在開始：準備放鬆。這一段約 1 分鐘。腹式呼吸，放鬆腹部、臀部與大腿。"
+    },
+    {
+      "id": "phase-02",
+      "phaseIndex": 1,
+      "phaseLabel": "慢速 Kegel（10 次）",
+      "startsAtSecond": 60,
+      "durationSeconds": 90,
+      "text": "現在開始：慢速 Kegel（10 次）。這一段約 1 分 30 秒。每次收 3 秒、放 6 秒。"
+    },
+    {
+      "id": "phase-03",
+      "phaseIndex": 2,
+      "phaseLabel": "快速 Kegel（10 次）",
+      "startsAtSecond": 150,
+      "durationSeconds": 20,
+      "text": "現在開始：快速 Kegel（10 次）。這一段約 20 秒。輕點一下，立刻完全放掉。"
+    },
+    {
+      "id": "phase-04",
+      "phaseIndex": 3,
+      "phaseLabel": "反向 Kegel",
+      "startsAtSecond": 170,
+      "durationSeconds": 120,
+      "text": "現在開始：反向 Kegel。這一段約 2 分鐘。吸氣下沉，吐氣時保持鬆開。"
+    },
+    {
+      "id": "phase-05",
+      "phaseIndex": 4,
+      "phaseLabel": "收尾掃描",
+      "startsAtSecond": 290,
+      "durationSeconds": 60,
+      "text": "現在開始：收尾掃描。這一段約 1 分鐘。檢查會陰、臀部、大腿與排尿感是否有緊繃。"
+    }
+  ]
+}
