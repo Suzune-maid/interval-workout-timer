@@ -9,9 +9,13 @@ async function loadManifest() {
   return JSON.parse(raw);
 }
 
+function findEntry(manifest, id) {
+  return manifest.entries.find((item) => item.id === id);
+}
+
 test('phase-02 countdownGuidance manifest 會定義慢速 Kegel 的收放節奏', async () => {
   const manifest = await loadManifest();
-  const entry = manifest.entries.find((item) => item.id === 'phase-02');
+  const entry = findEntry(manifest, 'phase-02');
 
   assert.ok(entry, 'phase-02 應存在於 narration manifest');
   assert.ok(entry.countdownGuidance, 'phase-02 應有 countdownGuidance');
@@ -34,6 +38,64 @@ test('phase-02 countdownGuidance manifest 會定義慢速 Kegel 的收放節奏'
       'contract', 'release',
       'contract', 'release',
       'contract', 'release',
+    ],
+  );
+});
+
+test('phase-03 countdownGuidance manifest 會定義快速 Kegel 的點收全放節奏', async () => {
+  const manifest = await loadManifest();
+  const entry = findEntry(manifest, 'phase-03');
+
+  assert.ok(entry, 'phase-03 應存在於 narration manifest');
+  assert.ok(entry.countdownGuidance, 'phase-03 應有 countdownGuidance');
+  assert.equal(entry.countdownGuidance.summary, '1 秒點收、1 秒全放，共 10 次');
+  assert.deepEqual(Object.keys(entry.countdownGuidance.clips).sort(), ['pulse', 'release']);
+  assert.deepEqual(
+    entry.countdownGuidance.events.map((item) => item.elapsedSecond),
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+  );
+  assert.deepEqual(
+    entry.countdownGuidance.events.map((item) => item.clipId),
+    [
+      'pulse', 'release',
+      'pulse', 'release',
+      'pulse', 'release',
+      'pulse', 'release',
+      'pulse', 'release',
+      'pulse', 'release',
+      'pulse', 'release',
+      'pulse', 'release',
+      'pulse', 'release',
+      'pulse', 'release',
+    ],
+  );
+});
+
+test('phase-04 countdownGuidance manifest 會定義反向 Kegel 的呼吸下沉節奏', async () => {
+  const manifest = await loadManifest();
+  const entry = findEntry(manifest, 'phase-04');
+
+  assert.ok(entry, 'phase-04 應存在於 narration manifest');
+  assert.ok(entry.countdownGuidance, 'phase-04 應有 countdownGuidance');
+  assert.equal(entry.countdownGuidance.summary, '4 秒吸氣下沉、8 秒吐氣保持鬆，共 10 輪');
+  assert.deepEqual(Object.keys(entry.countdownGuidance.clips).sort(), ['exhaleSoft', 'inhaleDrop']);
+  assert.deepEqual(
+    entry.countdownGuidance.events.map((item) => item.elapsedSecond),
+    [0, 4, 12, 16, 24, 28, 36, 40, 48, 52, 60, 64, 72, 76, 84, 88, 96, 100, 108, 112],
+  );
+  assert.deepEqual(
+    entry.countdownGuidance.events.map((item) => item.clipId),
+    [
+      'inhaleDrop', 'exhaleSoft',
+      'inhaleDrop', 'exhaleSoft',
+      'inhaleDrop', 'exhaleSoft',
+      'inhaleDrop', 'exhaleSoft',
+      'inhaleDrop', 'exhaleSoft',
+      'inhaleDrop', 'exhaleSoft',
+      'inhaleDrop', 'exhaleSoft',
+      'inhaleDrop', 'exhaleSoft',
+      'inhaleDrop', 'exhaleSoft',
+      'inhaleDrop', 'exhaleSoft',
     ],
   );
 });
