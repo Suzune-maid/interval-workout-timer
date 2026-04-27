@@ -53,5 +53,77 @@
       "durationSeconds": 60,
       "text": "現在開始：收尾掃描。這一段約 1 分鐘。檢查會陰、臀部、大腿與排尿感是否有緊繃。"
     }
-  ]
+  ],
+  "countdownGuidance": {
+    "phaseId": "phase-01",
+    "summary": "4 秒吸氣、6 秒吐氣，共 6 輪",
+    "events": [
+      {
+        "elapsedSecond": 0,
+        "clipId": "inhale"
+      },
+      {
+        "elapsedSecond": 4,
+        "clipId": "exhale"
+      },
+      {
+        "elapsedSecond": 10,
+        "clipId": "inhale"
+      },
+      {
+        "elapsedSecond": 14,
+        "clipId": "exhale"
+      },
+      {
+        "elapsedSecond": 20,
+        "clipId": "inhale"
+      },
+      {
+        "elapsedSecond": 24,
+        "clipId": "exhale"
+      },
+      {
+        "elapsedSecond": 30,
+        "clipId": "inhale"
+      },
+      {
+        "elapsedSecond": 34,
+        "clipId": "exhale"
+      },
+      {
+        "elapsedSecond": 40,
+        "clipId": "inhale"
+      },
+      {
+        "elapsedSecond": 44,
+        "clipId": "exhale"
+      },
+      {
+        "elapsedSecond": 50,
+        "clipId": "inhale"
+      },
+      {
+        "elapsedSecond": 54,
+        "clipId": "exhale"
+      }
+    ],
+    "clips": [
+      {
+        "id": "inhale",
+        "text": "吸氣",
+        "textFile": "audio/today/texts/phase-01-inhale.txt",
+        "audioFile": "audio/today/guidance/phase-01-inhale.wav",
+        "audioDurationSeconds": 1.32,
+        "audioSha256": "32cfbd27e0ae863d73bffef2a7bf099e68e7a6e34175f12f3201ea31e22dcdc2"
+      },
+      {
+        "id": "exhale",
+        "text": "吐氣",
+        "textFile": "audio/today/texts/phase-01-exhale.txt",
+        "audioFile": "audio/today/guidance/phase-01-exhale.wav",
+        "audioDurationSeconds": 1.92,
+        "audioSha256": "71846f3b58ba42e116decc2bd762719bfbc747ef57a7365e84b17680effb85fd"
+      }
+    ]
+  }
 }

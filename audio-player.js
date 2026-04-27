@@ -12,12 +12,15 @@ export function createNarrationPlayer(manifest, options = {}) {
   const entries = Array.isArray(manifest?.entries) ? manifest.entries : [];
   const narrationAudio = typeof Audio !== 'undefined' ? new Audio() : null;
   const cueAudio = typeof Audio !== 'undefined' ? new Audio() : null;
+  const guidanceAudio = typeof Audio !== 'undefined' ? new Audio() : null;
   const startCueFile = options.startCueFile ?? './audio/fx/countdown-start.wav';
   const endCueFile = options.endCueFile ?? './audio/fx/countdown-end.wav';
   let lastPlayedId = null;
+  const playedGuidanceEvents = new Set();
 
   const narrationController = narrationAudio ? createAudioController(narrationAudio) : null;
   const cueController = cueAudio ? createAudioController(cueAudio) : null;
+  const guidanceController = guidanceAudio ? createAudioController(guidanceAudio) : null;
 
   if (narrationAudio) {
     narrationAudio.preload = 'auto';
@@ -25,6 +28,10 @@ export function createNarrationPlayer(manifest, options = {}) {
 
   if (cueAudio) {
     cueAudio.preload = 'auto';
+  }
+
+  if (guidanceAudio) {
+    guidanceAudio.preload = 'auto';
   }
 
   async function playPhaseIntro(phaseIndex, playbackMode = 'full') {
@@ -59,6 +66,43 @@ export function createNarrationPlayer(manifest, options = {}) {
     return entry;
   }
 
+  async function playCountdownGuidance(phaseIndex, elapsedSecond) {
+    const entry = entries.find((item) => item.phaseIndex === phaseIndex);
+    const guidance = entry?.countdownGuidance;
+
+    if (!entry || !guidance || !guidanceController) {
+      return null;
+    }
+
+    const guidanceEvent = guidance.events?.find((item) => item.elapsedSecond === elapsedSecond);
+    if (!guidanceEvent) {
+      return null;
+    }
+
+    const eventKey = `${entry.id}:${guidanceEvent.elapsedSecond}:${guidanceEvent.clipId}`;
+    if (playedGuidanceEvents.has(eventKey)) {
+      return null;
+    }
+
+    const clip = guidance.clips?.[guidanceEvent.clipId];
+    if (!clip?.audioFile) {
+      return null;
+    }
+
+    playedGuidanceEvents.add(eventKey);
+    const result = await guidanceController.play(clip.audioFile);
+
+    if (result !== 'ended') {
+      return null;
+    }
+
+    return {
+      ...guidanceEvent,
+      text: clip.text,
+      audioFile: clip.audioFile,
+    };
+  }
+
   async function playPhaseEndCue() {
     if (!cueController || !endCueFile) {
       return null;
@@ -67,10 +111,16 @@ export function createNarrationPlayer(manifest, options = {}) {
     return cueController.play(endCueFile);
   }
 
-  function reset() {
+  function stopActivePlayback() {
     narrationController?.stop();
     cueController?.stop();
+    guidanceController?.stop();
+  }
+
+  function reset() {
+    stopActivePlayback();
     lastPlayedId = null;
+    playedGuidanceEvents.clear();
   }
 
   function getEntryForPhase(phaseIndex) {
@@ -79,7 +129,9 @@ export function createNarrationPlayer(manifest, options = {}) {
 
   return {
     playPhaseIntro,
+    playCountdownGuidance,
     playPhaseEndCue,
+    stopActivePlayback,
     reset,
     getEntryForPhase,
   };

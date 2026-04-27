@@ -26,7 +26,86 @@
       "audioSha256": "f3bdd92b9e87cff2861a6a7b004c934ad212e09305eacd8b3df3f68e9e2b0f61",
       "ttsModel": "google/gemini-3.1-flash-tts-preview",
       "ttsVoice": "Leda",
-      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。"
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
+      "countdownGuidance": {
+        "summary": "4 秒吸氣、6 秒吐氣，共 6 輪",
+        "mode": "timed-breathing",
+        "breathPattern": {
+          "inhaleSeconds": 4,
+          "exhaleSeconds": 6,
+          "cycles": 6
+        },
+        "clips": {
+          "inhale": {
+            "id": "inhale",
+            "text": "吸氣",
+            "textFile": "audio/library/2026-04-27/texts/phase-01-inhale.txt",
+            "audioFile": "audio/library/2026-04-27/guidance/phase-01-inhale.wav",
+            "audioDurationSeconds": 1.32,
+            "audioSha256": "32cfbd27e0ae863d73bffef2a7bf099e68e7a6e34175f12f3201ea31e22dcdc2",
+            "ttsStyle": "請用自然、穩定、像教練帶呼吸的台灣中文口吻，簡短清楚地說出：吸氣。"
+          },
+          "exhale": {
+            "id": "exhale",
+            "text": "吐氣",
+            "textFile": "audio/library/2026-04-27/texts/phase-01-exhale.txt",
+            "audioFile": "audio/library/2026-04-27/guidance/phase-01-exhale.wav",
+            "audioDurationSeconds": 1.92,
+            "audioSha256": "71846f3b58ba42e116decc2bd762719bfbc747ef57a7365e84b17680effb85fd",
+            "ttsStyle": "請用自然、穩定、像教練帶呼吸的台灣中文口吻，簡短清楚地說出：吐氣。"
+          }
+        },
+        "events": [
+          {
+            "elapsedSecond": 0,
+            "clipId": "inhale"
+          },
+          {
+            "elapsedSecond": 4,
+            "clipId": "exhale"
+          },
+          {
+            "elapsedSecond": 10,
+            "clipId": "inhale"
+          },
+          {
+            "elapsedSecond": 14,
+            "clipId": "exhale"
+          },
+          {
+            "elapsedSecond": 20,
+            "clipId": "inhale"
+          },
+          {
+            "elapsedSecond": 24,
+            "clipId": "exhale"
+          },
+          {
+            "elapsedSecond": 30,
+            "clipId": "inhale"
+          },
+          {
+            "elapsedSecond": 34,
+            "clipId": "exhale"
+          },
+          {
+            "elapsedSecond": 40,
+            "clipId": "inhale"
+          },
+          {
+            "elapsedSecond": 44,
+            "clipId": "exhale"
+          },
+          {
+            "elapsedSecond": 50,
+            "clipId": "inhale"
+          },
+          {
+            "elapsedSecond": 54,
+            "clipId": "exhale"
+          }
+        ]
+      }
     },
     {
       "id": "phase-02",

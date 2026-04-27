@@ -27,6 +27,7 @@ const phasePlan = document.querySelector('#phase-plan');
 const scheduleGrid = document.querySelector('#schedule-grid');
 const narrationStatusElement = document.querySelector('#narration-status');
 const narrationTextElement = document.querySelector('#narration-text');
+const guidanceLiveElement = document.querySelector('#guidance-live');
 const startButton = document.querySelector('#start-button');
 const pauseButton = document.querySelector('#pause-button');
 const resetButton = document.querySelector('#reset-button');
@@ -49,9 +50,11 @@ renderTimer();
 renderPhasePlan();
 renderSchedule();
 renderNarrationInfo();
+renderGuidanceLive();
 initializeNarration().catch((error) => {
   narrationStatusElement.textContent = '語音素材讀取失敗，先顯示腳本內容。';
   narrationTextElement.textContent = error.message;
+  renderGuidanceLive();
 });
 
 startButton.addEventListener('click', async () => {
@@ -81,6 +84,7 @@ pauseButton.addEventListener('click', () => {
     };
     statusMessage.textContent = '已暫停，目前停在倒數開始前。';
     renderTimer();
+    renderGuidanceLive();
     return;
   }
 
@@ -95,6 +99,7 @@ pauseButton.addEventListener('click', () => {
   };
   statusMessage.textContent = '已暫停。重新開始時會先播開始音效，再繼續倒數。';
   renderTimer();
+  renderGuidanceLive();
 });
 
 resetButton.addEventListener('click', () => {
@@ -104,6 +109,7 @@ resetButton.addEventListener('click', () => {
   renderTimer();
   renderPhasePlan();
   renderNarrationInfo();
+  renderGuidanceLive();
 });
 
 skipButton.addEventListener('click', () => {
@@ -119,6 +125,7 @@ skipButton.addEventListener('click', () => {
   renderTimer();
   renderPhasePlan();
   renderNarrationInfo();
+  renderGuidanceLive();
 });
 
 function renderStaticContent() {
@@ -164,8 +171,33 @@ function renderNarrationInfo() {
     return;
   }
 
-  narrationStatusElement.textContent = `語音起點：${formatClock(entry.startsAtSecond)} ｜ 音檔長度：約 ${entry.audioDurationSeconds ?? '未記錄'} 秒`;
+  const guidanceSummary = entry.countdownGuidance?.summary
+    ? ` ｜ 倒數引導：${entry.countdownGuidance.summary}`
+    : '';
+
+  narrationStatusElement.textContent = `語音起點：${formatClock(entry.startsAtSecond)} ｜ 音檔長度：約 ${entry.audioDurationSeconds ?? '未記錄'} 秒${guidanceSummary}`;
   narrationTextElement.textContent = entry.text;
+}
+
+function renderGuidanceLive(message) {
+  if (!guidanceLiveElement) {
+    return;
+  }
+
+  const entry = currentNarrationEntry();
+  const guidance = entry?.countdownGuidance;
+
+  if (message) {
+    guidanceLiveElement.textContent = message;
+    return;
+  }
+
+  if (!guidance) {
+    guidanceLiveElement.textContent = '這一段目前沒有倒數中的教練引導語音。';
+    return;
+  }
+
+  guidanceLiveElement.textContent = `倒數中會依節奏播放：${guidance.summary}`;
 }
 
 function renderPhasePlan() {
@@ -247,6 +279,7 @@ async function initializeNarration() {
   narrationManifest = await loadNarrationManifest();
   narrationPlayer = createNarrationPlayer(narrationManifest);
   renderNarrationInfo();
+  renderGuidanceLive();
 }
 
 function currentNarrationEntry() {
@@ -273,6 +306,7 @@ async function beginPhaseCountdown({ playbackMode = 'full' } = {}) {
     : `準備恢復 ${phase.label}，先播放開始音效。`;
   renderTimer();
   renderPhasePlan();
+  renderGuidanceLive();
 
   await playPhaseIntroForCurrentPhase(playbackMode);
 
@@ -290,6 +324,8 @@ async function beginPhaseCountdown({ playbackMode = 'full' } = {}) {
     : `${phase.label} 已恢復倒數。`;
   renderTimer();
   renderPhasePlan();
+  renderGuidanceLive();
+  void maybePlayCountdownGuidance(phase.phaseIndex ?? state.currentPhaseIndex, 0, sequenceId);
   startCountdownLoop(sequenceId);
 }
 
@@ -302,11 +338,15 @@ function startCountdownLoop(sequenceId) {
     }
 
     if (state.remainingSeconds > 1) {
+      const phase = currentPhase();
+      const elapsedSecond = phase ? phase.seconds - state.remainingSeconds + 1 : 0;
+
       state = {
         ...state,
         remainingSeconds: state.remainingSeconds - 1,
       };
       renderTimer();
+      await maybePlayCountdownGuidance(phase?.phaseIndex ?? state.currentPhaseIndex, elapsedSecond, sequenceId);
       return;
     }
 
@@ -318,6 +358,7 @@ function startCountdownLoop(sequenceId) {
       isRunning: false,
     };
     renderTimer();
+    renderGuidanceLive();
     statusMessage.textContent = `${finishedPhase?.label ?? '目前段落'} 倒數結束，播放結束音效。`;
     await playPhaseEndCue();
 
@@ -328,10 +369,12 @@ function startCountdownLoop(sequenceId) {
     state = advancePhase(state);
     renderTimer();
     renderPhasePlan();
+    renderGuidanceLive();
 
     if (state.isComplete) {
       statusMessage.textContent = '今日課表已跑完。接下來只要做收尾放鬆與身體掃描就好。';
       renderNarrationInfo();
+      renderGuidanceLive();
       return;
     }
 
@@ -339,8 +382,34 @@ function startCountdownLoop(sequenceId) {
   }, 1000);
 }
 
+async function maybePlayCountdownGuidance(phaseIndex, elapsedSecond, sequenceId) {
+  if (!narrationPlayer) {
+    return null;
+  }
+
+  try {
+    const result = await narrationPlayer.playCountdownGuidance(phaseIndex, elapsedSecond);
+
+    if (sequenceId !== phaseSequenceId) {
+      return null;
+    }
+
+    if (result?.text) {
+      renderGuidanceLive(`教練引導：${result.text}（第 ${elapsedSecond} 秒）`);
+    }
+
+    return result;
+  } catch (error) {
+    if (sequenceId === phaseSequenceId) {
+      renderGuidanceLive('中段引導語音播放失敗，倒數仍持續進行。');
+    }
+    return null;
+  }
+}
+
 async function playPhaseIntroForCurrentPhase(playbackMode = 'full') {
   renderNarrationInfo();
+  renderGuidanceLive();
 
   if (!narrationPlayer) {
     return null;
@@ -388,6 +457,7 @@ function cancelActiveTimeline({ resetNarration = false } = {}) {
   phaseSequenceId += 1;
   isPreparingPhase = false;
   stopTimer();
+  narrationPlayer?.stopActivePlayback();
 
   if (resetNarration) {
     narrationPlayer?.reset();

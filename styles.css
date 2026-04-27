@@ -157,6 +157,15 @@ h1 {
   line-height: 1.6;
 }
 
+.guidance-live {
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(160, 180, 255, 0.16);
+  color: var(--good);
+  font-weight: 600;
+  min-height: 1.5em;
+}
+
 .session-title {
   margin-bottom: 8px;
   font-size: 1.4rem;
