@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>鍛鍊週期計時器</title>
+    <meta
+      name="description"
+      content="為鍛鍊設計的訓練／放鬆週期計時網站第一版，提供基本倒數、回合控制與流程預覽。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero-card">
+        <p class="eyebrow">V1 Framework</p>
+        <h1>鍛鍊週期計時器</h1>
+        <p class="hero-copy">
+          先把訓練 / 放鬆週期的核心骨架搭起來。主人可以先用這版驗證流程，下一版再補音效、動作名稱與手機優化。
+        </p>
+      </section>
+
+      <section class="panel-grid">
+        <section class="panel">
+          <div class="panel-heading">
+            <h2>週期設定</h2>
+            <p>先設定一輪鍛鍊的節奏。</p>
+          </div>
+
+          <form id="config-form" class="config-form">
+            <label>
+              <span>訓練秒數</span>
+              <input id="train-seconds" name="trainSeconds" type="number" min="1" step="1" value="45" />
+            </label>
+
+            <label>
+              <span>放鬆秒數</span>
+              <input id="rest-seconds" name="restSeconds" type="number" min="1" step="1" value="15" />
+            </label>
+
+            <label>
+              <span>回合數</span>
+              <input id="rounds" name="rounds" type="number" min="1" step="1" value="8" />
+            </label>
+          </form>
+
+          <div class="tips-card">
+            <h3>V1 先做到的事</h3>
+            <ul>
+              <li>基本訓練 / 放鬆循環</li>
+              <li>開始、暫停、重設、跳下一段</li>
+              <li>流程預覽與目前回合顯示</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="panel timer-panel">
+          <div class="panel-heading">
+            <h2>目前計時</h2>
+            <p id="status-message">準備好了，按下開始就能進入第一段訓練。</p>
+          </div>
+
+          <div class="timer-card">
+            <div>
+              <p class="label">目前階段</p>
+              <p id="phase-label" class="phase-label">訓練 1</p>
+            </div>
+            <div>
+              <p class="label">回合進度</p>
+              <p id="round-label" class="round-label">第 1 / 8 回合</p>
+            </div>
+            <p id="time-display" class="time-display">00:45</p>
+          </div>
+
+          <div class="button-row">
+            <button id="start-button" type="button" class="primary">開始</button>
+            <button id="pause-button" type="button">暫停</button>
+            <button id="reset-button" type="button">重設</button>
+            <button id="skip-button" type="button">跳到下一段</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel plan-panel">
+        <div class="panel-heading">
+          <h2>流程預覽</h2>
+          <p>讓主人先確認這次鍛鍊的整體節奏。</p>
+        </div>
+        <ol id="phase-plan" class="phase-plan"></ol>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

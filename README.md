@@ -1,2 +1,30 @@
-# interval-workout-timer
-Interval workout timer web app
+# Interval Workout Timer
+
+鍛鍊用的訓練 / 放鬆週期計時網站。
+
+## V1 功能
+
+- 設定訓練秒數
+- 設定放鬆秒數
+- 設定回合數
+- 顯示目前階段、回合進度與倒數時間
+- 開始 / 暫停 / 重設 / 跳到下一段
+- 顯示整體流程預覽
+
+## 本機開發
+
+```bash
+python3 -m http.server 8124
+```
+
+然後打開 <http://127.0.0.1:8124/>。
+
+## 測試
+
+```bash
+npm test
+```
+
+## 部署
+
+此專案預計部署到 GitHub Pages，作為可直接在手機或桌機瀏覽器開啟的靜態網站。
