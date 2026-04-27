@@ -139,6 +139,22 @@ export function buildProgramCalendar(startDate, totalWeeks = PROGRAM_WEEKS) {
   return calendar;
 }
 
+export function createSelectedDayState(calendar, dayOffset = 0) {
+  const safeCalendar = Array.isArray(calendar) ? calendar : [];
+  const maxOffset = Math.max(0, safeCalendar.length - 1);
+  const selectedDayOffset = clamp(Math.floor(Number(dayOffset) || 0), 0, maxOffset);
+
+  return {
+    calendar: safeCalendar,
+    selectedDayOffset,
+    entry: safeCalendar[selectedDayOffset] ?? null,
+  };
+}
+
+export function selectCalendarEntry(selectionState, dayOffset) {
+  return createSelectedDayState(selectionState?.calendar ?? [], dayOffset);
+}
+
 export function buildDailySession(weekNumber, dayNumber) {
   const safeWeek = clamp(normalizePositiveInteger(weekNumber), 1, PROGRAM_WEEKS);
   const safeDay = clamp(normalizePositiveInteger(dayNumber), 1, DAYS_PER_WEEK);
