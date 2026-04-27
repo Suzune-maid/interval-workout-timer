@@ -2,10 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   advancePhase,
+  buildDailySession,
+  buildProgramCalendar,
   buildWorkoutPlan,
   createSessionState,
+  createSessionStateFromPhases,
   formatClock,
   getNextPhaseIndex,
+  resolveProgramDay,
 } from '../timer-core.js';
 
 test('buildWorkoutPlan 會建立訓練與休息交錯的流程，最後一回合不追加休息', () => {
@@ -67,4 +71,53 @@ test('advancePhase 會前往下一階段，最後一段後標記完成', () => {
   assert.equal(completed.remainingSeconds, 0);
   assert.equal(completed.isRunning, false);
   assert.equal(completed.isComplete, true);
+});
+
+test('createSessionStateFromPhases 會接受自訂階段陣列', () => {
+  const state = createSessionStateFromPhases([
+    { label: '準備放鬆', seconds: 60 },
+    { label: '反向 Kegel', seconds: 120 },
+  ]);
+
+  assert.equal(state.currentPhaseIndex, 0);
+  assert.equal(state.remainingSeconds, 60);
+  assert.equal(state.phases.length, 2);
+  assert.equal(state.phases[1].label, '反向 Kegel');
+});
+
+test('resolveProgramDay 會把日期換算成第幾週第幾天', () => {
+  const firstDay = resolveProgramDay('2026-04-27', '2026-04-27');
+  const laterDay = resolveProgramDay('2026-04-27', '2026-05-09');
+
+  assert.equal(firstDay.weekNumber, 1);
+  assert.equal(firstDay.dayNumber, 1);
+  assert.equal(firstDay.dayOffset, 0);
+  assert.equal(laterDay.weekNumber, 2);
+  assert.equal(laterDay.dayNumber, 6);
+  assert.equal(laterDay.dayOffset, 12);
+});
+
+test('buildProgramCalendar 會建立 42 天的完整日程表', () => {
+  const calendar = buildProgramCalendar('2026-04-27');
+
+  assert.equal(calendar.length, 42);
+  assert.equal(calendar[0].date, '2026-04-27');
+  assert.equal(calendar[0].weekNumber, 1);
+  assert.equal(calendar[0].dayNumber, 1);
+  assert.equal(calendar[41].date, '2026-06-07');
+  assert.equal(calendar[41].weekNumber, 6);
+  assert.equal(calendar[41].dayNumber, 7);
+});
+
+test('buildDailySession 會依週次與星期建立正式訓練內容', () => {
+  const formalDay = buildDailySession(3, 5);
+  const advancedKegelDay = buildDailySession(6, 1);
+
+  assert.equal(formalDay.kind, 'formal');
+  assert.match(formalDay.title, /正式訓練/);
+  assert.match(formalDay.weekFocus, /第一次乾式波峰嘗試/);
+  assert.ok(formalDay.phases.length >= 4);
+
+  assert.equal(advancedKegelDay.kind, 'kegel');
+  assert.ok(advancedKegelDay.phases.some((phase) => phase.label.includes('波峰模擬')));
 });
