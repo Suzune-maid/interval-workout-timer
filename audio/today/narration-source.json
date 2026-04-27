@@ -27,7 +27,110 @@
       "phaseLabel": "慢速 Kegel（10 次）",
       "startsAtSecond": 60,
       "durationSeconds": 90,
-      "text": "現在開始：慢速 Kegel（10 次）。這一段約 1 分 30 秒。每次收 3 秒、放 6 秒。"
+      "text": "現在開始：慢速 Kegel（10 次）。這一段約 1 分 30 秒。每次收 3 秒、放 6 秒。",
+      "countdownGuidance": {
+        "summary": "3 秒收、6 秒放，共 10 次",
+        "mode": "timed-kegel",
+        "coachPrompt": "慢速 Kegel 段落用更短的教練短句帶 10 次節奏，收縮提醒上提，放鬆提醒臀腿一起鬆。",
+        "clips": [
+          {
+            "id": "contract",
+            "text": "收緊，上提",
+            "textFile": "audio/today/texts/phase-02-contract.txt",
+            "audioFile": "audio/today/guidance/phase-02-contract.wav",
+            "ttsStyle": "請用自然、穩定、像教練帶動作的台灣中文口吻，簡短清楚地說出：收緊，上提。"
+          },
+          {
+            "id": "release",
+            "text": "放掉，臀腿放鬆",
+            "textFile": "audio/today/texts/phase-02-release.txt",
+            "audioFile": "audio/today/guidance/phase-02-release.wav",
+            "ttsStyle": "請用自然、穩定、像教練帶動作的台灣中文口吻，簡短清楚地說出：放掉，臀腿放鬆。"
+          }
+        ],
+        "events": [
+          {
+            "elapsedSecond": 0,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 3,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 9,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 12,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 18,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 21,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 27,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 30,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 36,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 39,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 45,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 48,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 54,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 57,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 63,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 66,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 72,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 75,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 81,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 84,
+            "clipId": "release"
+          }
+        ]
+      }
     },
     {
       "id": "phase-03",

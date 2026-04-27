@@ -120,7 +120,118 @@
       "audioSha256": "ccd65052bf2ef7a61a7b3a46d91c4a152e2455afe4cc9dd78b55650ecd745511",
       "ttsModel": "google/gemini-3.1-flash-tts-preview",
       "ttsVoice": "Leda",
-      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。"
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
+      "countdownGuidance": {
+        "summary": "3 秒收、6 秒放，共 10 次",
+        "mode": "timed-kegel",
+        "kegelPattern": {
+          "contractSeconds": 3,
+          "releaseSeconds": 6,
+          "cycles": 10
+        },
+        "clips": {
+          "contract": {
+            "id": "contract",
+            "text": "收緊，上提",
+            "textFile": "audio/library/2026-04-27/texts/phase-02-contract.txt",
+            "audioFile": "audio/library/2026-04-27/guidance/phase-02-contract.wav",
+            "audioDurationSeconds": 2.4,
+            "audioSha256": "d0c99e0796eb7b923fced8c109cc224a9b535e1c45a2eafb327303a23ad8c6a7",
+            "ttsStyle": "請用自然、穩定、像教練帶動作的台灣中文口吻，簡短清楚地說出：收緊，上提。"
+          },
+          "release": {
+            "id": "release",
+            "text": "放掉，臀腿放鬆",
+            "textFile": "audio/library/2026-04-27/texts/phase-02-release.txt",
+            "audioFile": "audio/library/2026-04-27/guidance/phase-02-release.wav",
+            "audioDurationSeconds": 3.76,
+            "audioSha256": "e6acfb5287b1f922b9e53df4eeee1253bc7b1b4cc369867f09e9552157b0f52f",
+            "ttsStyle": "請用自然、穩定、像教練帶動作的台灣中文口吻，簡短清楚地說出：放掉，臀腿放鬆。"
+          }
+        },
+        "events": [
+          {
+            "elapsedSecond": 0,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 3,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 9,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 12,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 18,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 21,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 27,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 30,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 36,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 39,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 45,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 48,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 54,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 57,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 63,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 66,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 72,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 75,
+            "clipId": "release"
+          },
+          {
+            "elapsedSecond": 81,
+            "clipId": "contract"
+          },
+          {
+            "elapsedSecond": 84,
+            "clipId": "release"
+          }
+        ]
+      }
     },
     {
       "id": "phase-03",
