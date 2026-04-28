@@ -37,17 +37,26 @@
 
 ## Current Baseline
 
-執行這份 roadmap 前，應先視為以下基線存在且可驗證：
+截至 **2026-04-28（Phase 2 完成後）**，後續工作應以以下狀態作為新基線，而不是以 roadmap 初稿建立時的數字為準：
 
-- `app.js` 約 589 行，`audio-player.js` 約 207 行，`timer-core.js` 約 477 行。
-- `npm test` 全綠（目前 26/26）。
+- `app.js` 約 **325 行**、`timeline-orchestrator.js` 約 **330 行**、`audio-player.js` 約 **207 行**、`timer-core.js` 約 **477 行**。
+- `npm test` 全綠（目前 **38/38**）。
 - 日程表已支援點選切換日程。
 - `phase-01` 到 `phase-05` 的倒數中引導已完成並部署。
-- 正式站仍以單頁靜態站形式運作。
+- `tests/app-flow.test.js` 已鎖住切日、fallback、pause/resume、skip 與 stale async overwrite guardrails。
+- `tests/phase1-modules.test.js` 已鎖住 `dom-refs.js`、`schedule-view.js`、`timer-view.js`、`session-controller.js` 的模組契約。
+- `tests/timeline-orchestrator.test.js` 已鎖住 preparing → started、pause/resume、skip 取消舊 sequence、session complete 等流程契約。
+- 正式站仍以單頁靜態站形式運作，且 Phase 0 / 1 / 2 都已完成本地 smoke test 與 GitHub Pages live 驗證。
+- 對應完成 commit：
+  - Phase 0: `a0bd75b` — `test: add phase 0 audio flow guardrails`
+  - Phase 1: `19c435a` — `refactor: split app into view and session modules`
+  - Phase 2: `a5d9389` — `refactor: extract timeline orchestrator`
 
 ---
 
 # Phase 0: Baseline Freeze and Guardrails
+
+**Status:** ✅ Completed (`a0bd75b`)
 
 **Objective:** 在開始動架構前，先把目前可工作的行為固定下來，避免後續重構把已驗證的播放流程弄壞。
 
@@ -55,7 +64,7 @@
 - Modify: `tests/audio-player.test.js`
 - Modify: `tests/timer-core.test.js`
 - Modify: `tests/day-selection.test.js`
-- Create: `tests/app-flow.test.js`（若能用純模擬方式建立最小流程測試）
+- Create: `tests/app-flow.test.js`
 - Modify: `README.md`
 
 **Deliverables:**
@@ -65,6 +74,12 @@
    - skip phase 時 active playback 是否停止
    - 沒有專用語音素材的日子能否安全退回文字模式
 2. 在 README 加上目前行為基線描述，作為重構前後比對依據。
+3. 補上 sequence guard，避免被取消的舊 async 語音流程回頭覆寫新的 UI 狀態。
+
+**What shipped in this phase:**
+- 新增 `tests/app-flow.test.js`，建立 app-flow regression guardrails。
+- `README.md` 新增 **「目前行為基線（Phase 0 guardrails）」** 段落。
+- 已修正切日後舊 narration / cue promise 完成時回頭覆寫 UI 的 race condition。
 
 **Verification:**
 - `npm test`
@@ -77,6 +92,8 @@
 
 # Phase 1: Split `app.js` into View + Session Controller
 
+**Status:** ✅ Completed (`19c435a`)
+
 **Objective:** 先把 `app.js` 從超大協調檔拆成比較清楚的責任邊界，讓後續音訊重構不必一直碰 UI render 邏輯。
 
 **Files:**
@@ -84,8 +101,10 @@
 - Create: `schedule-view.js`
 - Create: `timer-view.js`
 - Create: `dom-refs.js`
+- Create: `tests/phase1-modules.test.js`
+- Create: `tests/support/fake-dom.js`
 - Modify: `app.js`
-- Test: `tests/app-flow.test.js`
+- Regression: `tests/app-flow.test.js`
 
 **Target Structure:**
 - `dom-refs.js`
@@ -108,6 +127,11 @@
 - 先以簡單 factory / module function 把責任切開即可。
 - 維持現有資料流名稱，避免第一階段過度 rename 造成 review 成本上升。
 
+**What shipped in this phase:**
+- 已抽出 `dom-refs.js`、`schedule-view.js`、`timer-view.js`、`session-controller.js`。
+- 新增 `tests/phase1-modules.test.js` 與 `tests/support/fake-dom.js`，鎖住模組介面與 render 契約。
+- `app.js` 已縮成較明確的組裝層，讓 view render 與 selected day / session state 脫離主流程檔。
+
 **Verification:**
 - `npm test`
 - 手動驗證：
@@ -123,14 +147,17 @@
 
 # Phase 2: Introduce a Real Timeline Orchestrator
 
+**Status:** ✅ Completed (`a5d9389`)
+
 **Objective:** 把目前散在 `app.js` 中的「倒數、phase 轉換、播放前等待、結束後切段」邏輯整理成單一流程協調器，避免 `setInterval(async () => ...)` 逐步變成難以維護的時序地雷。
 
 **Files:**
 - Create: `timeline-orchestrator.js`
+- Create: `tests/timeline-orchestrator.test.js`
 - Modify: `session-controller.js`
 - Modify: `app.js`
-- Test: `tests/app-flow.test.js`
-- Test: `tests/audio-player.test.js`
+- Regression: `tests/app-flow.test.js`
+- Regression: `tests/audio-player.test.js`
 
 **Responsibilities of `timeline-orchestrator.js`:**
 - 啟動 phase
@@ -150,13 +177,20 @@
 - 先做一個明確的 orchestrator 物件，把流程規則集中。
 - 這一層仍可先用 `setInterval`，但應把 timer 與 state transition 從 DOM 層拔出。
 
+**What shipped in this phase:**
+- 已新增 `timeline-orchestrator.js`，集中倒數、phase progression、pause/resume、skip/cancel 與 sequence 管理。
+- `session-controller.js` 已補上 `advancePhase()` 介面，讓 phase progression 不必再由 `app.js` 直接操縱。
+- `app.js` 不再直接持有 `beginPhaseCountdown`、`startCountdownLoop`、`maybePlayCountdownGuidance`、`playPhaseIntroForCurrentPhase`、`playPhaseEndCue`、`cancelActiveTimeline` 等 phase flow 細節。
+- 新增 `tests/timeline-orchestrator.test.js`，補足 orchestrator 層的最小單元測試。
+
 **Verification:**
 - `npm test`
-- 針對 `timeline-orchestrator.js` 補最小單元測試：
+- `timeline-orchestrator.js` 單元測試已覆蓋：
   - preparing → started 的事件順序
   - pause / resume
   - skip 時取消舊 sequence
   - session complete 流程
+- 本地 smoke test 與 GitHub Pages live 驗證皆已完成。
 
 **Exit Criteria:**
 - `app.js` 不再直接操作 phase flow 細節。
