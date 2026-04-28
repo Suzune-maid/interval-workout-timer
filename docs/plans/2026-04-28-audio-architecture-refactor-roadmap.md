@@ -37,20 +37,22 @@
 
 ## Current Baseline
 
-截至 **2026-04-28（Phase 2 完成後）**，後續工作應以以下狀態作為新基線，而不是以 roadmap 初稿建立時的數字為準：
+截至 **2026-04-28（Phase 3 完成後）**，後續工作應以以下狀態作為新基線，而不是以 roadmap 初稿建立時的數字為準：
 
-- `app.js` 約 **325 行**、`timeline-orchestrator.js` 約 **330 行**、`audio-player.js` 約 **207 行**、`timer-core.js` 約 **477 行**。
-- `npm test` 全綠（目前 **38/38**）。
+- `app.js` 約 **325 行**、`audio-engine.js` 約 **186 行**、`audio-player.js` 約 **161 行**、`timeline-orchestrator.js` 約 **334 行**、`timer-core.js` 約 **477 行**。
+- `npm test` 全綠（目前 **44/44**）。
 - 日程表已支援點選切換日程。
 - `phase-01` 到 `phase-05` 的倒數中引導已完成並部署。
 - `tests/app-flow.test.js` 已鎖住切日、fallback、pause/resume、skip 與 stale async overwrite guardrails。
 - `tests/phase1-modules.test.js` 已鎖住 `dom-refs.js`、`schedule-view.js`、`timer-view.js`、`session-controller.js` 的模組契約。
-- `tests/timeline-orchestrator.test.js` 已鎖住 preparing → started、pause/resume、skip 取消舊 sequence、session complete 等流程契約。
-- 正式站仍以單頁靜態站形式運作，且 Phase 0 / 1 / 2 都已完成本地 smoke test 與 GitHub Pages live 驗證。
+- `tests/timeline-orchestrator.test.js` 已鎖住 preparing → started、pause/resume、skip 取消舊 sequence、session complete，以及 generic `stopAll()` cancellation 契約。
+- `tests/audio-engine.test.js` 已鎖住同 track interrupt、獨立 stopTrack、preload 與 reset 行為。
+- 正式站仍以單頁靜態站形式運作，且 Phase 0 / 1 / 2 / 3 都已完成本地 smoke test 與 GitHub Pages live 驗證。
 - 對應完成 commit：
   - Phase 0: `a0bd75b` — `test: add phase 0 audio flow guardrails`
   - Phase 1: `19c435a` — `refactor: split app into view and session modules`
   - Phase 2: `a5d9389` — `refactor: extract timeline orchestrator`
+  - Phase 3: `refactor: introduce audio engine abstraction`
 
 ---
 
@@ -200,6 +202,8 @@
 
 # Phase 3: Upgrade `audio-player.js` into an Audio Engine Abstraction
 
+**Status:** ✅ Completed
+
 **Objective:** 讓音訊層不再綁死「三個固定 Audio 元件」，改成可以逐步支援多軌、優先級與重疊策略的抽象。
 
 **Files:**
@@ -231,13 +235,22 @@
 - 但 API 要先設計成未來能切到 `AudioContext` 而不影響 orchestration 層。
 - 把 `playedGuidanceEvents`、`lastPlayedId` 等狀態限制在 engine 內部，不要讓 `app.js` 感知這些細節。
 
+**What shipped in this phase:**
+- 已新增 `audio-engine.js`，以 `playClip()` / `stopTrack()` / `stopAll()` / `reset()` / `preload()` / `getTrackState()` 提供抽象音訊層。
+- `audio-player.js` 已改為相容 wrapper：保留 `playPhaseIntro()` / `playCountdownGuidance()` / `playPhaseEndCue()` 等既有上層 API，但內部改走 track-based audio engine。
+- `timeline-orchestrator.js` 在取消流程時已優先使用 generic `stopAll()`，不再綁死舊的三 audio element 心智模型。
+- 新增 `tests/audio-engine.test.js`，並擴充 `tests/audio-player.test.js`、`tests/timeline-orchestrator.test.js`，補齊 audio abstraction 契約。
+
 **Verification:**
-- `npm test`
-- 必須新增測試覆蓋：
+- `npm test`（**44/44** 全綠）
+- `tests/audio-engine.test.js` 已覆蓋：
   - 同一 track 的 interrupt behavior
-  - 不同 track 是否能獨立停止
-  - reset 後狀態是否清乾淨
-  - guidance event 去重是否仍正確
+  - 不同 track 的獨立 stopTrack
+  - preload 去重
+  - reset 後狀態清理
+- `tests/audio-player.test.js` 已覆蓋 wrapper 的 `getTrackState()` / `stopTrack()` 相容介面。
+- `tests/timeline-orchestrator.test.js` 已覆蓋 cancellation 時優先走 generic `stopAll()`。
+- 本地 smoke test 與後續 GitHub Pages live 驗證通過。
 
 **Exit Criteria:**
 - 上層不再直接假設只有 3 個 Audio 元件。

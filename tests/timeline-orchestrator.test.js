@@ -293,3 +293,44 @@ test('timeline orchestrator 會在倒數中送出 tick / guidance，並在最後
   assert.equal(session.getState().isRunning, false);
   assert.equal(scheduler.getActiveIntervalIds().length, 0);
 });
+
+test('timeline orchestrator 在取消流程時會優先使用 generic audio engine 的 stopAll', async () => {
+  const session = createSessionHarness([
+    { label: '準備放鬆', seconds: 3 },
+    { label: '正式收縮', seconds: 5 },
+  ]);
+  const scheduler = createScheduler();
+  const intro = createDeferred();
+  const calls = [];
+  const player = {
+    playPhaseIntro() {
+      calls.push('intro');
+      return intro.promise.then(() => ({ phaseIndex: 0 }));
+    },
+    stopAll() {
+      calls.push('stopAll');
+    },
+    reset() {
+      calls.push('reset');
+    },
+  };
+
+  const orchestrator = createTimelineOrchestrator({
+    sessionController: session,
+    getNarrationPlayer: () => player,
+    hasNarrationAudio: () => true,
+    setIntervalFn: scheduler.setInterval,
+    clearIntervalFn: scheduler.clearInterval,
+  });
+
+  const startPromise = orchestrator.start();
+  await nextTurn();
+
+  const skipResult = orchestrator.skip();
+  assert.equal(skipResult.kind, 'phase-skipped');
+  assert.deepEqual(calls, ['intro', 'stopAll', 'reset']);
+
+  intro.resolve();
+  await startPromise;
+  assert.equal(scheduler.getActiveIntervalIds().length, 0);
+});

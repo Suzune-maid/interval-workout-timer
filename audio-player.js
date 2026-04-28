@@ -1,3 +1,5 @@
+import { createAudioEngine } from './audio-engine.js';
+
 export async function loadNarrationManifest(url = './audio/today/narration-manifest.json') {
   const response = await fetch(url, { cache: 'no-store' });
 
@@ -10,35 +12,17 @@ export async function loadNarrationManifest(url = './audio/today/narration-manif
 
 export function createNarrationPlayer(manifest, options = {}) {
   const entries = Array.isArray(manifest?.entries) ? manifest.entries : [];
-  const narrationAudio = typeof Audio !== 'undefined' ? new Audio() : null;
-  const cueAudio = typeof Audio !== 'undefined' ? new Audio() : null;
-  const guidanceAudio = typeof Audio !== 'undefined' ? new Audio() : null;
   const startCueFile = options.startCueFile ?? './audio/fx/countdown-start.wav';
   const endCueFile = options.endCueFile ?? './audio/fx/countdown-end.wav';
+  const engine = options.engine ?? createAudioEngine();
   let lastPlayedId = null;
   const playedGuidanceEvents = new Set();
-
-  const narrationController = narrationAudio ? createAudioController(narrationAudio) : null;
-  const cueController = cueAudio ? createAudioController(cueAudio) : null;
-  const guidanceController = guidanceAudio ? createAudioController(guidanceAudio) : null;
-
-  if (narrationAudio) {
-    narrationAudio.preload = 'auto';
-  }
-
-  if (cueAudio) {
-    cueAudio.preload = 'auto';
-  }
-
-  if (guidanceAudio) {
-    guidanceAudio.preload = 'auto';
-  }
 
   async function playPhaseIntro(phaseIndex, playbackMode = 'full') {
     const entry = entries.find((item) => item.phaseIndex === phaseIndex);
 
-    if (!entry || !cueController) {
-      return entry ?? null;
+    if (!entry) {
+      return null;
     }
 
     if (playbackMode === 'full') {
@@ -46,18 +30,28 @@ export function createNarrationPlayer(manifest, options = {}) {
         return entry;
       }
 
-      if (narrationController) {
-        const narrationResult = await narrationController.play(entry.audioFile);
-        if (narrationResult !== 'ended') {
-          return entry;
-        }
+      const narrationResult = await engine.playClip({
+        track: 'narration',
+        src: entry.audioFile,
+        priority: 'primary',
+        interruptPolicy: 'replace-track',
+        duckingGroup: 'speech',
+      });
+
+      if (narrationResult !== 'ended') {
+        return entry;
       }
 
       lastPlayedId = entry.id;
     }
 
     if (startCueFile) {
-      const cueResult = await cueController.play(startCueFile);
+      const cueResult = await engine.playClip({
+        track: 'cue',
+        src: startCueFile,
+        priority: 'high',
+        interruptPolicy: 'replace-track',
+      });
       if (cueResult !== 'ended') {
         return entry;
       }
@@ -70,7 +64,7 @@ export function createNarrationPlayer(manifest, options = {}) {
     const entry = entries.find((item) => item.phaseIndex === phaseIndex);
     const guidance = entry?.countdownGuidance;
 
-    if (!entry || !guidance || !guidanceController) {
+    if (!entry || !guidance) {
       return null;
     }
 
@@ -90,7 +84,13 @@ export function createNarrationPlayer(manifest, options = {}) {
     }
 
     playedGuidanceEvents.add(eventKey);
-    const result = await guidanceController.play(clip.audioFile);
+    const result = await engine.playClip({
+      track: 'guidance-primary',
+      src: clip.audioFile,
+      priority: 'primary',
+      interruptPolicy: 'replace-track',
+      duckingGroup: 'speech',
+    });
 
     if (result !== 'ended') {
       return null;
@@ -104,23 +104,42 @@ export function createNarrationPlayer(manifest, options = {}) {
   }
 
   async function playPhaseEndCue() {
-    if (!cueController || !endCueFile) {
+    if (!endCueFile) {
       return null;
     }
 
-    return cueController.play(endCueFile);
+    return engine.playClip({
+      track: 'cue',
+      src: endCueFile,
+      priority: 'high',
+      interruptPolicy: 'replace-track',
+    });
+  }
+
+  function stopTrack(track) {
+    engine.stopTrack(track);
+  }
+
+  function stopAll() {
+    engine.stopAll();
   }
 
   function stopActivePlayback() {
-    narrationController?.stop();
-    cueController?.stop();
-    guidanceController?.stop();
+    stopAll();
   }
 
   function reset() {
-    stopActivePlayback();
     lastPlayedId = null;
     playedGuidanceEvents.clear();
+    engine.reset();
+  }
+
+  function preload(clips) {
+    engine.preload(clips);
+  }
+
+  function getTrackState(track) {
+    return engine.getTrackState(track);
   }
 
   function getEntryForPhase(phaseIndex) {
@@ -131,77 +150,12 @@ export function createNarrationPlayer(manifest, options = {}) {
     playPhaseIntro,
     playCountdownGuidance,
     playPhaseEndCue,
+    stopTrack,
+    stopAll,
     stopActivePlayback,
     reset,
+    preload,
+    getTrackState,
     getEntryForPhase,
-  };
-}
-
-function createAudioController(audio) {
-  let cancelCurrentPlayback = null;
-
-  return {
-    async play(src) {
-      cancelCurrentPlayback?.('interrupted');
-      audio.pause();
-      audio.currentTime = 0;
-      audio.src = src;
-
-      return new Promise((resolve, reject) => {
-        let settled = false;
-
-        const cleanup = () => {
-          audio.removeEventListener('ended', handleEnded);
-          audio.removeEventListener('error', handleError);
-          if (cancelCurrentPlayback === handleCancel) {
-            cancelCurrentPlayback = null;
-          }
-        };
-
-        const finish = (result) => {
-          if (settled) {
-            return;
-          }
-
-          settled = true;
-          cleanup();
-          resolve(result);
-        };
-
-        const fail = (error) => {
-          if (settled) {
-            return;
-          }
-
-          settled = true;
-          cleanup();
-          reject(error);
-        };
-
-        const handleEnded = () => {
-          finish('ended');
-        };
-
-        const handleError = () => {
-          fail(new Error(`音訊播放失敗：${src}`));
-        };
-
-        const handleCancel = (reason = 'cancelled') => {
-          finish(reason);
-        };
-
-        cancelCurrentPlayback = handleCancel;
-        audio.addEventListener('ended', handleEnded, { once: true });
-        audio.addEventListener('error', handleError, { once: true });
-
-        Promise.resolve(audio.play()).catch(fail);
-      });
-    },
-
-    stop() {
-      cancelCurrentPlayback?.('cancelled');
-      audio.pause();
-      audio.currentTime = 0;
-    },
   };
 }

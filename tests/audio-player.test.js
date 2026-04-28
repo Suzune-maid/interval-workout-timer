@@ -281,6 +281,38 @@ test('createNarrationPlayer stopActivePlayback 會中止目前的倒數引導播
   assert.equal(replay, null);
 });
 
+test('createNarrationPlayer 會透過 audio engine abstraction 暴露 track state 與 stopTrack', async () => {
+  installFakeAudio();
+  const player = buildPlayerWithGuidance();
+
+  let resolved = false;
+  const guidancePromise = player.playCountdownGuidance(0, 0).then((result) => {
+    resolved = result;
+  });
+
+  await nextTurn();
+  assert.deepEqual(player.getTrackState('guidance-primary'), {
+    track: 'guidance-primary',
+    status: 'playing',
+    src: INHALE_CUE,
+  });
+
+  player.stopTrack('guidance-primary');
+  await guidancePromise;
+
+  assert.equal(resolved, null);
+  assert.deepEqual(player.getTrackState('guidance-primary'), {
+    track: 'guidance-primary',
+    status: 'idle',
+    src: null,
+  });
+  assert.deepEqual(player.getTrackState('narration'), {
+    track: 'narration',
+    status: 'idle',
+    src: null,
+  });
+});
+
 test('createNarrationPlayer 會在倒數結束時播放結束音效，且等音效播完才結束', async () => {
   const { events, instances } = installFakeAudio();
 

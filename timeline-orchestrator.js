@@ -61,7 +61,11 @@ export function createTimelineOrchestrator({
     stopTimer();
 
     const player = getPlayer();
-    player?.stopActivePlayback?.();
+    if (player?.stopAll) {
+      player.stopAll();
+    } else {
+      player?.stopActivePlayback?.();
+    }
 
     if (resetNarration) {
       player?.reset?.();
