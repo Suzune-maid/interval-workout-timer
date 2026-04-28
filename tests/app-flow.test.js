@@ -324,12 +324,14 @@ function installFakeAudio() {
   return { events, instances };
 }
 
-function buildManifestForEntry(entry) {
+function buildManifestForEntry(entry, options = {}) {
+  const audioDurations = options.audioDurations ?? {};
+
   return {
     entries: buildNarrationEntries(entry.session).map((item) => ({
       ...item,
       audioFile: `./audio/today/generated/${item.id}.wav`,
-      audioDurationSeconds: Math.min(item.durationSeconds, 12),
+      audioDurationSeconds: audioDurations[item.id] ?? Math.min(item.durationSeconds, 12),
     })),
   };
 }
@@ -357,14 +359,18 @@ function findDayButton(root, dayOffset) {
   return null;
 }
 
-async function bootApp() {
-  const restoreDate = installFakeDate();
+async function bootApp({
+  isoString = '2026-04-27T08:00:00Z',
+  manifestEntry = 0,
+  manifestOptions = {},
+} = {}) {
+  const restoreDate = installFakeDate(isoString);
   const calendar = buildProgramCalendar('2026-04-27');
-  const todayEntry = calendar[0];
+  const todayEntry = typeof manifestEntry === 'number' ? calendar[manifestEntry] : manifestEntry;
   const document = installFakeDom();
   const timer = installFakeWindow();
   const audio = installFakeAudio();
-  installFakeFetch(buildManifestForEntry(todayEntry));
+  installFakeFetch(buildManifestForEntry(todayEntry, manifestOptions));
 
   const moduleUrl = `${pathToFileURL(path.join(PROJECT_ROOT, 'app.js')).href}?test=${Date.now()}-${Math.random()}`;
   await import(moduleUrl);
@@ -486,6 +492,37 @@ test('倒數 heartbeat 延遲後，畫面秒數會用 monotonic clock 正確追�
     await timer.advance(3200, { coalesce: true });
 
     assert.equal(timeDisplay.textContent, '00:57');
+  } finally {
+    restoreDate();
+  }
+});
+
+test('今天是 2026-04-28 時，app 會載入正式訓練日的專用語音素材', async () => {
+  const { calendar, document, restoreDate } = await bootApp({
+    isoString: '2026-04-28T08:00:00Z',
+    manifestEntry: 1,
+    manifestOptions: {
+      audioDurations: {
+        'phase-01': 13.56,
+        'phase-02': 9.84,
+        'phase-03': 12.48,
+        'phase-04': 11.72,
+        'phase-05': 10.68,
+      },
+    },
+  });
+  try {
+    const title = document.querySelector('#today-title');
+    const phaseLabel = document.querySelector('#phase-label');
+    const narrationStatus = document.querySelector('#narration-status');
+    const narrationText = document.querySelector('#narration-text');
+    const guidanceLive = document.querySelector('#guidance-live');
+
+    assert.equal(title.textContent, '正式訓練日');
+    assert.equal(phaseLabel.textContent, calendar[1].session.phases[0].label);
+    assert.equal(narrationStatus.textContent, '語音起點：00:00 ｜ 音檔長度：約 13.56 秒');
+    assert.match(narrationText.textContent, /現在開始：準備期。這一段約 2 分鐘。呼吸、放鬆與設定今天只做地圖建立。/);
+    assert.equal(guidanceLive.textContent, '這一段目前沒有倒數中的教練引導語音。');
   } finally {
     restoreDate();
   }
