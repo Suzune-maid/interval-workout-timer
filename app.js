@@ -334,7 +334,7 @@ async function beginPhaseCountdown({ playbackMode = 'full' } = {}) {
   renderGuidanceLive();
 
   if (hasNarrationAudio) {
-    await playPhaseIntroForCurrentPhase(playbackMode);
+    await playPhaseIntroForCurrentPhase(playbackMode, sequenceId);
   }
 
   if (sequenceId !== phaseSequenceId || state.isComplete) {
@@ -393,7 +393,7 @@ function startCountdownLoop(sequenceId) {
     statusMessage.textContent = hasNarrationAudioForSelectedDay()
       ? `${finishedPhase?.label ?? '目前段落'} 倒數結束，播放結束音效。`
       : `${finishedPhase?.label ?? '目前段落'} 倒數結束，準備切換下一段。`;
-    await playPhaseEndCue();
+    await playPhaseEndCue(sequenceId);
 
     if (sequenceId !== phaseSequenceId) {
       return;
@@ -440,40 +440,48 @@ async function maybePlayCountdownGuidance(phaseIndex, elapsedSecond, sequenceId)
   }
 }
 
-async function playPhaseIntroForCurrentPhase(playbackMode = 'full') {
+async function playPhaseIntroForCurrentPhase(playbackMode = 'full', sequenceId = phaseSequenceId) {
   renderNarrationInfo();
   renderGuidanceLive();
 
   if (!hasNarrationAudioForSelectedDay()) {
-    narrationStatusElement.textContent = '這一天目前只有文字腳本，倒數會直接開始。';
+    if (sequenceId === phaseSequenceId) {
+      narrationStatusElement.textContent = '這一天目前只有文字腳本，倒數會直接開始。';
+    }
     return null;
   }
 
   try {
     const entry = await narrationPlayer.playPhaseIntro(state.currentPhaseIndex, playbackMode);
-    if (entry) {
+    if (entry && sequenceId === phaseSequenceId) {
       narrationStatusElement.textContent = playbackMode === 'full'
         ? `階段說明與開始音效已播完：${entry.phaseLabel}`
         : `開始音效已播完：${entry.phaseLabel}`;
     }
     return entry;
   } catch (error) {
-    narrationStatusElement.textContent = '語音或開始音效播放失敗，仍會直接開始倒數。';
+    if (sequenceId === phaseSequenceId) {
+      narrationStatusElement.textContent = '語音或開始音效播放失敗，仍會直接開始倒數。';
+    }
     return null;
   }
 }
 
-async function playPhaseEndCue() {
+async function playPhaseEndCue(sequenceId = phaseSequenceId) {
   if (!hasNarrationAudioForSelectedDay()) {
     return null;
   }
 
   try {
     await narrationPlayer.playPhaseEndCue();
-    narrationStatusElement.textContent = '結束音效已播完，準備切換下一段。';
+    if (sequenceId === phaseSequenceId) {
+      narrationStatusElement.textContent = '結束音效已播完，準備切換下一段。';
+    }
     return true;
   } catch (error) {
-    narrationStatusElement.textContent = '結束音效播放失敗，仍會繼續切換到下一段。';
+    if (sequenceId === phaseSequenceId) {
+      narrationStatusElement.textContent = '結束音效播放失敗，仍會繼續切換到下一段。';
+    }
     return false;
   }
 }
