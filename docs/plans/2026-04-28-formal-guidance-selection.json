@@ -1,0 +1,61 @@
+{
+  "sourceDate": "2026-04-28",
+  "sessionTitle": "正式訓練日",
+  "voiceModel": "google/gemini-3.1-flash-tts-preview",
+  "voice": "Leda",
+  "styles": {
+    "whispery": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。",
+    "teasing-plus": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
+  },
+  "phases": [
+    {
+      "phaseId": "phase-01",
+      "summary": "曖昧耳語暖身，共 4 句",
+      "events": [
+        {"clipId": "whisper-wake", "style": "whispery", "startAtSecond": 0, "text": "先讓感覺慢慢醒來。"},
+        {"clipId": "whisper-just-right", "style": "whispery", "startAtSecond": 25, "text": "現在這樣……剛剛好。"},
+        {"clipId": "whisper-hold", "style": "whispery", "startAtSecond": 55, "text": "很好……先停在這裡。"},
+        {"clipId": "whisper-linger", "style": "whispery", "startAtSecond": 85, "text": "把這種想靠近的感覺，先多留一下。"}
+      ]
+    },
+    {
+      "phaseId": "phase-02",
+      "summary": "正式案引導：4 句加強挑逗＋2 句曖昧耳語",
+      "events": [
+        {"clipId": "tease-clear-enough", "style": "teasing-plus", "startAtSecond": 15, "text": "到四五分了，感覺已經夠清楚，先不要急著再往上撲。"},
+        {"clipId": "tease-not-more", "style": "teasing-plus", "startAtSecond": 45, "text": "很好，就先停在這裡，不要再多了。"},
+        {"clipId": "whisper-heat-hold", "style": "whispery", "startAtSecond": 75, "text": "這個熱度……先抱住。"},
+        {"clipId": "tease-dont-give", "style": "teasing-plus", "startAtSecond": 105, "text": "先把這種想要維持住，不要太快把自己交出去。"},
+        {"clipId": "whisper-feeling", "style": "whispery", "startAtSecond": 135, "text": "嗯……已經很有感覺了。"},
+        {"clipId": "tease-want-more", "style": "teasing-plus", "startAtSecond": 160, "text": "你不用立刻得到更多，只要先讓自己更想要。"}
+      ]
+    },
+    {
+      "phaseId": "phase-03",
+      "summary": "正式案引導：4 句加強挑逗＋2 句曖昧耳語",
+      "events": [
+        {"clipId": "tease-five-six", "style": "teasing-plus", "startAtSecond": 20, "text": "五到六分，很剛好，已經開始想要更多了，對吧。"},
+        {"clipId": "tease-hold-self", "style": "teasing-plus", "startAtSecond": 55, "text": "這個區間最迷人，因為你明明想更近，卻還能留住自己。"},
+        {"clipId": "whisper-slow-near", "style": "whispery", "startAtSecond": 90, "text": "快靠近了……先慢一點。"},
+        {"clipId": "tease-hang-desire", "style": "teasing-plus", "startAtSecond": 130, "text": "越是想快一點，就越先慢下來，先留在這裡。"},
+        {"clipId": "whisper-stay-clear", "style": "whispery", "startAtSecond": 170, "text": "先把清醒留著。"},
+        {"clipId": "tease-keep-yourself", "style": "teasing-plus", "startAtSecond": 210, "text": "先留住你自己，再決定要不要更近。"}
+      ]
+    },
+    {
+      "phaseId": "phase-04",
+      "summary": "正式案引導：2 句加強挑逗＋2 句曖昧耳語",
+      "events": [
+        {"clipId": "tease-six-seven", "style": "teasing-plus", "startAtSecond": 25, "text": "六到七分了，會有點忍不住，這時候最要小心，也最有味道。"},
+        {"clipId": "tease-doorway", "style": "teasing-plus", "startAtSecond": 75, "text": "靠近七八分了，先別急，讓它在門口多停一下。"},
+        {"clipId": "whisper-doorway", "style": "whispery", "startAtSecond": 130, "text": "就停在門口……先不要再多。"},
+        {"clipId": "whisper-step-back", "style": "whispery", "startAtSecond": 190, "text": "退半步……就好。"}
+      ]
+    },
+    {
+      "phaseId": "phase-05",
+      "summary": null,
+      "events": []
+    }
+  ]
+}

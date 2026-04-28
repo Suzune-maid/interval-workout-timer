@@ -18,17 +18,32 @@ function findEntry(document, id) {
   return document.entries.find((item) => item.id === id);
 }
 
-test('today narration manifest 會用 timeline/event schema 表達正式訓練日，且不重複保存 legacy guidance events/clips', async () => {
+test('today narration manifest 會把正式訓練日的正式案 guidance 掛到 phase-01 到 phase-04', async () => {
   const raw = await readJson(TODAY_MANIFEST_PATH);
-  const entry = findEntry(raw, 'phase-02');
+  const phase01 = findEntry(raw, 'phase-01');
+  const phase02 = findEntry(raw, 'phase-02');
+  const phase03 = findEntry(raw, 'phase-03');
+  const phase04 = findEntry(raw, 'phase-04');
+  const phase05 = findEntry(raw, 'phase-05');
 
   assert.equal(raw.schemaVersion, 'timeline-events-v1');
   assert.equal(raw.sourceDate, '2026-04-28');
   assert.equal(raw.sessionTitle, '正式訓練日');
-  assert.ok(entry, 'phase-02 應存在於 today narration manifest');
-  assert.deepEqual(entry.timelineClips, {});
-  assert.deepEqual(entry.timelineEvents, []);
-  assert.equal(entry.countdownGuidance, undefined);
+
+  assert.equal(phase01.countdownGuidance?.summary, '曖昧耳語暖身，共 4 句');
+  assert.equal(phase02.countdownGuidance?.summary, '正式案引導：4 句加強挑逗＋2 句曖昧耳語');
+  assert.equal(phase03.countdownGuidance?.summary, '正式案引導：4 句加強挑逗＋2 句曖昧耳語');
+  assert.equal(phase04.countdownGuidance?.summary, '正式案引導：2 句加強挑逗＋2 句曖昧耳語');
+  assert.equal(phase05.countdownGuidance, undefined);
+
+  assert.deepEqual(phase01.timelineEvents.map((item) => item.startAtSecond), [0, 25, 55, 85]);
+  assert.deepEqual(phase02.timelineEvents.map((item) => item.startAtSecond), [15, 45, 75, 105, 135, 160]);
+  assert.deepEqual(phase03.timelineEvents.map((item) => item.startAtSecond), [20, 55, 90, 130, 170, 210]);
+  assert.deepEqual(phase04.timelineEvents.map((item) => item.startAtSecond), [25, 75, 130, 190]);
+  assert.deepEqual(phase05.timelineEvents, []);
+
+  assert.deepEqual(Object.keys(phase01.timelineClips), ['whisper-wake', 'whisper-just-right', 'whisper-hold', 'whisper-linger']);
+  assert.deepEqual(Object.keys(phase04.timelineClips), ['tease-six-seven', 'tease-doorway', 'whisper-doorway', 'whisper-step-back']);
 });
 
 test('normalizeNarrationManifest 仍會從 guided library 的 timeline/event schema 還原相容 countdownGuidance 檢視資料', async () => {
@@ -61,25 +76,29 @@ test('normalizeNarrationManifest 仍會從 guided library 的 timeline/event sch
   );
 });
 
-test('today narration source、formal library manifest 與 library index 會同步使用 timeline/event schema', async () => {
+test('today narration source、formal library manifest 與 library index 會同步保存正式案 guidance clips / events', async () => {
   const [source, formalLibraryManifest, libraryIndex] = await Promise.all([
     readJson(TODAY_SOURCE_PATH),
     readJson(FORMAL_LIBRARY_MANIFEST_PATH),
     readJson(LIBRARY_INDEX_PATH),
   ]);
 
-  const sourceEntry = findEntry(source, 'phase-03');
-  const libraryEntry = findEntry(formalLibraryManifest, 'phase-05');
+  const sourcePhase02 = findEntry(source, 'phase-02');
+  const sourcePhase03 = findEntry(source, 'phase-03');
+  const libraryPhase04 = findEntry(formalLibraryManifest, 'phase-04');
+  const libraryPhase05 = findEntry(formalLibraryManifest, 'phase-05');
   const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-04-28');
 
   assert.equal(source.schemaVersion, 'timeline-events-v1');
   assert.equal(formalLibraryManifest.schemaVersion, 'timeline-events-v1');
-  assert.ok(Array.isArray(sourceEntry.timelineEvents), 'source phase-03 應使用 timelineEvents');
-  assert.ok(Array.isArray(libraryEntry.timelineEvents), 'formal library phase-05 應使用 timelineEvents');
-  assert.deepEqual(sourceEntry.timelineEvents, []);
-  assert.deepEqual(libraryEntry.timelineEvents, []);
-  assert.equal(sourceEntry.countdownGuidance, undefined);
-  assert.equal(libraryEntry.countdownGuidance, undefined);
+  assert.equal(sourcePhase02.countdownGuidance?.summary, '正式案引導：4 句加強挑逗＋2 句曖昧耳語');
+  assert.equal(sourcePhase03.timelineEvents.length, 6);
+  assert.equal(libraryPhase04.countdownGuidance?.summary, '正式案引導：2 句加強挑逗＋2 句曖昧耳語');
+  assert.equal(libraryPhase04.timelineEvents.length, 4);
+  assert.equal(libraryPhase04.timelineClips['whisper-doorway']?.text, '就停在門口……先不要再多。');
+  assert.equal(libraryPhase04.timelineClips['whisper-step-back']?.text, '退半步……就好。');
+  assert.deepEqual(libraryPhase05.timelineEvents, []);
+  assert.equal(libraryPhase05.countdownGuidance, undefined);
   assert.ok(libraryItem, 'library index 應包含 2026-04-28 formal day 條目');
   assert.equal(libraryItem.schemaVersion, 'timeline-events-v1');
   assert.equal(libraryItem.timelineSchemaFile, 'audio/schema/timeline-event.schema.json');

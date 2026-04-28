@@ -1,0 +1,258 @@
+{
+  "generatedAt": "2026-04-28T17:28:56+08:00",
+  "sourceDate": "2026-04-28",
+  "sessionTitle": "正式訓練日",
+  "voiceModel": "google/gemini-3.1-flash-tts-preview",
+  "voice": "Leda",
+  "phases": [
+    {
+      "phaseId": "phase-01",
+      "summary": "曖昧耳語暖身，共 4 句",
+      "clips": [
+        {
+          "clipId": "whisper-wake",
+          "style": "whispery",
+          "startAtSecond": 0,
+          "text": "先讓感覺慢慢醒來。",
+          "audioDurationSeconds": 4.36,
+          "audioSha256": "2f7b67ab05a07ff2939656c516f034794396939692de9b9fff22e68b4b560945",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-01-guidance-01.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-01-guidance-01.wav"
+        },
+        {
+          "clipId": "whisper-just-right",
+          "style": "whispery",
+          "startAtSecond": 25,
+          "text": "現在這樣……剛剛好。",
+          "audioDurationSeconds": 3.4,
+          "audioSha256": "b91c951b01fdd009836e9656e4a398599fcdceaad9b6e433fdecb93d492a555c",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-01-guidance-02.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-01-guidance-02.wav"
+        },
+        {
+          "clipId": "whisper-hold",
+          "style": "whispery",
+          "startAtSecond": 55,
+          "text": "很好……先停在這裡。",
+          "audioDurationSeconds": 3.16,
+          "audioSha256": "5d4e373a5a3c19d8faa4a5c229bbe4aba3249a458d839aab8f6dfd9a32ed40f9",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-01-guidance-03.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-01-guidance-03.wav"
+        },
+        {
+          "clipId": "whisper-linger",
+          "style": "whispery",
+          "startAtSecond": 85,
+          "text": "把這種想靠近的感覺，先多留一下。",
+          "audioDurationSeconds": 5.76,
+          "audioSha256": "20e8ad84b23c8abfd3dd68edee7af91d87442d4bb43e8d762495e3b23d2d69ba",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-01-guidance-04.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-01-guidance-04.wav"
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-02",
+      "summary": "正式案引導：4 句加強挑逗＋2 句曖昧耳語",
+      "clips": [
+        {
+          "clipId": "tease-clear-enough",
+          "style": "teasing-plus",
+          "startAtSecond": 15,
+          "text": "到四五分了，感覺已經夠清楚，先不要急著再往上撲。",
+          "audioDurationSeconds": 8.04,
+          "audioSha256": "6b0686ff5fa42e26b02006d07f2cc4937a1c0765a479e637c657d6c5a5cf6b53",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-02-guidance-01.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-01.wav"
+        },
+        {
+          "clipId": "tease-not-more",
+          "style": "teasing-plus",
+          "startAtSecond": 45,
+          "text": "很好，就先停在這裡，不要再多了。",
+          "audioDurationSeconds": 4.92,
+          "audioSha256": "f17429bc66d8fcc11fcaf518abd7184b74530aa7ff285845e66b797eaadee1c1",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-02-guidance-02.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-02.wav"
+        },
+        {
+          "clipId": "whisper-heat-hold",
+          "style": "whispery",
+          "startAtSecond": 75,
+          "text": "這個熱度……先抱住。",
+          "audioDurationSeconds": 4.12,
+          "audioSha256": "00399bc57b073e4ab00cb546eccc5f61746273c20186d0b70e39f5398a7cf7d3",
+          "attempts": 2,
+          "todayAudioFile": "audio/today/guidance/phase-02-guidance-03.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-03.wav"
+        },
+        {
+          "clipId": "tease-dont-give",
+          "style": "teasing-plus",
+          "startAtSecond": 105,
+          "text": "先把這種想要維持住，不要太快把自己交出去。",
+          "audioDurationSeconds": 6.24,
+          "audioSha256": "7453bb98aa5100b6fd1fbeee051829937eeb881935b4f8508bcda43f4d0ab4c2",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-02-guidance-04.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-04.wav"
+        },
+        {
+          "clipId": "whisper-feeling",
+          "style": "whispery",
+          "startAtSecond": 135,
+          "text": "嗯……已經很有感覺了。",
+          "audioDurationSeconds": 3.88,
+          "audioSha256": "9f32387b5b9faf3e984339682d7ef8a691cae97617cca1e16f606cddcf32dda9",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-02-guidance-05.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-05.wav"
+        },
+        {
+          "clipId": "tease-want-more",
+          "style": "teasing-plus",
+          "startAtSecond": 160,
+          "text": "你不用立刻得到更多，只要先讓自己更想要。",
+          "audioDurationSeconds": 8.8,
+          "audioSha256": "2495046003a50827148120bc3c6bd5a68307e39a97e7ccc2f22236af9b1b2c38",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-02-guidance-06.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-06.wav"
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-03",
+      "summary": "正式案引導：4 句加強挑逗＋2 句曖昧耳語",
+      "clips": [
+        {
+          "clipId": "tease-five-six",
+          "style": "teasing-plus",
+          "startAtSecond": 20,
+          "text": "五到六分，很剛好，已經開始想要更多了，對吧。",
+          "audioDurationSeconds": 7.16,
+          "audioSha256": "69cf0b1d0ed401ae9bb475486ee7b77cb9d10b3996b0a8e990b2c70bba44de5e",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-03-guidance-01.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-01.wav"
+        },
+        {
+          "clipId": "tease-hold-self",
+          "style": "teasing-plus",
+          "startAtSecond": 55,
+          "text": "這個區間最迷人，因為你明明想更近，卻還能留住自己。",
+          "audioDurationSeconds": 7.8,
+          "audioSha256": "451f12ffd69ff340bcc1801ed4b203d3baa7fad41682a88d7ad2db592013f903",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-03-guidance-02.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-02.wav"
+        },
+        {
+          "clipId": "whisper-slow-near",
+          "style": "whispery",
+          "startAtSecond": 90,
+          "text": "快靠近了……先慢一點。",
+          "audioDurationSeconds": 3.44,
+          "audioSha256": "df744c679a05a846cff1aed58b0899774136091dce4313948d081ec61713ebc3",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-03-guidance-03.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-03.wav"
+        },
+        {
+          "clipId": "tease-hang-desire",
+          "style": "teasing-plus",
+          "startAtSecond": 130,
+          "text": "越是想快一點，就越先慢下來，先留在這裡。",
+          "audioDurationSeconds": 6.48,
+          "audioSha256": "560b2f65f9773bb16650dfa70cb00f3edb8d5f7c0e538f4eabe7b35222f4eb59",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-03-guidance-04.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-04.wav"
+        },
+        {
+          "clipId": "whisper-stay-clear",
+          "style": "whispery",
+          "startAtSecond": 170,
+          "text": "先把清醒留著。",
+          "audioDurationSeconds": 2.64,
+          "audioSha256": "a1a6f58e5afad438a86f7df33187a84f4b3b45fa66bebdd7a2ec288cdfbac8b8",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-03-guidance-05.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-05.wav"
+        },
+        {
+          "clipId": "tease-keep-yourself",
+          "style": "teasing-plus",
+          "startAtSecond": 210,
+          "text": "先留住你自己，再決定要不要更近。",
+          "audioDurationSeconds": 6.12,
+          "audioSha256": "7c85fe7f4e368d30a36ab75450d5b1e93133e6526fde2e63143c0174d928d2df",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-03-guidance-06.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-06.wav"
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-04",
+      "summary": "正式案引導：2 句加強挑逗＋2 句曖昧耳語",
+      "clips": [
+        {
+          "clipId": "tease-six-seven",
+          "style": "teasing-plus",
+          "startAtSecond": 25,
+          "text": "六到七分了，會有點忍不住，這時候最要小心，也最有味道。",
+          "audioDurationSeconds": 9.28,
+          "audioSha256": "22f443488475f629d2f00372577dce887ddbfc08b086190a680aa6ac4a7a49a7",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-04-guidance-01.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-04-guidance-01.wav"
+        },
+        {
+          "clipId": "tease-doorway",
+          "style": "teasing-plus",
+          "startAtSecond": 75,
+          "text": "靠近七八分了，先別急，讓它在門口多停一下。",
+          "audioDurationSeconds": 8.36,
+          "audioSha256": "8a7edfe8e2f5984b503bb42c218fa24ae39c3cc6d6abaab9f563213e81f51f1f",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-04-guidance-02.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-04-guidance-02.wav"
+        },
+        {
+          "clipId": "whisper-doorway",
+          "style": "whispery",
+          "startAtSecond": 130,
+          "text": "就停在門口……先不要再多。",
+          "audioDurationSeconds": 4.64,
+          "audioSha256": "fc91c53d77188ff69d7579a57c5fe8b17072553acd50cddd4cc08de08eea2514",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-04-guidance-03.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-04-guidance-03.wav"
+        },
+        {
+          "clipId": "whisper-step-back",
+          "style": "whispery",
+          "startAtSecond": 190,
+          "text": "退半步……就好。",
+          "audioDurationSeconds": 2.88,
+          "audioSha256": "f2f330576431849cad7f728d483acb93f7c2208069e611368ac8a5e1fb7230f5",
+          "attempts": 1,
+          "todayAudioFile": "audio/today/guidance/phase-04-guidance-04.wav",
+          "libraryAudioFile": "audio/library/2026-04-28/guidance/phase-04-guidance-04.wav"
+        }
+      ]
+    },
+    {
+      "phaseId": "phase-05",
+      "summary": null,
+      "clips": []
+    }
+  ]
+}
