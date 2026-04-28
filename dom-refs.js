@@ -1,0 +1,25 @@
+export function collectDomRefs(document) {
+  return {
+    todayDateElement: document.querySelector('#today-date'),
+    todayWeekdayElement: document.querySelector('#today-weekday'),
+    todayFocusElement: document.querySelector('#today-focus'),
+    todaySummaryElement: document.querySelector('#today-summary'),
+    todayTitleElement: document.querySelector('#today-title'),
+    todayDurationElement: document.querySelector('#today-duration'),
+    todayNotesElement: document.querySelector('#today-notes'),
+    phaseLabel: document.querySelector('#phase-label'),
+    phaseProgress: document.querySelector('#phase-progress'),
+    phaseCue: document.querySelector('#phase-cue'),
+    timeDisplay: document.querySelector('#time-display'),
+    statusMessage: document.querySelector('#status-message'),
+    phasePlan: document.querySelector('#phase-plan'),
+    scheduleGrid: document.querySelector('#schedule-grid'),
+    narrationStatusElement: document.querySelector('#narration-status'),
+    narrationTextElement: document.querySelector('#narration-text'),
+    guidanceLiveElement: document.querySelector('#guidance-live'),
+    startButton: document.querySelector('#start-button'),
+    pauseButton: document.querySelector('#pause-button'),
+    resetButton: document.querySelector('#reset-button'),
+    skipButton: document.querySelector('#skip-button'),
+  };
+}

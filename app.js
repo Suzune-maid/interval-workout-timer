@@ -1,72 +1,52 @@
 import {
   advancePhase,
-  buildNarrationEntries,
   buildProgramCalendar,
-  createSelectedDayState,
-  createSessionStateFromPhases,
   findNarrationEntryByPhase,
   formatClock,
   resolveProgramDay,
-  selectCalendarEntry,
 } from './timer-core.js';
 import { createNarrationPlayer, loadNarrationManifest } from './audio-player.js';
+import { collectDomRefs } from './dom-refs.js';
+import { createSessionController } from './session-controller.js';
+import { renderSchedule, renderStaticContent } from './schedule-view.js';
+import {
+  renderGuidanceLive,
+  renderNarrationInfo,
+  renderPhasePlan,
+  renderTimer,
+} from './timer-view.js';
 
 const PROGRAM_START_DATE = '2026-04-27';
 
-const todayDateElement = document.querySelector('#today-date');
-const todayWeekdayElement = document.querySelector('#today-weekday');
-const todayFocusElement = document.querySelector('#today-focus');
-const todaySummaryElement = document.querySelector('#today-summary');
-const todayTitleElement = document.querySelector('#today-title');
-const todayDurationElement = document.querySelector('#today-duration');
-const todayNotesElement = document.querySelector('#today-notes');
-const phaseLabel = document.querySelector('#phase-label');
-const phaseProgress = document.querySelector('#phase-progress');
-const phaseCue = document.querySelector('#phase-cue');
-const timeDisplay = document.querySelector('#time-display');
-const statusMessage = document.querySelector('#status-message');
-const phasePlan = document.querySelector('#phase-plan');
-const scheduleGrid = document.querySelector('#schedule-grid');
-const narrationStatusElement = document.querySelector('#narration-status');
-const narrationTextElement = document.querySelector('#narration-text');
-const guidanceLiveElement = document.querySelector('#guidance-live');
-const startButton = document.querySelector('#start-button');
-const pauseButton = document.querySelector('#pause-button');
-const resetButton = document.querySelector('#reset-button');
-const skipButton = document.querySelector('#skip-button');
-
+const refs = collectDomRefs(document);
 const calendar = buildProgramCalendar(PROGRAM_START_DATE);
 const todayInfo = resolveProgramDay(PROGRAM_START_DATE, getLocalDateString(new Date()));
 const todayEntry = calendar[todayInfo.dayOffset] ?? calendar[0];
+const sessionController = createSessionController({
+  calendar,
+  todayInfo,
+  todayEntry,
+});
 
-let daySelection = createSelectedDayState(calendar, todayInfo.dayOffset);
-let fallbackNarrationEntries = buildNarrationEntries(selectedEntry().session);
-let state = createSessionStateFromPhases(selectedEntry().session.phases);
 let timerId = null;
 let narrationPlayer = null;
 let narrationManifest = null;
 let isPreparingPhase = false;
 let phaseSequenceId = 0;
 
-renderStaticContent();
-renderTimer();
-renderPhasePlan();
-renderSchedule();
-renderNarrationInfo();
-renderGuidanceLive();
+renderAll();
 initializeNarration().catch((error) => {
-  narrationStatusElement.textContent = '語音素材讀取失敗，先顯示腳本內容。';
-  narrationTextElement.textContent = error.message;
-  renderGuidanceLive();
+  refs.narrationStatusElement.textContent = '語音素材讀取失敗，先顯示腳本內容。';
+  refs.narrationTextElement.textContent = error.message;
+  syncGuidanceLive();
 });
 
-startButton.addEventListener('click', async () => {
-  if (state.isComplete) {
+refs.startButton.addEventListener('click', async () => {
+  if (getState().isComplete) {
     cancelActiveTimeline({ resetNarration: true });
-    state = createSessionStateFromPhases(selectedEntry().session.phases);
-    renderTimer();
-    renderPhasePlan();
-    renderNarrationInfo();
+    sessionController.resetSessionState();
+    syncTimerViews();
+    syncNarrationInfo();
   }
 
   if (timerId || isPreparingPhase) {
@@ -78,16 +58,16 @@ startButton.addEventListener('click', async () => {
   });
 });
 
-pauseButton.addEventListener('click', () => {
+refs.pauseButton.addEventListener('click', () => {
   if (isPreparingPhase) {
     cancelActiveTimeline({ resetNarration: true });
-    state = {
-      ...state,
+    sessionController.setState({
+      ...getState(),
       isRunning: false,
-    };
-    statusMessage.textContent = '已暫停，目前停在倒數開始前。';
-    renderTimer();
-    renderGuidanceLive();
+    });
+    refs.statusMessage.textContent = '已暫停，目前停在倒數開始前。';
+    syncTimerViews();
+    syncGuidanceLive();
     return;
   }
 
@@ -96,413 +76,131 @@ pauseButton.addEventListener('click', () => {
   }
 
   cancelActiveTimeline();
-  state = {
-    ...state,
+  sessionController.setState({
+    ...getState(),
     isRunning: false,
-  };
-  statusMessage.textContent = '已暫停。重新開始時會先播開始音效，再繼續倒數。';
-  renderTimer();
-  renderGuidanceLive();
+  });
+  refs.statusMessage.textContent = '已暫停。重新開始時會先播開始音效，再繼續倒數。';
+  syncTimerViews();
+  syncGuidanceLive();
 });
 
-resetButton.addEventListener('click', () => {
+refs.resetButton.addEventListener('click', () => {
   cancelActiveTimeline({ resetNarration: true });
-  state = createSessionStateFromPhases(selectedEntry().session.phases);
-  statusMessage.textContent = `已重設為第 ${selectedEntry().weekNumber} 週第 ${selectedEntry().dayNumber} 天的起始課表。`;
-  renderTimer();
-  renderPhasePlan();
-  renderNarrationInfo();
-  renderGuidanceLive();
-});
-
-skipButton.addEventListener('click', () => {
-  cancelActiveTimeline({ resetNarration: true });
-  state = advancePhase(state);
-
-  if (state.isComplete) {
-    statusMessage.textContent = '已跳到目前課表最後。這一天的主要流程完成。';
-  } else {
-    statusMessage.textContent = `已切換到 ${currentPhase().label}。按開始後會先播階段說明，再開始倒數。`;
-  }
-
-  renderTimer();
-  renderPhasePlan();
-  renderNarrationInfo();
-  renderGuidanceLive();
-});
-
-function renderStaticContent() {
+  sessionController.resetSessionState();
   const entry = selectedEntry();
-  todayDateElement.textContent = formatDisplayDate(entry.date);
-  todayWeekdayElement.textContent = `第 ${entry.weekNumber} 週・第 ${entry.dayNumber} 天（週${entry.weekdayLabel}）`;
-  todayFocusElement.textContent = entry.session.weekFocus;
-  todaySummaryElement.textContent = entry.session.summary;
-  todayTitleElement.textContent = entry.session.title;
-  todayDurationElement.textContent = `建議時間：${entry.session.durationLabel}`;
+  refs.statusMessage.textContent = `已重設為第 ${entry.weekNumber} 週第 ${entry.dayNumber} 天的起始課表。`;
+  syncTimerViews();
+  syncNarrationInfo();
+  syncGuidanceLive();
+});
 
-  todayNotesElement.innerHTML = '';
-  entry.session.notes.forEach((note) => {
-    const item = document.createElement('li');
-    item.textContent = note;
-    todayNotesElement.appendChild(item);
-  });
+refs.skipButton.addEventListener('click', () => {
+  cancelActiveTimeline({ resetNarration: true });
+  sessionController.setState(advancePhase(getState()));
 
-  if (todayInfo.isAfterProgram && entry.dayOffset === todayEntry.dayOffset) {
-    statusMessage.textContent = '6 週主計畫已走完，目前先停在最後一天內容，若要再跑一輪可之後改起始日。';
-  }
-}
-
-function renderTimer() {
-  const phase = currentPhase();
-  const totalPhases = state.phases.length;
-
-  phaseLabel.textContent = phase?.label ?? '目前課表完成';
-  phaseProgress.textContent = state.isComplete
-    ? `共 ${totalPhases} 段，已完成`
-    : `第 ${state.currentPhaseIndex + 1} / ${totalPhases} 段`;
-  phaseCue.textContent = phase?.cue ?? '這一天的階段都已完成，最後做身體掃描即可。';
-  timeDisplay.textContent = formatClock(state.remainingSeconds);
-  startButton.disabled = state.isRunning || isPreparingPhase;
-  pauseButton.disabled = !state.isRunning && !isPreparingPhase;
-}
-
-function renderNarrationInfo() {
-  const entry = currentNarrationEntry();
-
-  if (!entry) {
-    narrationStatusElement.textContent = '目前沒有對應語音。';
-    narrationTextElement.textContent = '若之後要補更多日期，只要沿用同樣的 manifest 格式即可。';
-    return;
+  if (getState().isComplete) {
+    refs.statusMessage.textContent = '已跳到目前課表最後。這一天的主要流程完成。';
+  } else {
+    refs.statusMessage.textContent = `已切換到 ${currentPhase().label}。按開始後會先播階段說明，再開始倒數。`;
   }
 
-  if (!hasNarrationAudioForSelectedDay()) {
-    narrationStatusElement.textContent = '這一天目前只有文字腳本，尚未對應專用語音素材。';
-    narrationTextElement.textContent = entry.text;
-    return;
-  }
-
-  const guidanceSummary = entry.countdownGuidance?.summary
-    ? ` ｜ 倒數引導：${entry.countdownGuidance.summary}`
-    : '';
-
-  narrationStatusElement.textContent = `語音起點：${formatClock(entry.startsAtSecond)} ｜ 音檔長度：約 ${entry.audioDurationSeconds ?? '未記錄'} 秒${guidanceSummary}`;
-  narrationTextElement.textContent = entry.text;
-}
-
-function renderGuidanceLive(message) {
-  if (!guidanceLiveElement) {
-    return;
-  }
-
-  const entry = currentNarrationEntry();
-  const guidance = entry?.countdownGuidance;
-
-  if (message) {
-    guidanceLiveElement.textContent = message;
-    return;
-  }
-
-  if (!guidance) {
-    guidanceLiveElement.textContent = hasNarrationAudioForSelectedDay()
-      ? '這一段目前沒有倒數中的教練引導語音。'
-      : '這一天目前先以文字腳本切換流程，尚未配置對應的中段語音。';
-    return;
-  }
-
-  guidanceLiveElement.textContent = `倒數中會依節奏播放：${guidance.summary}`;
-}
-
-function renderPhasePlan() {
-  phasePlan.innerHTML = '';
-
-  state.phases.forEach((phase, index) => {
-    const item = document.createElement('li');
-    item.className = 'phase-item';
-
-    if (index < state.currentPhaseIndex || state.isComplete) {
-      item.classList.add('complete');
-    }
-
-    if (!state.isComplete && index === state.currentPhaseIndex) {
-      item.classList.add('active');
-    }
-
-    item.innerHTML = `
-      <div class="phase-line">
-        <strong>${phase.label}</strong>
-        <span>${formatClock(phase.seconds)}</span>
-      </div>
-      <p>${phase.cue ?? ''}</p>
-    `;
-
-    phasePlan.appendChild(item);
-  });
-}
-
-function renderSchedule() {
-  scheduleGrid.innerHTML = '';
-
-  const weeks = groupByWeek(calendar);
-
-  weeks.forEach((weekEntries, weekIndex) => {
-    const weekCard = document.createElement('section');
-    weekCard.className = 'week-card';
-
-    const heading = document.createElement('div');
-    heading.className = 'week-heading';
-    heading.innerHTML = `
-      <h3>第 ${weekIndex + 1} 週</h3>
-      <p>${weekEntries[0].session.weekFocus}</p>
-    `;
-    weekCard.appendChild(heading);
-
-    const list = document.createElement('div');
-    list.className = 'week-list';
-
-    weekEntries.forEach((entry) => {
-      const item = document.createElement('button');
-      item.type = 'button';
-      item.className = 'day-card day-card-button';
-      item.dataset.dayOffset = String(entry.dayOffset);
-      item.setAttribute('aria-pressed', String(entry.dayOffset === daySelection.selectedDayOffset));
-
-      if (entry.dayOffset < todayInfo.dayOffset) {
-        item.classList.add('past');
-      }
-
-      if (entry.dayOffset === todayInfo.dayOffset) {
-        item.classList.add('current');
-      }
-
-      if (entry.dayOffset === daySelection.selectedDayOffset) {
-        item.classList.add('selected');
-      }
-
-      item.innerHTML = `
-        <p class="day-top">第 ${entry.dayNumber} 天・週${entry.weekdayLabel}</p>
-        <h4>${entry.session.title}</h4>
-        <p class="day-date">${formatDisplayDate(entry.date)}</p>
-        <p class="day-summary">${entry.session.summary}</p>
-        <p class="day-duration">${entry.session.durationLabel}</p>
-      `;
-
-      item.addEventListener('click', () => {
-        switchSelectedDay(entry.dayOffset);
-      });
-
-      list.appendChild(item);
-    });
-
-    weekCard.appendChild(list);
-    scheduleGrid.appendChild(weekCard);
-  });
-}
+  syncTimerViews();
+  syncNarrationInfo();
+  syncGuidanceLive();
+});
 
 async function initializeNarration() {
   narrationManifest = await loadNarrationManifest();
   narrationPlayer = createNarrationPlayer(narrationManifest);
-  renderNarrationInfo();
-  renderGuidanceLive();
+  syncNarrationInfo();
+  syncGuidanceLive();
 }
 
-function currentNarrationEntry() {
-  const phaseIndex = state.currentPhaseIndex;
-  return findNarrationEntryByPhase(getNarrationEntriesForSelectedDay(), phaseIndex);
+function renderAll() {
+  syncStaticContent();
+  syncTimerViews();
+  syncSchedule();
+  syncNarrationInfo();
+  syncGuidanceLive();
 }
 
-async function beginPhaseCountdown({ playbackMode = 'full' } = {}) {
-  const phase = currentPhase();
-  const hasNarrationAudio = hasNarrationAudioForSelectedDay();
-
-  if (!phase || state.isComplete) {
-    return;
-  }
-
-  const sequenceId = ++phaseSequenceId;
-  isPreparingPhase = true;
-  state = {
-    ...state,
-    isRunning: false,
-  };
-  statusMessage.textContent = hasNarrationAudio
-    ? playbackMode === 'full'
-      ? `先播放 ${phase.label} 的階段說明與開始音效，之後才會開始倒數。`
-      : `準備恢復 ${phase.label}，先播放開始音效。`
-    : `${phase.label} 目前會直接開始倒數，這一天尚未配置專用語音。`;
-  renderTimer();
-  renderPhasePlan();
-  renderGuidanceLive();
-
-  if (hasNarrationAudio) {
-    await playPhaseIntroForCurrentPhase(playbackMode, sequenceId);
-  }
-
-  if (sequenceId !== phaseSequenceId || state.isComplete) {
-    return;
-  }
-
-  isPreparingPhase = false;
-  state = {
-    ...state,
-    isRunning: true,
-  };
-  statusMessage.textContent = playbackMode === 'full'
-    ? `${phase.label} 開始倒數。`
-    : `${phase.label} 已恢復倒數。`;
-  renderTimer();
-  renderPhasePlan();
-  renderGuidanceLive();
-
-  if (hasNarrationAudio) {
-    void maybePlayCountdownGuidance(phase.phaseIndex ?? state.currentPhaseIndex, 0, sequenceId);
-  }
-
-  startCountdownLoop(sequenceId);
+function syncStaticContent() {
+  renderStaticContent({
+    refs,
+    entry: selectedEntry(),
+    todayInfo,
+    todayEntry,
+    formatDisplayDate,
+  });
 }
 
-function startCountdownLoop(sequenceId) {
-  stopTimer();
-  timerId = window.setInterval(async () => {
-    if (sequenceId !== phaseSequenceId) {
-      stopTimer();
-      return;
-    }
-
-    if (state.remainingSeconds > 1) {
-      const phase = currentPhase();
-      const elapsedSecond = phase ? phase.seconds - state.remainingSeconds + 1 : 0;
-
-      state = {
-        ...state,
-        remainingSeconds: state.remainingSeconds - 1,
-      };
-      renderTimer();
-      await maybePlayCountdownGuidance(phase?.phaseIndex ?? state.currentPhaseIndex, elapsedSecond, sequenceId);
-      return;
-    }
-
-    const finishedPhase = currentPhase();
-    stopTimer();
-    state = {
-      ...state,
-      remainingSeconds: 0,
-      isRunning: false,
-    };
-    renderTimer();
-    renderGuidanceLive();
-    statusMessage.textContent = hasNarrationAudioForSelectedDay()
-      ? `${finishedPhase?.label ?? '目前段落'} 倒數結束，播放結束音效。`
-      : `${finishedPhase?.label ?? '目前段落'} 倒數結束，準備切換下一段。`;
-    await playPhaseEndCue(sequenceId);
-
-    if (sequenceId !== phaseSequenceId) {
-      return;
-    }
-
-    state = advancePhase(state);
-    renderTimer();
-    renderPhasePlan();
-    renderGuidanceLive();
-
-    if (state.isComplete) {
-      statusMessage.textContent = '目前課表已跑完。接下來只要做收尾放鬆與身體掃描就好。';
-      renderNarrationInfo();
-      renderGuidanceLive();
-      return;
-    }
-
-    await beginPhaseCountdown({ playbackMode: 'full' });
-  }, 1000);
+function syncTimerViews() {
+  renderTimer({
+    refs,
+    state: getState(),
+    isPreparingPhase,
+    currentPhase: currentPhase(),
+    formatClock,
+  });
+  renderPhasePlan({
+    refs,
+    state: getState(),
+    formatClock,
+  });
 }
 
-async function maybePlayCountdownGuidance(phaseIndex, elapsedSecond, sequenceId) {
-  if (!hasNarrationAudioForSelectedDay()) {
-    return null;
-  }
-
-  try {
-    const result = await narrationPlayer.playCountdownGuidance(phaseIndex, elapsedSecond);
-
-    if (sequenceId !== phaseSequenceId) {
-      return null;
-    }
-
-    if (result?.text) {
-      renderGuidanceLive(`教練引導：${result.text}（第 ${elapsedSecond} 秒）`);
-    }
-
-    return result;
-  } catch (error) {
-    if (sequenceId === phaseSequenceId) {
-      renderGuidanceLive('中段引導語音播放失敗，倒數仍持續進行。');
-    }
-    return null;
-  }
+function syncSchedule() {
+  renderSchedule({
+    refs,
+    calendar,
+    todayInfo,
+    daySelection: sessionController.getDaySelection(),
+    formatDisplayDate,
+    onSelectDay: switchSelectedDay,
+  });
 }
 
-async function playPhaseIntroForCurrentPhase(playbackMode = 'full', sequenceId = phaseSequenceId) {
-  renderNarrationInfo();
-  renderGuidanceLive();
-
-  if (!hasNarrationAudioForSelectedDay()) {
-    if (sequenceId === phaseSequenceId) {
-      narrationStatusElement.textContent = '這一天目前只有文字腳本，倒數會直接開始。';
-    }
-    return null;
-  }
-
-  try {
-    const entry = await narrationPlayer.playPhaseIntro(state.currentPhaseIndex, playbackMode);
-    if (entry && sequenceId === phaseSequenceId) {
-      narrationStatusElement.textContent = playbackMode === 'full'
-        ? `階段說明與開始音效已播完：${entry.phaseLabel}`
-        : `開始音效已播完：${entry.phaseLabel}`;
-    }
-    return entry;
-  } catch (error) {
-    if (sequenceId === phaseSequenceId) {
-      narrationStatusElement.textContent = '語音或開始音效播放失敗，仍會直接開始倒數。';
-    }
-    return null;
-  }
+function syncNarrationInfo() {
+  renderNarrationInfo({
+    refs,
+    entry: currentNarrationEntry(),
+    hasNarrationAudio: hasNarrationAudioForSelectedDay(),
+    formatClock,
+  });
 }
 
-async function playPhaseEndCue(sequenceId = phaseSequenceId) {
-  if (!hasNarrationAudioForSelectedDay()) {
-    return null;
-  }
-
-  try {
-    await narrationPlayer.playPhaseEndCue();
-    if (sequenceId === phaseSequenceId) {
-      narrationStatusElement.textContent = '結束音效已播完，準備切換下一段。';
-    }
-    return true;
-  } catch (error) {
-    if (sequenceId === phaseSequenceId) {
-      narrationStatusElement.textContent = '結束音效播放失敗，仍會繼續切換到下一段。';
-    }
-    return false;
-  }
+function syncGuidanceLive(message) {
+  renderGuidanceLive({
+    refs,
+    entry: currentNarrationEntry(),
+    hasNarrationAudio: hasNarrationAudioForSelectedDay(),
+    message,
+  });
 }
 
-function shouldReplayNarrationForCurrentPhase() {
-  const phase = currentPhase();
-  return Boolean(phase && state.remainingSeconds === phase.seconds);
-}
-
-function currentPhase() {
-  return state.phases[state.currentPhaseIndex] ?? null;
+function getState() {
+  return sessionController.getState();
 }
 
 function selectedEntry() {
-  return daySelection.entry ?? todayEntry;
+  return sessionController.selectedEntry();
+}
+
+function currentPhase() {
+  const state = getState();
+  return state.phases[state.currentPhaseIndex] ?? null;
+}
+
+function currentNarrationEntry() {
+  const phaseIndex = getState().currentPhaseIndex;
+  return findNarrationEntryByPhase(getNarrationEntriesForSelectedDay(), phaseIndex);
 }
 
 function getNarrationEntriesForSelectedDay() {
   return hasNarrationAudioForSelectedDay()
-    ? narrationManifest?.entries ?? fallbackNarrationEntries
-    : fallbackNarrationEntries;
+    ? narrationManifest?.entries ?? sessionController.getFallbackNarrationEntries()
+    : sessionController.getFallbackNarrationEntries();
 }
 
 function hasNarrationAudioForSelectedDay() {
@@ -525,27 +223,198 @@ function hasNarrationAudioForSelectedDay() {
   });
 }
 
+async function beginPhaseCountdown({ playbackMode = 'full' } = {}) {
+  const phase = currentPhase();
+  const state = getState();
+  const hasNarrationAudio = hasNarrationAudioForSelectedDay();
+
+  if (!phase || state.isComplete) {
+    return;
+  }
+
+  const sequenceId = ++phaseSequenceId;
+  isPreparingPhase = true;
+  sessionController.setState({
+    ...state,
+    isRunning: false,
+  });
+  refs.statusMessage.textContent = hasNarrationAudio
+    ? playbackMode === 'full'
+      ? `先播放 ${phase.label} 的階段說明與開始音效，之後才會開始倒數。`
+      : `準備恢復 ${phase.label}，先播放開始音效。`
+    : `${phase.label} 目前會直接開始倒數，這一天尚未配置專用語音。`;
+  syncTimerViews();
+  syncGuidanceLive();
+
+  if (hasNarrationAudio) {
+    await playPhaseIntroForCurrentPhase(playbackMode, sequenceId);
+  }
+
+  if (sequenceId !== phaseSequenceId || getState().isComplete) {
+    return;
+  }
+
+  isPreparingPhase = false;
+  sessionController.setState({
+    ...getState(),
+    isRunning: true,
+  });
+  refs.statusMessage.textContent = playbackMode === 'full'
+    ? `${phase.label} 開始倒數。`
+    : `${phase.label} 已恢復倒數。`;
+  syncTimerViews();
+  syncGuidanceLive();
+
+  if (hasNarrationAudio) {
+    void maybePlayCountdownGuidance(phase.phaseIndex ?? getState().currentPhaseIndex, 0, sequenceId);
+  }
+
+  startCountdownLoop(sequenceId);
+}
+
+function startCountdownLoop(sequenceId) {
+  stopTimer();
+  timerId = window.setInterval(async () => {
+    if (sequenceId !== phaseSequenceId) {
+      stopTimer();
+      return;
+    }
+
+    const state = getState();
+    if (state.remainingSeconds > 1) {
+      const phase = currentPhase();
+      const elapsedSecond = phase ? phase.seconds - state.remainingSeconds + 1 : 0;
+
+      sessionController.setState({
+        ...state,
+        remainingSeconds: state.remainingSeconds - 1,
+      });
+      syncTimerViews();
+      await maybePlayCountdownGuidance(phase?.phaseIndex ?? getState().currentPhaseIndex, elapsedSecond, sequenceId);
+      return;
+    }
+
+    const finishedPhase = currentPhase();
+    stopTimer();
+    sessionController.setState({
+      ...getState(),
+      remainingSeconds: 0,
+      isRunning: false,
+    });
+    syncTimerViews();
+    syncGuidanceLive();
+    refs.statusMessage.textContent = hasNarrationAudioForSelectedDay()
+      ? `${finishedPhase?.label ?? '目前段落'} 倒數結束，播放結束音效。`
+      : `${finishedPhase?.label ?? '目前段落'} 倒數結束，準備切換下一段。`;
+    await playPhaseEndCue(sequenceId);
+
+    if (sequenceId !== phaseSequenceId) {
+      return;
+    }
+
+    sessionController.setState(advancePhase(getState()));
+    syncTimerViews();
+    syncGuidanceLive();
+
+    if (getState().isComplete) {
+      refs.statusMessage.textContent = '目前課表已跑完。接下來只要做收尾放鬆與身體掃描就好。';
+      syncNarrationInfo();
+      syncGuidanceLive();
+      return;
+    }
+
+    await beginPhaseCountdown({ playbackMode: 'full' });
+  }, 1000);
+}
+
+async function maybePlayCountdownGuidance(phaseIndex, elapsedSecond, sequenceId) {
+  if (!hasNarrationAudioForSelectedDay()) {
+    return null;
+  }
+
+  try {
+    const result = await narrationPlayer.playCountdownGuidance(phaseIndex, elapsedSecond);
+
+    if (sequenceId !== phaseSequenceId) {
+      return null;
+    }
+
+    if (result?.text) {
+      syncGuidanceLive(`教練引導：${result.text}（第 ${elapsedSecond} 秒）`);
+    }
+
+    return result;
+  } catch (error) {
+    if (sequenceId === phaseSequenceId) {
+      syncGuidanceLive('中段引導語音播放失敗，倒數仍持續進行。');
+    }
+    return null;
+  }
+}
+
+async function playPhaseIntroForCurrentPhase(playbackMode = 'full', sequenceId = phaseSequenceId) {
+  syncNarrationInfo();
+  syncGuidanceLive();
+
+  if (!hasNarrationAudioForSelectedDay()) {
+    if (sequenceId === phaseSequenceId) {
+      refs.narrationStatusElement.textContent = '這一天目前只有文字腳本，倒數會直接開始。';
+    }
+    return null;
+  }
+
+  try {
+    const entry = await narrationPlayer.playPhaseIntro(getState().currentPhaseIndex, playbackMode);
+    if (entry && sequenceId === phaseSequenceId) {
+      refs.narrationStatusElement.textContent = playbackMode === 'full'
+        ? `階段說明與開始音效已播完：${entry.phaseLabel}`
+        : `開始音效已播完：${entry.phaseLabel}`;
+    }
+    return entry;
+  } catch (error) {
+    if (sequenceId === phaseSequenceId) {
+      refs.narrationStatusElement.textContent = '語音或開始音效播放失敗，仍會直接開始倒數。';
+    }
+    return null;
+  }
+}
+
+async function playPhaseEndCue(sequenceId = phaseSequenceId) {
+  if (!hasNarrationAudioForSelectedDay()) {
+    return null;
+  }
+
+  try {
+    await narrationPlayer.playPhaseEndCue();
+    if (sequenceId === phaseSequenceId) {
+      refs.narrationStatusElement.textContent = '結束音效已播完，準備切換下一段。';
+    }
+    return true;
+  } catch (error) {
+    if (sequenceId === phaseSequenceId) {
+      refs.narrationStatusElement.textContent = '結束音效播放失敗，仍會繼續切換到下一段。';
+    }
+    return false;
+  }
+}
+
+function shouldReplayNarrationForCurrentPhase() {
+  const phase = currentPhase();
+  return Boolean(phase && getState().remainingSeconds === phase.seconds);
+}
+
 function switchSelectedDay(dayOffset) {
-  if (dayOffset === daySelection.selectedDayOffset) {
+  if (dayOffset === sessionController.getDaySelection().selectedDayOffset) {
     return;
   }
 
   cancelActiveTimeline({ resetNarration: true });
-  daySelection = selectCalendarEntry(daySelection, dayOffset);
-  fallbackNarrationEntries = buildNarrationEntries(selectedEntry().session);
-  state = createSessionStateFromPhases(selectedEntry().session.phases);
-
-  const entry = selectedEntry();
-  statusMessage.textContent = entry.dayOffset === todayInfo.dayOffset
+  const entry = sessionController.switchSelectedDay(dayOffset);
+  refs.statusMessage.textContent = entry.dayOffset === todayInfo.dayOffset
     ? '已切回今天的課表。按開始後會先播階段說明，再開始倒數。'
     : `已切換到第 ${entry.weekNumber} 週第 ${entry.dayNumber} 天。按開始後會載入這一天的流程。`;
 
-  renderStaticContent();
-  renderTimer();
-  renderPhasePlan();
-  renderSchedule();
-  renderNarrationInfo();
-  renderGuidanceLive();
+  renderAll();
 }
 
 function cancelActiveTimeline({ resetNarration = false } = {}) {
@@ -566,18 +435,6 @@ function stopTimer() {
 
   window.clearInterval(timerId);
   timerId = null;
-}
-
-function groupByWeek(entries) {
-  const groups = [];
-
-  entries.forEach((entry) => {
-    const index = entry.weekNumber - 1;
-    groups[index] ??= [];
-    groups[index].push(entry);
-  });
-
-  return groups;
 }
 
 function getLocalDateString(date) {
