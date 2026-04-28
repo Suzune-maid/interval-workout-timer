@@ -1,6 +1,6 @@
 # interval-workout-timer
 
-乾式高潮導向訓練儀表板，包含 6 週日程、今日課表計時器，以及可重用的語音引導素材。
+乾式高潮導向訓練儀表板，包含 6 週日程、今日課表計時器、可重用的語音引導素材，以及已完成 Phase 5 的 monotonic time scheduling 基礎。
 
 ## 目前功能
 
@@ -15,8 +15,10 @@
 - 第五階段支援收尾掃描引導，會每 12 秒帶一次腹部、臀部、大腿、會陰與排尿感檢查
 - 每段倒數結束時播放結束音效，再切到下一段
 - 支援開始 / 暫停 / 重設 / 跳到下一段
+- 倒數已改用 monotonic clock 追秒；若 heartbeat 延遲，畫面會自動 catch up，不會整段慢半拍
 - 顯示今日語音引導文本、起始時間與音檔長度
 - 提供可重用的語音素材清單與歷史音檔索引
+- 語音資料已升級為 `timeline-events-v1`，以 `timelineClips` / `timelineEvents` 驅動播放資料
 
 ## 目前行為基線（Phase 0 guardrails）
 
@@ -28,22 +30,47 @@
 - 按「跳到下一段」時，必須先停止目前音訊，再切到下一個 phase。
 - 被取消或過期的非同步語音播放流程，不可以在完成後回頭覆寫新的畫面狀態。
 
+## 目前架構（截至 Phase 5）
+
+- `app.js`
+  - 頁面組裝層，負責初始化、事件綁定與把 orchestrator / view / audio 接起來
+- `dom-refs.js`
+  - 集中收斂主要 DOM refs
+- `schedule-view.js`
+  - 日程表與今日摘要 render
+- `timer-view.js`
+  - timer、phase plan、語音狀態與 guidance 文案 render
+- `session-controller.js`
+  - selected day、session state 與 phase progression 的高階狀態切換
+- `timeline-orchestrator.js`
+  - countdown、phase progression、pause / resume / skip / cancel 與 monotonic scheduling
+- `audio-engine.js`
+  - track-based 音訊抽象層
+- `audio-player.js`
+  - 相容 wrapper，保留既有播放 API，內部改走 audio engine
+- `narration-manifest.js`
+  - 將 `timeline-events-v1` manifest 正規化，並提供 legacy 相容檢視
+- `timer-core.js`
+  - 純資料邏輯與 session / phase helper
+
 ## 語音素材結構
 
 - `audio/today/narration-manifest.json`
-  - 今日要直接載入的語音清單
-  - `phase-01` 到 `phase-05` 目前都包含 `countdownGuidance`
-  - `phase-01` 記錄吸氣／吐氣 clip 與播放時間點
-  - `phase-02` 記錄慢速 Kegel 的收／放 clip 與播放時間點
-  - `phase-03` 記錄快速 Kegel 的點收／全放節拍 clip 與播放時間點
-  - `phase-04` 記錄反向 Kegel 的吸氣下沉／吐氣保持鬆 clip 與播放時間點
-  - `phase-05` 記錄收尾掃描的身體檢查 clip 與播放時間點
+  - 今日直接載入的語音清單
+  - 使用 `schemaVersion: timeline-events-v1`
+  - `phase-01` 到 `phase-05` 以 `timelineClips` / `timelineEvents` 描述 phase narration、cue 與倒數中的 guidance
+- `audio/today/narration-source.json`
+  - 今日語音素材的來源資料，同步使用 `timeline-events-v1`
 - `audio/library/index.json`
-  - 已建立日期的語音索引
+  - 已建立日期的語音索引，並指向對應 timeline schema
 - `audio/library/<date>/manifest.json`
-  - 該日期每一段的文本、音檔、長度、sha256 與起始秒數
+  - 該日期每一段的文本、音檔、長度、sha256，以及 `timelineClips` / `timelineEvents`
+- `audio/schema/timeline-event.schema.json`
+  - timeline/event schema 定義
 - `audio/today/guidance/` 與 `audio/library/<date>/guidance/`
   - 倒數中段引導的短語音，目前已實作第 1 階段呼吸節奏、第 2 階段慢速 Kegel、第 3 階段快速 Kegel、第 4 階段反向 Kegel 呼吸引導，以及第 5 階段收尾掃描引導
+- `narration-manifest.js`
+  - 若上層仍需要舊介面，會從新 schema 產生 legacy `countdownGuidance` 相容檢視，而不是再把它當成主要資料來源
 
 ## 本機開發
 
@@ -54,6 +81,8 @@ python3 -m http.server 8124
 然後打開 <http://127.0.0.1:8124/>。
 
 ## 測試
+
+目前測試基線為 **46/46 通過**。
 
 ```bash
 npm test

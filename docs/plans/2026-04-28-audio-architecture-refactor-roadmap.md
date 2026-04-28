@@ -49,14 +49,14 @@
 - `tests/timeline-orchestrator.test.js` 已鎖住 preparing → started、pause/resume、skip 取消舊 sequence、session complete，以及 generic `stopAll()` cancellation 契約。
 - `tests/audio-engine.test.js` 已鎖住同 track interrupt、獨立 stopTrack、preload 與 reset 行為。
 - `tests/narration-manifest.test.js` 已鎖住 timeline/event schema migration 與 legacy 相容檢視層。
-- 正式站仍以單頁靜態站形式運作，且 Phase 0 / 1 / 2 / 3 / 4 都已完成本地 smoke test 與 GitHub Pages live 驗證。
+- 正式站仍以單頁靜態站形式運作，且 Phase 0 / 1 / 2 / 3 / 4 / 5 都已完成本地 smoke test 與 GitHub Pages live 驗證。
 - 對應完成 commit：
   - Phase 0: `a0bd75b` — `test: add phase 0 audio flow guardrails`
   - Phase 1: `19c435a` — `refactor: split app into view and session modules`
   - Phase 2: `a5d9389` — `refactor: extract timeline orchestrator`
   - Phase 3: `5bdff1f` — `refactor: introduce audio engine abstraction`
-  - Phase 4: `refactor: migrate narration manifest to timeline events`
-  - Phase 5: `refactor: schedule playback with monotonic timing`
+  - Phase 4: `a9b33f4` — `refactor: migrate narration manifest to timeline events`
+  - Phase 5: `65be23f` — `refactor: schedule playback with monotonic timing`
 
 ---
 
@@ -206,7 +206,7 @@
 
 # Phase 3: Upgrade `audio-player.js` into an Audio Engine Abstraction
 
-**Status:** ✅ Completed
+**Status:** ✅ Completed (`5bdff1f`)
 
 **Objective:** 讓音訊層不再綁死「三個固定 Audio 元件」，改成可以逐步支援多軌、優先級與重疊策略的抽象。
 
@@ -264,7 +264,7 @@
 
 # Phase 4: Move from Phase-Centric Manifest to Timeline/Event Schema
 
-**Status:** ✅ Completed
+**Status:** ✅ Completed (`a9b33f4`)
 
 **Objective:** 讓資料層可以表達更複雜的播放規則，不再只靠 JS 寫死 phase intro 與 guidance 事件的關係。
 
@@ -321,7 +321,7 @@
 
 # Phase 5: Introduce Monotonic Time Scheduling
 
-**Status:** ✅ Completed (`pending commit`)
+**Status:** ✅ Completed (`65be23f`)
 
 **Objective:** 改善音訊與倒數同步的穩定性，為未來更密集的同播與節拍需求打底。
 
