@@ -5,7 +5,7 @@
   "weekNumber": 1,
   "dayNumber": 1,
   "weekdayLabel": "一",
-  "sessionTitle": "Kegel 普通日",
+  "sessionTitle": "凱格爾普通日",
   "voiceTool": {
     "command": "uv run gemini-tts",
     "project": "gemini-tts-cli",
@@ -26,14 +26,14 @@
     {
       "id": "phase-02",
       "phaseIndex": 1,
-      "phaseLabel": "慢速 Kegel（10 次）",
+      "phaseLabel": "慢速凱格爾（10 次）",
       "startsAtSecond": 60,
       "durationSeconds": 90,
-      "text": "現在開始：慢速 Kegel（10 次）。這一段約 1 分 30 秒。每次收 3 秒、放 6 秒。",
+      "text": "現在開始：慢速凱格爾（10 次）。這一段約 1 分 30 秒。每次收 3 秒、放 6 秒。",
       "countdownGuidance": {
         "summary": "3 秒收、6 秒放，共 10 次",
         "mode": "timed-kegel",
-        "coachPrompt": "慢速 Kegel 段落用更短的教練短句帶 10 次節奏，收縮提醒上提，放鬆提醒臀腿一起鬆。"
+        "coachPrompt": "慢速凱格爾段落用更短的教練短句帶 10 次節奏，收縮提醒上提，放鬆提醒臀腿一起鬆。"
       },
       "timelineClips": {
         "contract": {
@@ -257,14 +257,14 @@
     {
       "id": "phase-03",
       "phaseIndex": 2,
-      "phaseLabel": "快速 Kegel（10 次）",
+      "phaseLabel": "快速凱格爾（10 次）",
       "startsAtSecond": 150,
       "durationSeconds": 20,
-      "text": "現在開始：快速 Kegel（10 次）。這一段約 20 秒。輕點一下，立刻完全放掉。",
+      "text": "現在開始：快速凱格爾（10 次）。這一段約 20 秒。輕點一下，立刻完全放掉。",
       "countdownGuidance": {
         "summary": "1 秒點收、1 秒全放，共 10 次",
         "mode": "fast-kegel",
-        "coachPrompt": "快速 Kegel 段落用短促節拍口令帶動，重點是輕點收、立刻全放，不要夾屁股或憋氣。"
+        "coachPrompt": "快速凱格爾段落用短促節拍口令帶動，重點是輕點收、立刻全放，不要夾屁股或憋氣。"
       },
       "timelineClips": {
         "pulse": {
@@ -488,14 +488,14 @@
     {
       "id": "phase-04",
       "phaseIndex": 3,
-      "phaseLabel": "反向 Kegel",
+      "phaseLabel": "反向凱格爾",
       "startsAtSecond": 170,
       "durationSeconds": 120,
-      "text": "現在開始：反向 Kegel。這一段約 2 分鐘。吸氣下沉，吐氣時保持鬆開。",
+      "text": "現在開始：反向凱格爾。這一段約 2 分鐘。吸氣下沉，吐氣時保持鬆開。",
       "countdownGuidance": {
         "summary": "4 秒吸氣下沉、8 秒吐氣保持鬆，共 10 輪",
         "mode": "reverse-kegel-breathing",
-        "coachPrompt": "反向 Kegel 段落配合呼吸做下沉放鬆，吸氣時往下鬆開，吐氣時繼續保持鬆，不要重新夾緊。"
+        "coachPrompt": "反向凱格爾段落配合呼吸做下沉放鬆，吸氣時往下鬆開，吐氣時繼續保持鬆，不要重新夾緊。"
       },
       "timelineClips": {
         "inhaleDrop": {

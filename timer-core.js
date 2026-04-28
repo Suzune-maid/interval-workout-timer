@@ -160,7 +160,7 @@ export function buildDailySession(weekNumber, dayNumber) {
   const safeDay = clamp(normalizePositiveInteger(dayNumber), 1, DAYS_PER_WEEK);
 
   if (safeDay === 1 || safeDay === 4) {
-    return buildKegelSession(safeWeek, false);
+    return build凱格爾Session(safeWeek, false);
   }
 
   if (safeDay === 2 || safeDay === 5) {
@@ -172,7 +172,7 @@ export function buildDailySession(weekNumber, dayNumber) {
   }
 
   if (safeDay === 6) {
-    return buildKegelSession(safeWeek, true);
+    return build凱格爾Session(safeWeek, true);
   }
 
   return buildRestSession(safeWeek);
@@ -204,13 +204,13 @@ export function findNarrationEntryByPhase(entries, phaseIndex) {
     : null;
 }
 
-function buildKegelSession(weekNumber, isAdaptiveDay) {
-  const base = getKegelWeekConfig(weekNumber);
+function build凱格爾Session(weekNumber, isAdaptiveDay) {
+  const base = get凱格爾WeekConfig(weekNumber);
   const phases = [
     makePhase('準備放鬆', 60, '腹式呼吸，放鬆腹部、臀部與大腿。'),
-    makePhase(`慢速 Kegel（${base.slowCount} 次）`, base.slowCount * (base.slowHold + base.slowRest), `每次收 ${base.slowHold} 秒、放 ${base.slowRest} 秒。`),
-    makePhase(`快速 Kegel（${base.quickCount} 次）`, base.quickCount * 2, '輕點一下，立刻完全放掉。'),
-    makePhase('反向 Kegel', base.reverseSeconds, '吸氣下沉，吐氣時保持鬆開。'),
+    makePhase(`慢速凱格爾（${base.slowCount} 次）`, base.slowCount * (base.slowHold + base.slowRest), `每次收 ${base.slowHold} 秒、放 ${base.slowRest} 秒。`),
+    makePhase(`快速凱格爾（${base.quickCount} 次）`, base.quickCount * 2, '輕點一下，立刻完全放掉。'),
+    makePhase('反向凱格爾', base.reverseSeconds, '吸氣下沉，吐氣時保持鬆開。'),
   ];
 
   if (base.includeWaveSimulation) {
@@ -221,7 +221,7 @@ function buildKegelSession(weekNumber, isAdaptiveDay) {
 
   return {
     kind: 'kegel',
-    title: isAdaptiveDay ? 'Kegel 普通日（可依狀態改放鬆）' : 'Kegel 普通日',
+    title: isAdaptiveDay ? '凱格爾普通日（可依狀態改放鬆）' : '凱格爾普通日',
     durationLabel: base.durationLabel,
     weekFocus: WEEK_FOCUS[weekNumber],
     summary: base.summary,
@@ -253,14 +253,14 @@ function buildRelaxSession(weekNumber) {
     title: '放鬆日',
     durationLabel: '5 分鐘',
     weekFocus: WEEK_FOCUS[weekNumber],
-    summary: '把今天當成降張力日，專心腹式呼吸與反向 Kegel，不追求刺激。',
+    summary: '把今天當成降張力日，專心腹式呼吸與反向凱格爾，不追求刺激。',
     notes: [
       '若最近會陰緊、尿道怪或正式訓練後悶痛，今天只做放鬆。',
       '重點是吐氣時維持鬆開，不要重新夾緊骨盆底。',
     ],
     phases: [
       makePhase('腹式呼吸', 120, '鼻吸嘴吐，讓腹部自然膨起。'),
-      makePhase('反向 Kegel', 180, '吸氣下沉，吐氣保持放鬆。'),
+      makePhase('反向凱格爾', 180, '吸氣下沉，吐氣保持放鬆。'),
       makePhase('收尾掃描', 60, '確認腹部、臀部與大腿都沒有偷用力。'),
     ],
   };
@@ -283,7 +283,7 @@ function buildRestSession(weekNumber) {
   };
 }
 
-function getKegelWeekConfig(weekNumber) {
+function get凱格爾WeekConfig(weekNumber) {
   if (weekNumber <= 2) {
     return {
       slowHold: 3,
@@ -336,7 +336,7 @@ function getFormalWeekConfig(weekNumber) {
         makePhase('第 1 回：到 5 分停', 180, '穩定上升到 5 分後停止。'),
         makePhase('第 2 回：到 6 分停', 240, '感受高原區與可控感。'),
         makePhase('第 3 回：接近 7 分立刻停', 240, '有射精感冒出就停，不強求波峰。'),
-        makePhase('收尾放鬆', 180, '可正常結束，最後做呼吸與反向 Kegel。'),
+        makePhase('收尾放鬆', 180, '可正常結束，最後做呼吸與反向凱格爾。'),
       ],
     },
     2: {
@@ -377,7 +377,7 @@ function getFormalWeekConfig(weekNumber) {
         '訓練後若會陰悶痛，下一次要減量。',
       ],
       phases: [
-        makePhase('準備期', 120, '呼吸、放鬆與啟動版 Kegel。'),
+        makePhase('準備期', 120, '呼吸、放鬆與啟動版凱格爾。'),
         makePhase('第 1 回：6 分暖身', 180, '先把身體帶回穩定節奏。'),
         makePhase('第 2 回：第一次 7 分放鬆', 240, '接近 7 分後停下，觀察 30～60 秒。'),
         makePhase('第 3 回：第二次 7 分放鬆', 240, '再做一次同樣流程。'),
@@ -414,7 +414,7 @@ function getFormalWeekConfig(weekNumber) {
         makePhase('退到 5 分穩定', 180, '讓身體回到可控高興奮。'),
         makePhase('第二次 7 分放鬆嘗試', 120, '再做一次自然過波峰。'),
         makePhase('第三次嘗試或收尾', 180, '視狀態決定是否再做一次。'),
-        makePhase('放鬆／正常結束', 180, '收尾後只做放鬆，不再做強化 Kegel。'),
+        makePhase('放鬆／正常結束', 180, '收尾後只做放鬆，不再做強化凱格爾。'),
       ],
     },
   };

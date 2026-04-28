@@ -1,8 +1,8 @@
-# 慢速 Kegel（第 2 階段）教練引導 Implementation Plan
+# 慢速凱格爾（第 2 階段）教練引導 Implementation Plan
 
 > **For Hermes:** 以既有 GitHub Pages 靜態站流程實作此計畫；先用測試釘住 manifest 與播放行為，再補資料、音檔與驗證。
 
-**Goal:** 為第 2 階段「慢速 Kegel（10 次）」加入倒數中的教練式引導語音，讓使用者在不看螢幕時也能依 3 秒收、6 秒放的節奏完成 10 次。
+**Goal:** 為第 2 階段「慢速凱格爾（10 次）」加入倒數中的教練式引導語音，讓使用者在不看螢幕時也能依 3 秒收、6 秒放的節奏完成 10 次。
 
 **Architecture:** 沿用既有 `countdownGuidance` 資料模型與 `audio-player.js` / `app.js` 的泛用播放流程，不額外為 phase-02 寫特例。這次主要新增 phase-02 的 guidance clips、events、manifest/source 記錄，以及對應的回歸測試與 live 驗證。
 
@@ -11,7 +11,7 @@
 ---
 
 ## 本次採用的引導節奏
-- 階段：`phase-02` / `慢速 Kegel（10 次）`
+- 階段：`phase-02` / `慢速凱格爾（10 次）`
 - 總長：90 秒
 - 節奏：每輪 9 秒，共 10 輪
   - 第 0 秒：收
