@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "audio/schema/timeline-event.schema.json",
+  "title": "Interval Workout Timer Timeline Event",
+  "type": "object",
+  "required": [
+    "id",
+    "startAtSecond",
+    "clipId",
+    "track"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "startAtSecond": {
+      "type": "number",
+      "minimum": 0
+    },
+    "clipId": {
+      "type": "string"
+    },
+    "track": {
+      "type": "string",
+      "enum": [
+        "narration",
+        "cue",
+        "guidance-primary",
+        "guidance-secondary",
+        "ambient"
+      ]
+    },
+    "priority": {
+      "type": "string"
+    },
+    "interruptPolicy": {
+      "type": "string"
+    },
+    "duckingGroup": {
+      "type": "string"
+    },
+    "volume": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "additionalProperties": true
+}

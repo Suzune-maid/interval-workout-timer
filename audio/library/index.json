@@ -7,7 +7,11 @@
       "dayNumber": 1,
       "sessionTitle": "Kegel 普通日",
       "manifestFile": "audio/library/2026-04-27/manifest.json",
-      "entryCount": 5
+      "entryCount": 5,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
     }
-  ]
+  ],
+  "schemaVersion": "timeline-events-v1",
+  "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
 }

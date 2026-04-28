@@ -313,6 +313,75 @@ test('createNarrationPlayer 會透過 audio engine abstraction 暴露 track stat
   });
 });
 
+test('createNarrationPlayer 會用 timelineEvents 的 track / policy 設定驅動 guidance 播放', async () => {
+  const calls = [];
+  const player = createNarrationPlayer(
+    {
+      entries: [
+        {
+          id: 'phase-01',
+          phaseIndex: 0,
+          phaseLabel: '準備放鬆',
+          countdownGuidance: {
+            summary: '吸吐提示',
+            mode: 'timed-breathing',
+          },
+          timelineClips: {
+            inhale: {
+              id: 'inhale',
+              text: '吸氣',
+              audioFile: INHALE_CUE,
+            },
+          },
+          timelineEvents: [
+            {
+              id: 'phase-01-inhale-000',
+              startAtSecond: 0,
+              clipId: 'inhale',
+              track: 'guidance-secondary',
+              priority: 'high',
+              interruptPolicy: 'replace-track',
+              duckingGroup: 'speech',
+              volume: 0.6,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      engine: {
+        playClip(options) {
+          calls.push(options);
+          return Promise.resolve('ended');
+        },
+        stopTrack() {},
+        stopAll() {},
+        reset() {},
+        preload() {},
+        getTrackState(track) {
+          return { track, status: 'idle', src: null };
+        },
+      },
+    },
+  );
+
+  const result = await player.playCountdownGuidance(0, 0);
+
+  assert.equal(result.clipId, 'inhale');
+  assert.equal(result.text, '吸氣');
+  assert.equal(result.audioFile, INHALE_CUE);
+  assert.deepEqual(calls, [
+    {
+      track: 'guidance-secondary',
+      src: INHALE_CUE,
+      priority: 'high',
+      interruptPolicy: 'replace-track',
+      duckingGroup: 'speech',
+      volume: 0.6,
+    },
+  ]);
+});
+
 test('createNarrationPlayer 會在倒數結束時播放結束音效，且等音效播完才結束', async () => {
   const { events, instances } = installFakeAudio();
 

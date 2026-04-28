@@ -37,22 +37,25 @@
 
 ## Current Baseline
 
-截至 **2026-04-28（Phase 3 完成後）**，後續工作應以以下狀態作為新基線，而不是以 roadmap 初稿建立時的數字為準：
+截至 **2026-04-28（Phase 4 完成後）**，後續工作應以以下狀態作為新基線，而不是以 roadmap 初稿建立時的數字為準：
 
-- `app.js` 約 **325 行**、`audio-engine.js` 約 **186 行**、`audio-player.js` 約 **161 行**、`timeline-orchestrator.js` 約 **334 行**、`timer-core.js` 約 **477 行**。
+- `app.js` 約 **325 行**、`audio-engine.js` 約 **186 行**、`audio-player.js` 約 **169 行**、`narration-manifest.js` 約 **93 行**、`timeline-orchestrator.js` 約 **334 行**、`timer-core.js` 約 **477 行**。
 - `npm test` 全綠（目前 **44/44**）。
 - 日程表已支援點選切換日程。
 - `phase-01` 到 `phase-05` 的倒數中引導已完成並部署。
+- `audio/today/narration-manifest.json`、`audio/today/narration-source.json`、`audio/library/2026-04-27/manifest.json` 已改為 `schemaVersion: timeline-events-v1`。
 - `tests/app-flow.test.js` 已鎖住切日、fallback、pause/resume、skip 與 stale async overwrite guardrails。
 - `tests/phase1-modules.test.js` 已鎖住 `dom-refs.js`、`schedule-view.js`、`timer-view.js`、`session-controller.js` 的模組契約。
 - `tests/timeline-orchestrator.test.js` 已鎖住 preparing → started、pause/resume、skip 取消舊 sequence、session complete，以及 generic `stopAll()` cancellation 契約。
 - `tests/audio-engine.test.js` 已鎖住同 track interrupt、獨立 stopTrack、preload 與 reset 行為。
-- 正式站仍以單頁靜態站形式運作，且 Phase 0 / 1 / 2 / 3 都已完成本地 smoke test 與 GitHub Pages live 驗證。
+- `tests/narration-manifest.test.js` 已鎖住 timeline/event schema migration 與 legacy 相容檢視層。
+- 正式站仍以單頁靜態站形式運作，且 Phase 0 / 1 / 2 / 3 / 4 都已完成本地 smoke test 與 GitHub Pages live 驗證。
 - 對應完成 commit：
   - Phase 0: `a0bd75b` — `test: add phase 0 audio flow guardrails`
   - Phase 1: `19c435a` — `refactor: split app into view and session modules`
   - Phase 2: `a5d9389` — `refactor: extract timeline orchestrator`
-  - Phase 3: `refactor: introduce audio engine abstraction`
+  - Phase 3: `5bdff1f` — `refactor: introduce audio engine abstraction`
+  - Phase 4: `refactor: migrate narration manifest to timeline events`
 
 ---
 
@@ -260,6 +263,8 @@
 
 # Phase 4: Move from Phase-Centric Manifest to Timeline/Event Schema
 
+**Status:** ✅ Completed
+
 **Objective:** 讓資料層可以表達更複雜的播放規則，不再只靠 JS 寫死 phase intro 與 guidance 事件的關係。
 
 **Files:**
@@ -293,9 +298,20 @@
 - 更明確的 priority / ducking policy
 - 未來加入背景節拍、節拍器或 ambience
 
+**What shipped in this phase:**
+- `audio/today/narration-manifest.json`、`audio/today/narration-source.json`、`audio/library/2026-04-27/manifest.json` 已改成 `timelineEvents` + `timelineClips` 為主的 `timeline-events-v1` 結構。
+- 新增 `narration-manifest.js`，集中做 manifest normalization，讓新 schema 能對外提供 legacy 相容的 `countdownGuidance` 檢視層。
+- `audio-player.js` 已改成直接以 `timelineEvents` 作為 guidance 播放資料來源，並把 track / priority / interruptPolicy / duckingGroup / volume 傳給 audio engine。
+- `audio/library/index.json` 已補 `schemaVersion` 與 `timelineSchemaFile`，並新增 `audio/schema/timeline-event.schema.json`。
+
 **Verification:**
-- `npm test`
-- schema migration test：舊資料如何轉新資料，或新資料如何仍支援既有 phase-01~05 行為
+- `npm test`（**44/44** 全綠）
+- `tests/narration-manifest.test.js` 已覆蓋：
+  - `timeline-events-v1` schema migration
+  - legacy `countdownGuidance` 相容檢視層
+  - `audio/today` / `audio/library` / `audio/source` 三者同步更新
+- `tests/audio-player.test.js` 已覆蓋 `timelineEvents` 的 track / policy 設定會真正驅動 guidance 播放。
+- 本地 smoke test 與後續 GitHub Pages live 驗證通過。
 
 **Exit Criteria:**
 - timeline events 成為播放的資料來源，而不是大部分邏輯都寫在 JS 判斷裡。

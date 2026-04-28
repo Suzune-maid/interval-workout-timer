@@ -1,4 +1,5 @@
 import { createAudioEngine } from './audio-engine.js';
+import { normalizeNarrationManifest } from './narration-manifest.js';
 
 export async function loadNarrationManifest(url = './audio/today/narration-manifest.json') {
   const response = await fetch(url, { cache: 'no-store' });
@@ -7,11 +8,13 @@ export async function loadNarrationManifest(url = './audio/today/narration-manif
     throw new Error(`無法讀取語音清單：${response.status}`);
   }
 
-  return response.json();
+  const raw = await response.json();
+  return normalizeNarrationManifest(raw);
 }
 
 export function createNarrationPlayer(manifest, options = {}) {
-  const entries = Array.isArray(manifest?.entries) ? manifest.entries : [];
+  const normalizedManifest = normalizeNarrationManifest(manifest);
+  const entries = Array.isArray(normalizedManifest?.entries) ? normalizedManifest.entries : [];
   const startCueFile = options.startCueFile ?? './audio/fx/countdown-start.wav';
   const endCueFile = options.endCueFile ?? './audio/fx/countdown-end.wav';
   const engine = options.engine ?? createAudioEngine();
@@ -68,28 +71,32 @@ export function createNarrationPlayer(manifest, options = {}) {
       return null;
     }
 
-    const guidanceEvent = guidance.events?.find((item) => item.elapsedSecond === elapsedSecond);
+    const guidanceEvent = entry.timelineEvents?.find((item) => item.startAtSecond === elapsedSecond)
+      ?? guidance.events?.find((item) => item.elapsedSecond === elapsedSecond)
+      ?? null;
+
     if (!guidanceEvent) {
       return null;
     }
 
-    const eventKey = `${entry.id}:${guidanceEvent.elapsedSecond}:${guidanceEvent.clipId}`;
+    const eventKey = guidanceEvent.id ?? `${entry.id}:${guidanceEvent.startAtSecond ?? guidanceEvent.elapsedSecond}:${guidanceEvent.clipId}`;
     if (playedGuidanceEvents.has(eventKey)) {
       return null;
     }
 
-    const clip = guidance.clips?.[guidanceEvent.clipId];
+    const clip = entry.timelineClips?.[guidanceEvent.clipId] ?? guidance.clips?.[guidanceEvent.clipId];
     if (!clip?.audioFile) {
       return null;
     }
 
     playedGuidanceEvents.add(eventKey);
     const result = await engine.playClip({
-      track: 'guidance-primary',
+      track: guidanceEvent.track ?? 'guidance-primary',
       src: clip.audioFile,
-      priority: 'primary',
-      interruptPolicy: 'replace-track',
-      duckingGroup: 'speech',
+      priority: guidanceEvent.priority ?? 'primary',
+      interruptPolicy: guidanceEvent.interruptPolicy ?? 'replace-track',
+      duckingGroup: guidanceEvent.duckingGroup ?? 'speech',
+      volume: guidanceEvent.volume ?? 1,
     });
 
     if (result !== 'ended') {
@@ -98,6 +105,7 @@ export function createNarrationPlayer(manifest, options = {}) {
 
     return {
       ...guidanceEvent,
+      elapsedSecond: guidanceEvent.elapsedSecond ?? guidanceEvent.startAtSecond,
       text: clip.text,
       audioFile: clip.audioFile,
     };
