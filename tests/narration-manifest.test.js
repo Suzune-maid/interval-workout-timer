@@ -6,7 +6,8 @@ import { normalizeNarrationManifest } from '../narration-manifest.js';
 const TODAY_MANIFEST_PATH = new URL('../audio/today/narration-manifest.json', import.meta.url);
 const TODAY_SOURCE_PATH = new URL('../audio/today/narration-source.json', import.meta.url);
 const LIBRARY_INDEX_PATH = new URL('../audio/library/index.json', import.meta.url);
-const LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-04-27/manifest.json', import.meta.url);
+const GUIDED_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-04-27/manifest.json', import.meta.url);
+const FORMAL_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-04-28/manifest.json', import.meta.url);
 
 async function readJson(url) {
   const raw = await readFile(url, 'utf8');
@@ -17,39 +18,21 @@ function findEntry(document, id) {
   return document.entries.find((item) => item.id === id);
 }
 
-test('narration manifest 會用 timeline/event schema 表達 phase-02 guidance，原始資料不再重複保存 legacy events/clips', async () => {
+test('today narration manifest 會用 timeline/event schema 表達正式訓練日，且不重複保存 legacy guidance events/clips', async () => {
   const raw = await readJson(TODAY_MANIFEST_PATH);
   const entry = findEntry(raw, 'phase-02');
 
   assert.equal(raw.schemaVersion, 'timeline-events-v1');
-  assert.ok(entry, 'phase-02 應存在於 narration manifest');
-  assert.ok(Array.isArray(entry.timelineEvents), 'phase-02 應提供 timelineEvents');
-  assert.deepEqual(
-    entry.timelineEvents.map((item) => item.startAtSecond),
-    [0, 3, 9, 12, 18, 21, 27, 30, 36, 39, 45, 48, 54, 57, 63, 66, 72, 75, 81, 84],
-  );
-  assert.deepEqual(
-    entry.timelineEvents.map((item) => item.clipId),
-    [
-      'contract', 'release',
-      'contract', 'release',
-      'contract', 'release',
-      'contract', 'release',
-      'contract', 'release',
-      'contract', 'release',
-      'contract', 'release',
-      'contract', 'release',
-      'contract', 'release',
-      'contract', 'release',
-    ],
-  );
-  assert.equal(entry.timelineEvents[0].track, 'guidance-primary');
-  assert.equal(entry.countdownGuidance?.events, undefined);
-  assert.equal(entry.countdownGuidance?.clips, undefined);
+  assert.equal(raw.sourceDate, '2026-04-28');
+  assert.equal(raw.sessionTitle, '正式訓練日');
+  assert.ok(entry, 'phase-02 應存在於 today narration manifest');
+  assert.deepEqual(entry.timelineClips, {});
+  assert.deepEqual(entry.timelineEvents, []);
+  assert.equal(entry.countdownGuidance, undefined);
 });
 
-test('normalizeNarrationManifest 會從 timeline/event schema 還原相容 countdownGuidance 檢視資料', async () => {
-  const raw = await readJson(TODAY_MANIFEST_PATH);
+test('normalizeNarrationManifest 仍會從 guided library 的 timeline/event schema 還原相容 countdownGuidance 檢視資料', async () => {
+  const raw = await readJson(GUIDED_LIBRARY_MANIFEST_PATH);
   const manifest = normalizeNarrationManifest(raw);
   const entry = findEntry(manifest, 'phase-04');
 
@@ -78,22 +61,26 @@ test('normalizeNarrationManifest 會從 timeline/event schema 還原相容 count
   );
 });
 
-test('narration source 與 library manifest 也會同步使用 timeline/event schema', async () => {
-  const [source, libraryManifest, libraryIndex] = await Promise.all([
+test('today narration source、formal library manifest 與 library index 會同步使用 timeline/event schema', async () => {
+  const [source, formalLibraryManifest, libraryIndex] = await Promise.all([
     readJson(TODAY_SOURCE_PATH),
-    readJson(LIBRARY_MANIFEST_PATH),
+    readJson(FORMAL_LIBRARY_MANIFEST_PATH),
     readJson(LIBRARY_INDEX_PATH),
   ]);
 
   const sourceEntry = findEntry(source, 'phase-03');
-  const libraryEntry = findEntry(libraryManifest, 'phase-05');
+  const libraryEntry = findEntry(formalLibraryManifest, 'phase-05');
+  const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-04-28');
 
   assert.equal(source.schemaVersion, 'timeline-events-v1');
-  assert.equal(libraryManifest.schemaVersion, 'timeline-events-v1');
+  assert.equal(formalLibraryManifest.schemaVersion, 'timeline-events-v1');
   assert.ok(Array.isArray(sourceEntry.timelineEvents), 'source phase-03 應使用 timelineEvents');
-  assert.ok(Array.isArray(libraryEntry.timelineEvents), 'library phase-05 應使用 timelineEvents');
-  assert.equal(sourceEntry.countdownGuidance?.events, undefined);
-  assert.equal(libraryEntry.countdownGuidance?.clips, undefined);
-  assert.equal(libraryIndex.items[0].schemaVersion, 'timeline-events-v1');
-  assert.equal(libraryIndex.items[0].timelineSchemaFile, 'audio/schema/timeline-event.schema.json');
+  assert.ok(Array.isArray(libraryEntry.timelineEvents), 'formal library phase-05 應使用 timelineEvents');
+  assert.deepEqual(sourceEntry.timelineEvents, []);
+  assert.deepEqual(libraryEntry.timelineEvents, []);
+  assert.equal(sourceEntry.countdownGuidance, undefined);
+  assert.equal(libraryEntry.countdownGuidance, undefined);
+  assert.ok(libraryItem, 'library index 應包含 2026-04-28 formal day 條目');
+  assert.equal(libraryItem.schemaVersion, 'timeline-events-v1');
+  assert.equal(libraryItem.timelineSchemaFile, 'audio/schema/timeline-event.schema.json');
 });

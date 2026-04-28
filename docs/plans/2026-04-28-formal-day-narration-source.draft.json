@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-04-28T15:17:01+08:00",
+  "sourceDate": "2026-04-28",
+  "programStartDate": "2026-04-27",
+  "weekNumber": 1,
+  "dayNumber": 2,
+  "weekdayLabel": "二",
+  "sessionTitle": "正式訓練日",
+  "voiceTool": {
+    "command": "uv run gemini-tts",
+    "project": "gemini-tts-cli",
+    "model": "google/gemini-3.1-flash-tts-preview",
+    "voice": "Leda"
+  },
+  "entries": [
+    {
+      "id": "phase-01",
+      "phaseIndex": 0,
+      "phaseLabel": "準備期",
+      "startsAtSecond": 0,
+      "durationSeconds": 120,
+      "text": "現在開始：準備期。這一段約 2 分鐘。呼吸、放鬆與設定今天只做地圖建立。",
+      "timelineClips": {},
+      "timelineEvents": []
+    },
+    {
+      "id": "phase-02",
+      "phaseIndex": 1,
+      "phaseLabel": "第 1 回：到 5 分停",
+      "startsAtSecond": 120,
+      "durationSeconds": 180,
+      "text": "現在開始：第 1 回：到 5 分停。這一段約 3 分鐘。穩定上升到 5 分後停止。",
+      "timelineClips": {},
+      "timelineEvents": []
+    },
+    {
+      "id": "phase-03",
+      "phaseIndex": 2,
+      "phaseLabel": "第 2 回：到 6 分停",
+      "startsAtSecond": 300,
+      "durationSeconds": 240,
+      "text": "現在開始：第 2 回：到 6 分停。這一段約 4 分鐘。感受高原區與可控感。",
+      "timelineClips": {},
+      "timelineEvents": []
+    },
+    {
+      "id": "phase-04",
+      "phaseIndex": 3,
+      "phaseLabel": "第 3 回：接近 7 分立刻停",
+      "startsAtSecond": 540,
+      "durationSeconds": 240,
+      "text": "現在開始：第 3 回：接近 7 分立刻停。這一段約 4 分鐘。有射精感冒出就停，不強求波峰。",
+      "timelineClips": {},
+      "timelineEvents": []
+    },
+    {
+      "id": "phase-05",
+      "phaseIndex": 4,
+      "phaseLabel": "收尾放鬆",
+      "startsAtSecond": 780,
+      "durationSeconds": 180,
+      "text": "現在開始：收尾放鬆。這一段約 3 分鐘。可正常結束，最後做呼吸與反向凱格爾。",
+      "timelineClips": {},
+      "timelineEvents": []
+    }
+  ]
+}

@@ -1,11 +1,12 @@
 {
-  "generatedAt": "2026-04-27T21:04:25+08:00",
-  "sourceDate": "2026-04-27",
+  "schemaVersion": "timeline-events-v1",
+  "generatedAt": "2026-04-28T15:43:42+08:00",
+  "sourceDate": "2026-04-28",
   "programStartDate": "2026-04-27",
   "weekNumber": 1,
-  "dayNumber": 1,
-  "weekdayLabel": "一",
-  "sessionTitle": "凱格爾普通日",
+  "dayNumber": 2,
+  "weekdayLabel": "二",
+  "sessionTitle": "正式訓練日",
   "voiceTool": {
     "command": "uv run gemini-tts",
     "project": "gemini-tts-cli",
@@ -16,880 +17,87 @@
     {
       "id": "phase-01",
       "phaseIndex": 0,
-      "phaseLabel": "準備放鬆",
+      "phaseLabel": "準備期",
       "startsAtSecond": 0,
-      "durationSeconds": 60,
-      "text": "現在開始：準備放鬆。這一段約 1 分鐘。腹式呼吸，放鬆腹部、臀部與大腿。",
+      "durationSeconds": 120,
+      "text": "現在開始：準備期。這一段約 2 分鐘。呼吸、放鬆與設定今天只做地圖建立。",
+      "textFile": "audio/today/texts/phase-01.txt",
+      "audioFile": "audio/today/generated/phase-01.wav",
+      "audioDurationSeconds": 13.56,
+      "audioSha256": "a7529be3093826f0684da10144a54802a924cd83da513a68e5b4c057c6b9d97b",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
       "timelineClips": {},
       "timelineEvents": []
     },
     {
       "id": "phase-02",
       "phaseIndex": 1,
-      "phaseLabel": "慢速凱格爾（10 次）",
-      "startsAtSecond": 60,
-      "durationSeconds": 90,
-      "text": "現在開始：慢速凱格爾（10 次）。這一段約 1 分 30 秒。每次收 3 秒、放 6 秒。",
-      "countdownGuidance": {
-        "summary": "3 秒收、6 秒放，共 10 次",
-        "mode": "timed-kegel",
-        "coachPrompt": "慢速凱格爾段落用更短的教練短句帶 10 次節奏，收縮提醒上提，放鬆提醒臀腿一起鬆。"
-      },
-      "timelineClips": {
-        "contract": {
-          "id": "contract",
-          "text": "收緊，上提",
-          "textFile": "audio/today/texts/phase-02-contract.txt",
-          "audioFile": "audio/today/guidance/phase-02-contract.wav",
-          "ttsStyle": "請用自然、穩定、像教練帶動作的台灣中文口吻，簡短清楚地說出：收緊，上提。"
-        },
-        "release": {
-          "id": "release",
-          "text": "放掉，臀腿放鬆",
-          "textFile": "audio/today/texts/phase-02-release.txt",
-          "audioFile": "audio/today/guidance/phase-02-release.wav",
-          "ttsStyle": "請用自然、穩定、像教練帶動作的台灣中文口吻，簡短清楚地說出：放掉，臀腿放鬆。"
-        }
-      },
-      "timelineEvents": [
-        {
-          "id": "phase-02-contract-000",
-          "startAtSecond": 0,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-001",
-          "startAtSecond": 3,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-002",
-          "startAtSecond": 9,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-003",
-          "startAtSecond": 12,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-004",
-          "startAtSecond": 18,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-005",
-          "startAtSecond": 21,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-006",
-          "startAtSecond": 27,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-007",
-          "startAtSecond": 30,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-008",
-          "startAtSecond": 36,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-009",
-          "startAtSecond": 39,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-010",
-          "startAtSecond": 45,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-011",
-          "startAtSecond": 48,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-012",
-          "startAtSecond": 54,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-013",
-          "startAtSecond": 57,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-014",
-          "startAtSecond": 63,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-015",
-          "startAtSecond": 66,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-016",
-          "startAtSecond": 72,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-017",
-          "startAtSecond": 75,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-018",
-          "startAtSecond": 81,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-019",
-          "startAtSecond": 84,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        }
-      ]
+      "phaseLabel": "第 1 回：到 5 分停",
+      "startsAtSecond": 120,
+      "durationSeconds": 180,
+      "text": "現在開始：第 1 回：到 5 分停。這一段約 3 分鐘。穩定上升到 5 分後停止。",
+      "textFile": "audio/today/texts/phase-02.txt",
+      "audioFile": "audio/today/generated/phase-02.wav",
+      "audioDurationSeconds": 9.84,
+      "audioSha256": "32add62b6c96175d4f7d522dd5a0c56015387416bd91a85befd78d87091862f5",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
+      "timelineClips": {},
+      "timelineEvents": []
     },
     {
       "id": "phase-03",
       "phaseIndex": 2,
-      "phaseLabel": "快速凱格爾（10 次）",
-      "startsAtSecond": 150,
-      "durationSeconds": 20,
-      "text": "現在開始：快速凱格爾（10 次）。這一段約 20 秒。輕點一下，立刻完全放掉。",
-      "countdownGuidance": {
-        "summary": "1 秒點收、1 秒全放，共 10 次",
-        "mode": "fast-kegel",
-        "coachPrompt": "快速凱格爾段落用短促節拍口令帶動，重點是輕點收、立刻全放，不要夾屁股或憋氣。"
-      },
-      "timelineClips": {
-        "pulse": {
-          "id": "pulse",
-          "text": "收",
-          "textFile": "audio/today/texts/phase-03-pulse.txt",
-          "audioFile": "audio/today/guidance/phase-03-pulse.wav",
-          "ttsStyle": "請用乾淨、短促、像節拍口令的台灣中文口吻，非常短地說出：收。"
-        },
-        "release": {
-          "id": "release",
-          "text": "放",
-          "textFile": "audio/today/texts/phase-03-release.txt",
-          "audioFile": "audio/today/guidance/phase-03-release.wav",
-          "ttsStyle": "請用乾淨、短促、像節拍口令的台灣中文口吻，非常短地說出：放。"
-        }
-      },
-      "timelineEvents": [
-        {
-          "id": "phase-03-pulse-000",
-          "startAtSecond": 0,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-001",
-          "startAtSecond": 1,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-002",
-          "startAtSecond": 2,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-003",
-          "startAtSecond": 3,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-004",
-          "startAtSecond": 4,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-005",
-          "startAtSecond": 5,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-006",
-          "startAtSecond": 6,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-007",
-          "startAtSecond": 7,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-008",
-          "startAtSecond": 8,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-009",
-          "startAtSecond": 9,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-010",
-          "startAtSecond": 10,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-011",
-          "startAtSecond": 11,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-012",
-          "startAtSecond": 12,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-013",
-          "startAtSecond": 13,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-014",
-          "startAtSecond": 14,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-015",
-          "startAtSecond": 15,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-016",
-          "startAtSecond": 16,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-017",
-          "startAtSecond": 17,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-018",
-          "startAtSecond": 18,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-019",
-          "startAtSecond": 19,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        }
-      ]
+      "phaseLabel": "第 2 回：到 6 分停",
+      "startsAtSecond": 300,
+      "durationSeconds": 240,
+      "text": "現在開始：第 2 回：到 6 分停。這一段約 4 分鐘。感受高原區與可控感。",
+      "textFile": "audio/today/texts/phase-03.txt",
+      "audioFile": "audio/today/generated/phase-03.wav",
+      "audioDurationSeconds": 12.48,
+      "audioSha256": "2571b038ddb8235113a9a4da079c34869b0009ba442ddaa34c939bf27a0ac92c",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
+      "timelineClips": {},
+      "timelineEvents": []
     },
     {
       "id": "phase-04",
       "phaseIndex": 3,
-      "phaseLabel": "反向凱格爾",
-      "startsAtSecond": 170,
-      "durationSeconds": 120,
-      "text": "現在開始：反向凱格爾。這一段約 2 分鐘。吸氣下沉，吐氣時保持鬆開。",
-      "countdownGuidance": {
-        "summary": "4 秒吸氣下沉、8 秒吐氣保持鬆，共 10 輪",
-        "mode": "reverse-kegel-breathing",
-        "coachPrompt": "反向凱格爾段落配合呼吸做下沉放鬆，吸氣時往下鬆開，吐氣時繼續保持鬆，不要重新夾緊。"
-      },
-      "timelineClips": {
-        "inhaleDrop": {
-          "id": "inhaleDrop",
-          "text": "吸氣，下沉",
-          "textFile": "audio/today/texts/phase-04-inhale-drop.txt",
-          "audioFile": "audio/today/guidance/phase-04-inhale-drop.wav",
-          "ttsStyle": "請用自然、穩定、像教練帶呼吸的台灣中文口吻，簡短清楚地說出：吸氣，下沉。"
-        },
-        "exhaleSoft": {
-          "id": "exhaleSoft",
-          "text": "吐氣，保持鬆",
-          "textFile": "audio/today/texts/phase-04-exhale-soft.txt",
-          "audioFile": "audio/today/guidance/phase-04-exhale-soft.wav",
-          "ttsStyle": "請用自然、穩定、像教練帶呼吸的台灣中文口吻，簡短清楚地說出：吐氣，保持鬆。"
-        }
-      },
-      "timelineEvents": [
-        {
-          "id": "phase-04-inhaleDrop-000",
-          "startAtSecond": 0,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-001",
-          "startAtSecond": 4,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-002",
-          "startAtSecond": 12,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-003",
-          "startAtSecond": 16,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-004",
-          "startAtSecond": 24,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-005",
-          "startAtSecond": 28,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-006",
-          "startAtSecond": 36,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-007",
-          "startAtSecond": 40,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-008",
-          "startAtSecond": 48,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-009",
-          "startAtSecond": 52,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-010",
-          "startAtSecond": 60,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-011",
-          "startAtSecond": 64,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-012",
-          "startAtSecond": 72,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-013",
-          "startAtSecond": 76,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-014",
-          "startAtSecond": 84,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-015",
-          "startAtSecond": 88,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-016",
-          "startAtSecond": 96,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-017",
-          "startAtSecond": 100,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-018",
-          "startAtSecond": 108,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-019",
-          "startAtSecond": 112,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        }
-      ]
+      "phaseLabel": "第 3 回：接近 7 分立刻停",
+      "startsAtSecond": 540,
+      "durationSeconds": 240,
+      "text": "現在開始：第 3 回：接近 7 分立刻停。這一段約 4 分鐘。有射精感冒出就停，不強求波峰。",
+      "textFile": "audio/today/texts/phase-04.txt",
+      "audioFile": "audio/today/generated/phase-04.wav",
+      "audioDurationSeconds": 11.72,
+      "audioSha256": "c160ec155db09f5e973b41e1d9690531b6e095df759b1f670c6b1a60cb62a1c9",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
+      "timelineClips": {},
+      "timelineEvents": []
     },
     {
       "id": "phase-05",
       "phaseIndex": 4,
-      "phaseLabel": "收尾掃描",
-      "startsAtSecond": 290,
-      "durationSeconds": 60,
-      "text": "現在開始：收尾掃描。這一段約 1 分鐘。檢查會陰、臀部、大腿與排尿感是否有緊繃。",
-      "countdownGuidance": {
-        "summary": "每 12 秒帶一次放鬆檢查，共 5 個提示",
-        "mode": "cooldown-body-scan",
-        "coachPrompt": "收尾掃描段落用溫和短句依序檢查腹部、臀部、大腿、會陰與排尿感，重點是確認有沒有殘留緊繃。"
-      },
-      "timelineClips": {
-        "abdomenRelax": {
-          "id": "abdomenRelax",
-          "text": "腹部，放鬆",
-          "textFile": "audio/today/texts/phase-05-abdomen-relax.txt",
-          "audioFile": "audio/today/guidance/phase-05-abdomen-relax.wav",
-          "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：腹部，放鬆。"
-        },
-        "glutesRelease": {
-          "id": "glutesRelease",
-          "text": "臀部，不要夾",
-          "textFile": "audio/today/texts/phase-05-glutes-release.txt",
-          "audioFile": "audio/today/guidance/phase-05-glutes-release.wav",
-          "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：臀部，不要夾。"
-        },
-        "quadRelax": {
-          "id": "quadRelax",
-          "text": "大腿，放鬆",
-          "textFile": "audio/today/texts/phase-05-quad-relax.txt",
-          "audioFile": "audio/today/guidance/phase-05-quad-relax.wav",
-          "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：大腿，放鬆。"
-        },
-        "pelvicFloorSoft": {
-          "id": "pelvicFloorSoft",
-          "text": "會陰，鬆開",
-          "textFile": "audio/today/texts/phase-05-pelvic-floor-soft.txt",
-          "audioFile": "audio/today/guidance/phase-05-pelvic-floor-soft.wav",
-          "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：會陰，鬆開。"
-        },
-        "urinaryCheck": {
-          "id": "urinaryCheck",
-          "text": "留意排尿感",
-          "textFile": "audio/today/texts/phase-05-urinary-check.txt",
-          "audioFile": "audio/today/guidance/phase-05-urinary-check.wav",
-          "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：留意排尿感。"
-        }
-      },
-      "timelineEvents": [
-        {
-          "id": "phase-05-abdomenRelax-000",
-          "startAtSecond": 0,
-          "clipId": "abdomenRelax",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-05-glutesRelease-001",
-          "startAtSecond": 12,
-          "clipId": "glutesRelease",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-05-quadRelax-002",
-          "startAtSecond": 24,
-          "clipId": "quadRelax",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-05-pelvicFloorSoft-003",
-          "startAtSecond": 36,
-          "clipId": "pelvicFloorSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-05-urinaryCheck-004",
-          "startAtSecond": 48,
-          "clipId": "urinaryCheck",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        }
-      ]
+      "phaseLabel": "收尾放鬆",
+      "startsAtSecond": 780,
+      "durationSeconds": 180,
+      "text": "現在開始：收尾放鬆。這一段約 3 分鐘。可正常結束，最後做呼吸與反向凱格爾。",
+      "textFile": "audio/today/texts/phase-05.txt",
+      "audioFile": "audio/today/generated/phase-05.wav",
+      "audioDurationSeconds": 10.68,
+      "audioSha256": "b70896e705fbdc5df070ff12b86af57b4d8ebbb2a11fdcec7df81d33934021a8",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
+      "timelineClips": {},
+      "timelineEvents": []
     }
-  ],
-  "countdownGuidance": {
-    "phaseId": "phase-01",
-    "summary": "4 秒吸氣、6 秒吐氣，共 6 輪",
-    "events": [
-      {
-        "elapsedSecond": 0,
-        "clipId": "inhale"
-      },
-      {
-        "elapsedSecond": 4,
-        "clipId": "exhale"
-      },
-      {
-        "elapsedSecond": 10,
-        "clipId": "inhale"
-      },
-      {
-        "elapsedSecond": 14,
-        "clipId": "exhale"
-      },
-      {
-        "elapsedSecond": 20,
-        "clipId": "inhale"
-      },
-      {
-        "elapsedSecond": 24,
-        "clipId": "exhale"
-      },
-      {
-        "elapsedSecond": 30,
-        "clipId": "inhale"
-      },
-      {
-        "elapsedSecond": 34,
-        "clipId": "exhale"
-      },
-      {
-        "elapsedSecond": 40,
-        "clipId": "inhale"
-      },
-      {
-        "elapsedSecond": 44,
-        "clipId": "exhale"
-      },
-      {
-        "elapsedSecond": 50,
-        "clipId": "inhale"
-      },
-      {
-        "elapsedSecond": 54,
-        "clipId": "exhale"
-      }
-    ],
-    "clips": [
-      {
-        "id": "inhale",
-        "text": "吸氣",
-        "textFile": "audio/today/texts/phase-01-inhale.txt",
-        "audioFile": "audio/today/guidance/phase-01-inhale.wav",
-        "audioDurationSeconds": 1.32,
-        "audioSha256": "32cfbd27e0ae863d73bffef2a7bf099e68e7a6e34175f12f3201ea31e22dcdc2"
-      },
-      {
-        "id": "exhale",
-        "text": "吐氣",
-        "textFile": "audio/today/texts/phase-01-exhale.txt",
-        "audioFile": "audio/today/guidance/phase-01-exhale.wav",
-        "audioDurationSeconds": 1.92,
-        "audioSha256": "71846f3b58ba42e116decc2bd762719bfbc747ef57a7365e84b17680effb85fd"
-      }
-    ]
-  },
-  "schemaVersion": "timeline-events-v1"
+  ]
 }
