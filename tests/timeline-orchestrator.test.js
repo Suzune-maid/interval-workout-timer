@@ -18,15 +18,58 @@ function createDeferred() {
   return { promise, resolve, reject };
 }
 
-function createScheduler() {
+function createScheduler({ startMs = 0 } = {}) {
   let nextIntervalId = 1;
+  let nowMs = startMs;
   const intervals = new Map();
 
+  async function runDueCallbacksUntil(targetMs, { coalesce = false } = {}) {
+    if (coalesce) {
+      nowMs = targetMs;
+      const dueEntries = [...intervals.entries()]
+        .filter(([, interval]) => interval.nextRunAt <= targetMs)
+        .sort((a, b) => a[1].nextRunAt - b[1].nextRunAt || a[0] - b[0]);
+
+      for (const [id, interval] of dueEntries) {
+        if (!intervals.has(id)) {
+          continue;
+        }
+        interval.nextRunAt = targetMs + interval.delay;
+        await interval.callback();
+      }
+      return;
+    }
+
+    while (true) {
+      let nextEntry = null;
+      for (const [id, interval] of intervals.entries()) {
+        if (interval.nextRunAt > targetMs) {
+          continue;
+        }
+        if (!nextEntry || interval.nextRunAt < nextEntry.interval.nextRunAt || (interval.nextRunAt === nextEntry.interval.nextRunAt && id < nextEntry.id)) {
+          nextEntry = { id, interval };
+        }
+      }
+
+      if (!nextEntry) {
+        nowMs = targetMs;
+        return;
+      }
+
+      nowMs = nextEntry.interval.nextRunAt;
+      nextEntry.interval.nextRunAt += nextEntry.interval.delay;
+      await nextEntry.interval.callback();
+    }
+  }
+
   return {
+    now() {
+      return nowMs;
+    },
     setInterval(callback, delay) {
       const id = nextIntervalId;
       nextIntervalId += 1;
-      intervals.set(id, { callback, delay });
+      intervals.set(id, { callback, delay, nextRunAt: nowMs + delay });
       return id;
     },
     clearInterval(id) {
@@ -40,7 +83,12 @@ function createScheduler() {
       if (!interval) {
         throw new Error(`Unknown interval id: ${id}`);
       }
+      nowMs = interval.nextRunAt;
+      interval.nextRunAt += interval.delay;
       await interval.callback();
+    },
+    async advance(ms, options) {
+      await runDueCallbacksUntil(nowMs + ms, options);
     },
   };
 }
@@ -127,6 +175,7 @@ test('timeline orchestrator 會先送出 preparing，再在 intro 完成後送�
     hasNarrationAudio: () => true,
     setIntervalFn: scheduler.setInterval,
     clearIntervalFn: scheduler.clearInterval,
+    nowFn: scheduler.now,
     onPhasePreparing({ phase }) {
       events.push(`preparing:${phase.label}`);
     },
@@ -164,6 +213,7 @@ test('timeline orchestrator 支援 pause 後以 cue-only resume，且不重設�
     hasNarrationAudio: () => true,
     setIntervalFn: scheduler.setInterval,
     clearIntervalFn: scheduler.clearInterval,
+    nowFn: scheduler.now,
   });
 
   await orchestrator.start({ playbackMode: 'full' });
@@ -203,6 +253,7 @@ test('timeline orchestrator 在 skip 時會取消舊 sequence，不讓舊 intro 
     hasNarrationAudio: () => true,
     setIntervalFn: scheduler.setInterval,
     clearIntervalFn: scheduler.clearInterval,
+    nowFn: scheduler.now,
     onPhasePreparing({ phase }) {
       events.push(`preparing:${phase.label}`);
     },
@@ -253,6 +304,7 @@ test('timeline orchestrator 會在倒數中送出 tick / guidance，並在最後
     hasNarrationAudio: () => true,
     setIntervalFn: scheduler.setInterval,
     clearIntervalFn: scheduler.clearInterval,
+    nowFn: scheduler.now,
     onPhasePreparing({ phase }) {
       events.push(`preparing:${phase.label}`);
     },
@@ -321,6 +373,7 @@ test('timeline orchestrator 在取消流程時會優先使用 generic audio engi
     hasNarrationAudio: () => true,
     setIntervalFn: scheduler.setInterval,
     clearIntervalFn: scheduler.clearInterval,
+    nowFn: scheduler.now,
   });
 
   const startPromise = orchestrator.start();
@@ -333,4 +386,45 @@ test('timeline orchestrator 在取消流程時會優先使用 generic audio engi
   intro.resolve();
   await startPromise;
   assert.equal(scheduler.getActiveIntervalIds().length, 0);
+});
+
+test('timeline orchestrator 在 heartbeat 延遲時，會用 monotonic clock 一次追上多秒而不是只掉 1 秒', async () => {
+  const session = createSessionHarness([
+    { label: '準備放鬆', seconds: 6 },
+  ]);
+  const scheduler = createScheduler();
+  const ticks = [];
+  const guidanceCalls = [];
+  const narration = createNarrationPlayerHarness({
+    guidanceByElapsedSecond: {
+      1: { text: '吸' },
+      2: { text: '停' },
+      3: { text: '吐' },
+    },
+  });
+
+  const orchestrator = createTimelineOrchestrator({
+    sessionController: session,
+    getNarrationPlayer: () => narration.player,
+    hasNarrationAudio: () => true,
+    setIntervalFn: scheduler.setInterval,
+    clearIntervalFn: scheduler.clearInterval,
+    nowFn: scheduler.now,
+    onTick({ state, elapsedSecond }) {
+      ticks.push({ remainingSeconds: state.remainingSeconds, elapsedSecond });
+    },
+    onGuidance({ elapsedSecond }) {
+      guidanceCalls.push(elapsedSecond);
+    },
+  });
+
+  await orchestrator.start();
+  assert.equal(session.getState().remainingSeconds, 6);
+
+  await scheduler.advance(3200, { coalesce: true });
+
+  assert.equal(session.getState().remainingSeconds, 3);
+  assert.deepEqual(ticks.map((item) => item.remainingSeconds), [5, 4, 3]);
+  assert.deepEqual(ticks.map((item) => item.elapsedSecond), [1, 2, 3]);
+  assert.deepEqual(guidanceCalls, [1, 2, 3]);
 });

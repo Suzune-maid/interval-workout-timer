@@ -162,13 +162,58 @@ function installFakeDom() {
 
 function installFakeWindow() {
   let nextIntervalId = 1;
+  let nowMs = 0;
   const intervals = new Map();
 
+  async function runDueCallbacksUntil(targetMs, { coalesce = false } = {}) {
+    if (coalesce) {
+      nowMs = targetMs;
+      const dueEntries = [...intervals.entries()]
+        .filter(([, entry]) => entry.nextRunAt <= targetMs)
+        .sort((a, b) => a[1].nextRunAt - b[1].nextRunAt || a[0] - b[0]);
+
+      for (const [id, entry] of dueEntries) {
+        if (!intervals.has(id)) {
+          continue;
+        }
+        entry.nextRunAt = targetMs + entry.delay;
+        await entry.callback();
+      }
+      return;
+    }
+
+    while (true) {
+      let nextEntry = null;
+      for (const [id, entry] of intervals.entries()) {
+        if (entry.nextRunAt > targetMs) {
+          continue;
+        }
+        if (!nextEntry || entry.nextRunAt < nextEntry.entry.nextRunAt || (entry.nextRunAt === nextEntry.entry.nextRunAt && id < nextEntry.id)) {
+          nextEntry = { id, entry };
+        }
+      }
+
+      if (!nextEntry) {
+        nowMs = targetMs;
+        return;
+      }
+
+      nowMs = nextEntry.entry.nextRunAt;
+      nextEntry.entry.nextRunAt += nextEntry.entry.delay;
+      await nextEntry.entry.callback();
+    }
+  }
+
   globalThis.window = {
+    performance: {
+      now() {
+        return nowMs;
+      },
+    },
     setInterval(callback, delay) {
       const id = nextIntervalId;
       nextIntervalId += 1;
-      intervals.set(id, { callback, delay });
+      intervals.set(id, { callback, delay, nextRunAt: nowMs + delay });
       return id;
     },
     clearInterval(id) {
@@ -177,6 +222,9 @@ function installFakeWindow() {
   };
 
   return {
+    now() {
+      return nowMs;
+    },
     getActiveIntervalIds() {
       return [...intervals.keys()];
     },
@@ -185,7 +233,12 @@ function installFakeWindow() {
       if (!entry) {
         throw new Error(`Unknown interval id: ${id}`);
       }
+      nowMs = entry.nextRunAt;
+      entry.nextRunAt += entry.delay;
       await entry.callback();
+    },
+    async advance(ms, options) {
+      await runDueCallbacksUntil(nowMs + ms, options);
     },
   };
 }
@@ -411,6 +464,28 @@ test('跳到下一段時會停止目前播放並切到下一個 phase', async ()
     assert.ok(pauseEvents.length >= 1, '跳段時應停止目前正在播放的音訊');
     assert.equal(phaseLabel.textContent, calendar[0].session.phases[1].label);
     assert.equal(statusMessage.textContent, `已切換到 ${calendar[0].session.phases[1].label}。按開始後會先播階段說明，再開始倒數。`);
+  } finally {
+    restoreDate();
+  }
+});
+
+test('倒數 heartbeat 延遲後，畫面秒數會用 monotonic clock 正確追上', async () => {
+  const { document, timer, audio, restoreDate } = await bootApp();
+  try {
+    const startButton = document.querySelector('#start-button');
+    const timeDisplay = document.querySelector('#time-display');
+
+    startButton.click();
+    await nextTurn();
+    audio.instances[0].dispatch('ended');
+    await nextTurn();
+    audio.instances[1].dispatch('ended');
+    await nextTurn();
+
+    assert.equal(timeDisplay.textContent, '01:00');
+    await timer.advance(3200, { coalesce: true });
+
+    assert.equal(timeDisplay.textContent, '00:57');
   } finally {
     restoreDate();
   }

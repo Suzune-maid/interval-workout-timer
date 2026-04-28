@@ -6,6 +6,7 @@ export function createTimelineOrchestrator({
   hasNarrationAudio = () => false,
   setIntervalFn = globalThis.window?.setInterval?.bind(globalThis.window),
   clearIntervalFn = globalThis.window?.clearInterval?.bind(globalThis.window),
+  nowFn = () => globalThis.window?.performance?.now?.() ?? Date.now(),
   onPhasePreparing,
   onPhaseStarted,
   onTick,
@@ -21,6 +22,7 @@ export function createTimelineOrchestrator({
   let timerId = null;
   let isPreparingPhase = false;
   let phaseSequenceId = 0;
+  let countdownClock = null;
 
   function getState() {
     return sessionController.getState();
@@ -43,6 +45,29 @@ export function createTimelineOrchestrator({
     timerId = null;
   }
 
+  function resetCountdownClock() {
+    countdownClock = null;
+  }
+
+  function syncCountdownClock(state = getState()) {
+    const phase = currentPhase(state);
+    if (!phase) {
+      countdownClock = null;
+      return null;
+    }
+
+    const baseElapsedSeconds = Math.max(0, phase.seconds - state.remainingSeconds);
+    countdownClock = {
+      sequenceId: phaseSequenceId,
+      phaseIndex: state.currentPhaseIndex,
+      phaseSeconds: phase.seconds,
+      startedAtMs: nowFn(),
+      baseElapsedSeconds,
+      processedElapsedSeconds: baseElapsedSeconds,
+    };
+    return countdownClock;
+  }
+
   function updateState(nextState) {
     return sessionController.setState(nextState);
   }
@@ -59,6 +84,7 @@ export function createTimelineOrchestrator({
     phaseSequenceId += 1;
     isPreparingPhase = false;
     stopTimer();
+    resetCountdownClock();
 
     const player = getPlayer();
     if (player?.stopAll) {
@@ -193,12 +219,14 @@ export function createTimelineOrchestrator({
       void maybePlayCountdownGuidance(getState().currentPhaseIndex, 0, sequenceId);
     }
 
+    syncCountdownClock(getState());
     startCountdownLoop(sequenceId);
     return { kind: 'started', sequenceId };
   }
 
   function startCountdownLoop(sequenceId) {
     stopTimer();
+    syncCountdownClock(getState());
     timerId = setIntervalFn(async () => {
       if (sequenceId !== phaseSequenceId) {
         stopTimer();
@@ -206,81 +234,110 @@ export function createTimelineOrchestrator({
       }
 
       const state = getState();
-      if (state.remainingSeconds > 1) {
-        const phase = currentPhase(state);
-        const elapsedSecond = phase ? phase.seconds - state.remainingSeconds + 1 : 0;
-        updateState({
-          ...state,
-          remainingSeconds: state.remainingSeconds - 1,
-        });
-
-        onTick?.({
-          phase,
-          state: getState(),
-          elapsedSecond,
-          sequenceId,
-        });
-
-        await maybePlayCountdownGuidance(
-          phase?.phaseIndex ?? getState().currentPhaseIndex,
-          elapsedSecond,
-          sequenceId,
-        );
+      const phase = currentPhase(state);
+      const clock = countdownClock;
+      if (!phase || !clock || clock.sequenceId !== sequenceId || clock.phaseIndex !== state.currentPhaseIndex) {
+        syncCountdownClock(state);
         return;
       }
 
-      const finishedPhase = currentPhase();
-      stopTimer();
-      updateState({
-        ...getState(),
-        remainingSeconds: 0,
-        isRunning: false,
-      });
+      const elapsedByClock = Math.max(
+        clock.baseElapsedSeconds,
+        Math.floor((nowFn() - clock.startedAtMs) / 1000) + clock.baseElapsedSeconds,
+      );
+      const cappedElapsed = Math.min(phase.seconds, elapsedByClock);
 
-      onPhaseCompleted?.({
-        phase: finishedPhase,
-        state: getState(),
-        sequenceId,
-      });
+      if (cappedElapsed <= clock.processedElapsedSeconds) {
+        return;
+      }
 
-      if (hasNarrationAudio()) {
-        try {
-          const result = await getPlayer()?.playPhaseEndCue?.();
-          if (sequenceId === phaseSequenceId) {
-            onPhaseEndCueFinished?.({
-              result,
-              phase: finishedPhase,
-              state: getState(),
-              sequenceId,
-            });
-          }
-        } catch (error) {
-          if (sequenceId === phaseSequenceId) {
-            onPhaseEndCueError?.({
-              error,
-              phase: finishedPhase,
-              state: getState(),
-              sequenceId,
-            });
+      for (let elapsedSecond = clock.processedElapsedSeconds + 1; elapsedSecond <= cappedElapsed; elapsedSecond += 1) {
+        if (sequenceId !== phaseSequenceId) {
+          stopTimer();
+          return;
+        }
+
+        const liveState = getState();
+        const livePhase = currentPhase(liveState);
+        if (!livePhase) {
+          resetCountdownClock();
+          stopTimer();
+          return;
+        }
+
+        const nextRemainingSeconds = Math.max(0, livePhase.seconds - elapsedSecond);
+        updateState({
+          ...liveState,
+          remainingSeconds: nextRemainingSeconds,
+          isRunning: nextRemainingSeconds > 0,
+        });
+        countdownClock.processedElapsedSeconds = elapsedSecond;
+
+        if (nextRemainingSeconds > 0) {
+          onTick?.({
+            phase: livePhase,
+            state: getState(),
+            elapsedSecond,
+            sequenceId,
+          });
+
+          await maybePlayCountdownGuidance(
+            livePhase.phaseIndex ?? getState().currentPhaseIndex,
+            elapsedSecond,
+            sequenceId,
+          );
+          continue;
+        }
+
+        const finishedPhase = livePhase;
+        stopTimer();
+        resetCountdownClock();
+        onPhaseCompleted?.({
+          phase: finishedPhase,
+          state: getState(),
+          sequenceId,
+        });
+
+        if (hasNarrationAudio()) {
+          try {
+            const result = await getPlayer()?.playPhaseEndCue?.();
+            if (sequenceId === phaseSequenceId) {
+              onPhaseEndCueFinished?.({
+                result,
+                phase: finishedPhase,
+                state: getState(),
+                sequenceId,
+              });
+            }
+          } catch (error) {
+            if (sequenceId === phaseSequenceId) {
+              onPhaseEndCueError?.({
+                error,
+                phase: finishedPhase,
+                state: getState(),
+                sequenceId,
+              });
+            }
           }
         }
-      }
 
-      if (sequenceId !== phaseSequenceId) {
+        if (sequenceId !== phaseSequenceId) {
+          return;
+        }
+
+        moveToNextPhase();
+
+        if (getState().isComplete) {
+          onSessionCompleted?.({
+            state: getState(),
+            sequenceId,
+          });
+          return;
+        }
+
+        await start({ playbackMode: 'full' });
         return;
       }
-
-      moveToNextPhase();
-
-      if (getState().isComplete) {
-        onSessionCompleted?.({
-          state: getState(),
-          sequenceId,
-        });
-        return;
-      }
-
-      await start({ playbackMode: 'full' });
     }, 1000);
   }
 

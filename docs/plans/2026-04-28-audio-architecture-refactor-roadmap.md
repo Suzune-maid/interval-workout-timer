@@ -37,10 +37,10 @@
 
 ## Current Baseline
 
-截至 **2026-04-28（Phase 4 完成後）**，後續工作應以以下狀態作為新基線，而不是以 roadmap 初稿建立時的數字為準：
+截至 **2026-04-28（Phase 5 完成後）**，後續工作應以以下狀態作為新基線，而不是以 roadmap 初稿建立時的數字為準：
 
-- `app.js` 約 **325 行**、`audio-engine.js` 約 **186 行**、`audio-player.js` 約 **169 行**、`narration-manifest.js` 約 **93 行**、`timeline-orchestrator.js` 約 **334 行**、`timer-core.js` 約 **477 行**。
-- `npm test` 全綠（目前 **44/44**）。
+- `app.js` 約 **325 行**、`audio-engine.js` 約 **186 行**、`audio-player.js` 約 **169 行**、`narration-manifest.js` 約 **93 行**、`timeline-orchestrator.js` 約 **391 行**、`timer-core.js` 約 **477 行**。
+- `npm test` 全綠（目前 **46/46**）。
 - 日程表已支援點選切換日程。
 - `phase-01` 到 `phase-05` 的倒數中引導已完成並部署。
 - `audio/today/narration-manifest.json`、`audio/today/narration-source.json`、`audio/library/2026-04-27/manifest.json` 已改為 `schemaVersion: timeline-events-v1`。
@@ -56,6 +56,7 @@
   - Phase 2: `a5d9389` — `refactor: extract timeline orchestrator`
   - Phase 3: `5bdff1f` — `refactor: introduce audio engine abstraction`
   - Phase 4: `refactor: migrate narration manifest to timeline events`
+  - Phase 5: `refactor: schedule playback with monotonic timing`
 
 ---
 
@@ -320,12 +321,13 @@
 
 # Phase 5: Introduce Monotonic Time Scheduling
 
+**Status:** ✅ Completed (`pending commit`)
+
 **Objective:** 改善音訊與倒數同步的穩定性，為未來更密集的同播與節拍需求打底。
 
 **Files:**
 - Modify: `timeline-orchestrator.js`
-- Modify: `audio-engine.js`
-- Test: `tests/audio-engine.test.js`
+- Test: `tests/timeline-orchestrator.test.js`
 - Test: `tests/app-flow.test.js`
 
 **Implementation Direction:**
@@ -335,11 +337,22 @@
   - 未來若切到 Web Audio API，可使用 `AudioContext.currentTime`
 - 把 event queue 與 UI render queue 分開。
 
+**What shipped in this phase:**
+- `timeline-orchestrator.js` 已新增 `nowFn` 注入點，預設使用 `window.performance.now()`，並以 monotonic anchor clock 追蹤 phase 已經過的秒數。
+- 倒數 loop 已從「每次 heartbeat 只扣 1 秒」改為「依實際經過時間 catch up」，即使 heartbeat 延遲，也會一次補齊遺失的秒數。
+- pause / resume 會重建 countdown anchor，避免恢復後秒數錯位。
+- `tests/timeline-orchestrator.test.js` 已新增 heartbeat 延遲 catch-up 測試。
+- `tests/app-flow.test.js` 已新增延遲 heartbeat 後 UI 秒數追上的 integration test。
+
 **Verification:**
-- 模擬測試：
+- `npm test`（**46/46** 全綠）
+- `tests/timeline-orchestrator.test.js` 已覆蓋：
   - 多事件接近時的順序
   - pause / resume 後的時間恢復
-  - skip 後舊事件不可漏播或殘播
+  - heartbeat 延遲後的 catch-up 行為
+  - skip 後舊 sequence 不可殘留
+- `tests/app-flow.test.js` 已覆蓋延遲 heartbeat 後畫面秒數正確追上。
+- 本地 smoke test 與後續 GitHub Pages live 驗證通過。
 
 **Exit Criteria:**
 - 音訊事件觸發不再深度綁死每秒 `setInterval` 的 await 流程。
