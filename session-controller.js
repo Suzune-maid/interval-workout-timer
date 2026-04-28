@@ -1,4 +1,5 @@
 import {
+  advancePhase,
   buildNarrationEntries,
   createSelectedDayState,
   createSessionStateFromPhases,
@@ -31,6 +32,11 @@ export function createSessionController({ calendar, todayInfo, todayEntry }) {
     return state;
   }
 
+  function advanceSessionPhase() {
+    state = advancePhase(state);
+    return state;
+  }
+
   return {
     getCalendar() {
       return calendar;
@@ -45,6 +51,7 @@ export function createSessionController({ calendar, todayInfo, todayEntry }) {
       return state;
     },
     setState,
+    advancePhase: advanceSessionPhase,
     selectedEntry,
     switchSelectedDay,
     resetSessionState,
