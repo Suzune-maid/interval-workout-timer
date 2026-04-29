@@ -92,7 +92,7 @@ python3 -m http.server 8124
 
 ## 測試
 
-目前測試基線為 **48/48 通過**。
+目前測試基線為 **49/49 通過**。
 
 ```bash
 npm test
@@ -101,3 +101,14 @@ npm test
 ## GitHub Pages
 
 網站部署在 GitHub Pages，可直接於手機或桌機瀏覽器使用。
+
+- 正式站：<https://suzune-maid.github.io/interval-workout-timer/>
+- 本 repo **沒有**額外的 `.github/workflows` deploy pipeline
+- 目前採用 GitHub Pages 的 branch-based deployment
+- 只要 push 到 `main`，GitHub Pages 就會自動重新發佈正式站
+- 實際更新通常會有短暫 propagation delay，不是 push 完瞬間就看到新版本
+
+建議發版後至少做兩件事：
+
+1. 先跑一次 `npm test`
+2. push 後用正式站網址確認新內容是否已經出現
