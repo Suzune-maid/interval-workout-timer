@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "createdAt": "2026-04-28",
+  "style": "teasing-plus",
+  "label": "加強挑逗型",
+  "notes": "Stronger teasing/edge-play tone with restraint, anticipation, and keep-it-close language. Avoid explicit descriptions.",
+  "scoreCalibration": [
+    {"id": "teasing-plus-score-01", "scoreRange": "3-4", "text": "如果現在只是微微發熱，這樣正好，先讓想要慢慢長出來。"},
+    {"id": "teasing-plus-score-02", "scoreRange": "3-4", "text": "還不用太強，只要讓那種想靠近的感覺慢慢清楚就好。"},
+    {"id": "teasing-plus-score-03", "scoreRange": "3-4", "text": "你已經開始進來了，先別急著把感覺推太快。"},
+    {"id": "teasing-plus-score-04", "scoreRange": "4-5", "text": "到四五分了，感覺已經夠清楚，先不要急著再往上撲。"},
+    {"id": "teasing-plus-score-05", "scoreRange": "4-5", "text": "現在這種熱度剛剛好，讓它留在身體裡多走一會。"},
+    {"id": "teasing-plus-score-06", "scoreRange": "5-6", "text": "五到六分，很剛好，已經開始想要更多了，對吧。"},
+    {"id": "teasing-plus-score-07", "scoreRange": "5-6", "text": "這個區間最迷人，因為你明明想更近，卻還能留住自己。"},
+    {"id": "teasing-plus-score-08", "scoreRange": "6-7", "text": "六到七分了，會有點忍不住，這時候最要小心，也最有味道。"},
+    {"id": "teasing-plus-score-09", "scoreRange": "6-7", "text": "越是想更快，就越先慢一點，讓那股渴望吊著。"},
+    {"id": "teasing-plus-score-10", "scoreRange": "7-8", "text": "靠近七八分了，先別急，讓它在門口多停一下。"},
+    {"id": "teasing-plus-score-11", "scoreRange": "7-8", "text": "如果已經快滿出來，就溫柔地退半步，不要讓它搶走你。"}
+  ],
+  "holdSteady": [
+    {"id": "teasing-plus-hold-01", "text": "很好，就這樣，先不要再多。"},
+    {"id": "teasing-plus-hold-02", "text": "讓這種想要吊在這裡，多留一下。"},
+    {"id": "teasing-plus-hold-03", "text": "不要急著滿出來，先讓它發酵。"},
+    {"id": "teasing-plus-hold-04", "text": "你可以再想要一點，但先別馬上跟上去。"},
+    {"id": "teasing-plus-hold-05", "text": "讓熱度留著，讓衝動先等等你。"},
+    {"id": "teasing-plus-hold-06", "text": "先抱住這種感覺，不要一下子放手。"},
+    {"id": "teasing-plus-hold-07", "text": "保持這個節奏，讓自己一直想更靠近。"},
+    {"id": "teasing-plus-hold-08", "text": "現在最迷人的，就是還沒給滿。"},
+    {"id": "teasing-plus-hold-09", "text": "不要急著追到底，先享受快要靠近的感覺。"},
+    {"id": "teasing-plus-hold-10", "text": "不要把自己交出去太快，先留一點在手上。"}
+  ],
+  "warmUp": [
+    {"id": "teasing-plus-warm-01", "text": "把注意力放回那個你最捨不得離開的感覺。"},
+    {"id": "teasing-plus-warm-02", "text": "先別急著快，只要再靠近一點點。"},
+    {"id": "teasing-plus-warm-03", "text": "讓想要慢慢堆，不要一下子推滿。"},
+    {"id": "teasing-plus-warm-04", "text": "如果還不夠清楚，就再往前半步，然後停住。"},
+    {"id": "teasing-plus-warm-05", "text": "把呼吸送進去，讓熱度自己長上來。"},
+    {"id": "teasing-plus-warm-06", "text": "你不用立刻得到更多，只要先讓自己更想要。"},
+    {"id": "teasing-plus-warm-07", "text": "留一點空白，感覺反而會更明顯。"},
+    {"id": "teasing-plus-warm-08", "text": "先不要滿，半滿的時候最撩人。"},
+    {"id": "teasing-plus-warm-09", "text": "讓那種差一點點就更近的感覺，多停一會。"},
+    {"id": "teasing-plus-warm-10", "text": "再清楚一點，再靠近一點，然後先不要動太快。"}
+  ],
+  "coolDown": [
+    {"id": "teasing-plus-cool-01", "text": "先慢下來，別急著跟著衝動跑。"},
+    {"id": "teasing-plus-cool-02", "text": "先退半步，還不用把這種感覺丟掉。"},
+    {"id": "teasing-plus-cool-03", "text": "熱度留著，速度先收回來。"},
+    {"id": "teasing-plus-cool-04", "text": "不要一下子失手，先把自己抱回來。"},
+    {"id": "teasing-plus-cool-05", "text": "把呼吸拉長，讓那股急切慢一點。"},
+    {"id": "teasing-plus-cool-06", "text": "你不是要停掉一切，只是先別讓它把你帶走。"},
+    {"id": "teasing-plus-cool-07", "text": "先把清醒留住，感覺才不會一下散掉。"},
+    {"id": "teasing-plus-cool-08", "text": "別急著過去，先在門口多待一下。"},
+    {"id": "teasing-plus-cool-09", "text": "不要硬撐，也不要硬衝，先讓自己穩住。"},
+    {"id": "teasing-plus-cool-10", "text": "先留住你自己，再決定要不要更近。"}
+  ],
+  "phaseOpen": [
+    {"id": "teasing-plus-open-01", "target": "3-4", "text": "這一段，不用急著變強，只要讓想要慢慢醒來就好。"},
+    {"id": "teasing-plus-open-02", "target": "4-5", "text": "這一段，把熱度維持在四到五分，先不要急著給太多。"},
+    {"id": "teasing-plus-open-03", "target": "5-6", "text": "這一段，讓自己停在五到六分，明明想更近，但先別急。"},
+    {"id": "teasing-plus-open-04", "target": "6-7", "text": "這一段，可以靠近邊緣，但不要把自己交出去。"},
+    {"id": "teasing-plus-open-05", "target": "7-8", "text": "這一段，靠近就好，先不要過去。"}
+  ]
+}

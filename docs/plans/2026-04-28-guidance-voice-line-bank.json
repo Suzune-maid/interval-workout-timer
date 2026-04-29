@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "createdAt": "2026-04-28",
+  "purpose": "Guidance voice content ideation for excitement score calibration, hold, warm-up, cool-down, and phase opening.",
+  "styles": {
+    "coach": {
+      "label": "冷靜教練型",
+      "scoreCalibration": [
+        {"id": "coach-score-01", "scoreRange": "3", "text": "三分左右，身體開始醒來了。"},
+        {"id": "coach-score-02", "scoreRange": "3-4", "text": "三到四分就夠了，先不要急著往上加。"},
+        {"id": "coach-score-03", "scoreRange": "4", "text": "四分，感覺已經清楚，但還很穩。"},
+        {"id": "coach-score-04", "scoreRange": "4-5", "text": "四到五分，是可以開始做控制的區間。"},
+        {"id": "coach-score-05", "scoreRange": "5", "text": "五分，這是很好的工作區。"},
+        {"id": "coach-score-06", "scoreRange": "5-6", "text": "五到六分，感受明顯，但還留得住。"},
+        {"id": "coach-score-07", "scoreRange": "6", "text": "六分，開始有想加快的衝動了，先穩住。"},
+        {"id": "coach-score-08", "scoreRange": "6-7", "text": "六到七分，已經接近邊緣，要保持清醒。"},
+        {"id": "coach-score-09", "scoreRange": "7", "text": "七分，現在的重點不是更強，是更穩。"},
+        {"id": "coach-score-10", "scoreRange": "8", "text": "八分，先退半格，不要等到太晚。"}
+      ],
+      "holdSteady": [
+        {"id": "coach-hold-01", "text": "呼吸穩，節奏穩，讓感覺停在這裡。"},
+        {"id": "coach-hold-02", "text": "不用更快，先把現在的強度留住。"},
+        {"id": "coach-hold-03", "text": "身體可以熱，節奏不要亂。"},
+        {"id": "coach-hold-04", "text": "讓興奮在這裡堆，不要一下推滿。"},
+        {"id": "coach-hold-05", "text": "保持專注，但不要偷偷用力。"},
+        {"id": "coach-hold-06", "text": "留在這個區間，先做穩定。"},
+        {"id": "coach-hold-07", "text": "不是更強，是更可控。"},
+        {"id": "coach-hold-08", "text": "讓感覺清楚，但不要急躁。"},
+        {"id": "coach-hold-09", "text": "用同樣的節奏，再維持一下。"},
+        {"id": "coach-hold-10", "text": "先把這個強度守住。"}
+      ],
+      "warmUp": [
+        {"id": "coach-warm-01", "text": "把注意力收回最有感的地方。"},
+        {"id": "coach-warm-02", "text": "讓感覺再清楚一點點就好。"},
+        {"id": "coach-warm-03", "text": "不要急，讓身體自己往上走。"},
+        {"id": "coach-warm-04", "text": "如果還太平，就只加一點點。"},
+        {"id": "coach-warm-05", "text": "找到那個你想停留的節奏。"},
+        {"id": "coach-warm-06", "text": "讓期待慢慢升起來，不用一下推高。"},
+        {"id": "coach-warm-07", "text": "每一次呼吸，都讓專注再深一點。"},
+        {"id": "coach-warm-08", "text": "先求清楚，不求猛烈。"},
+        {"id": "coach-warm-09", "text": "再往前半格，看看能不能穩住。"},
+        {"id": "coach-warm-10", "text": "讓熱度慢慢長，不要一下燒完。"}
+      ],
+      "coolDown": [
+        {"id": "coach-cool-01", "text": "先慢一點，不要追。"},
+        {"id": "coach-cool-02", "text": "把呼吸拉長，把力氣放掉。"},
+        {"id": "coach-cool-03", "text": "退半格就好，不用一下退到底。"},
+        {"id": "coach-cool-04", "text": "肩膀放掉，下巴放掉，腹部放掉。"},
+        {"id": "coach-cool-05", "text": "把節奏收回來，感覺先留著。"},
+        {"id": "coach-cool-06", "text": "如果太急，先停在這裡觀察。"},
+        {"id": "coach-cool-07", "text": "讓衝動往後退一點。"},
+        {"id": "coach-cool-08", "text": "不要硬頂，先把清醒找回來。"},
+        {"id": "coach-cool-09", "text": "現在要做的是回到控制裡。"},
+        {"id": "coach-cool-10", "text": "先穩，再決定要不要往前。"}
+      ],
+      "phaseOpen": [
+        {"id": "coach-open-01", "target": "3-4", "text": "這一段，先把自己帶到四分左右。"},
+        {"id": "coach-open-02", "target": "4-5", "text": "這一段，維持在四到五分，不要急著衝高。"},
+        {"id": "coach-open-03", "target": "5", "text": "這一段，把興奮穩在五分上下。"},
+        {"id": "coach-open-04", "target": "6", "text": "這一段，可以升到六分，但不要超過太多。"},
+        {"id": "coach-open-05", "target": "6-7", "text": "這一段，如果靠近七分，就先學會退半格。"}
+      ]
+    },
+    "teasing": {
+      "label": "溫柔挑逗型",
+      "scoreCalibration": [
+        {"id": "teasing-score-01", "scoreRange": "3", "text": "如果現在只是微微有感，這樣很好，先讓身體慢慢醒來。"},
+        {"id": "teasing-score-02", "scoreRange": "3-4", "text": "你已經進到三四分了，先待在這裡，不用急。"},
+        {"id": "teasing-score-03", "scoreRange": "4", "text": "四分左右，感覺開始變得清楚了。"},
+        {"id": "teasing-score-04", "scoreRange": "5", "text": "到五分了，這種剛剛好的熱度，很適合先留住。"},
+        {"id": "teasing-score-05", "scoreRange": "5-6", "text": "五到六分，身體已經很誠實了，但你還握得住。"},
+        {"id": "teasing-score-06", "scoreRange": "6", "text": "六分左右，會開始想要更多，先別急著給太多。"},
+        {"id": "teasing-score-07", "scoreRange": "7", "text": "靠近七分了，讓自己清醒一點，別一下子衝出去。"},
+        {"id": "teasing-score-08", "scoreRange": "8", "text": "如果快到八分，就先溫柔地退半步。"}
+      ],
+      "holdSteady": [
+        {"id": "teasing-hold-01", "text": "很好，先待在這裡，讓感覺多停一下。"},
+        {"id": "teasing-hold-02", "text": "不用急著更強，現在這樣就很夠。"},
+        {"id": "teasing-hold-03", "text": "讓身體慢慢說話，你只要繼續聽。"},
+        {"id": "teasing-hold-04", "text": "留一點想要，不要一下子把它用完。"},
+        {"id": "teasing-hold-05", "text": "先穩穩地抱住這個熱度。"},
+        {"id": "teasing-hold-06", "text": "讓期待留在身體裡，再多停一下。"},
+        {"id": "teasing-hold-07", "text": "感覺可以再深一點，但節奏先別亂。"},
+        {"id": "teasing-hold-08", "text": "現在不要追快，追清楚就好。"},
+        {"id": "teasing-hold-09", "text": "這個區間很剛好，先不要離開它。"},
+        {"id": "teasing-hold-10", "text": "讓它慢慢堆起來，別急著衝頂。"}
+      ],
+      "warmUp": [
+        {"id": "teasing-warm-01", "text": "把注意力放回最想靠近的那個感覺。"},
+        {"id": "teasing-warm-02", "text": "再清楚一點點，就好。"},
+        {"id": "teasing-warm-03", "text": "先別急著滿出來，讓渴望多留一下。"},
+        {"id": "teasing-warm-04", "text": "讓期待走在前面，身體慢慢跟上。"},
+        {"id": "teasing-warm-05", "text": "不用很快，只要讓感覺更近一點。"},
+        {"id": "teasing-warm-06", "text": "如果想更靠近，可以再往前半步。"},
+        {"id": "teasing-warm-07", "text": "讓那種想要的感覺慢慢長大。"},
+        {"id": "teasing-warm-08", "text": "先不要一下子給滿，留一點空間給它發酵。"},
+        {"id": "teasing-warm-09", "text": "找到那個讓你捨不得停下來的節奏。"},
+        {"id": "teasing-warm-10", "text": "再多一點點，然後看看你能不能穩住它。"}
+      ],
+      "coolDown": [
+        {"id": "teasing-cool-01", "text": "先慢下來一點，沒關係。"},
+        {"id": "teasing-cool-02", "text": "讓呼吸把你帶回來。"},
+        {"id": "teasing-cool-03", "text": "把力氣鬆開，感覺不用馬上消失。"},
+        {"id": "teasing-cool-04", "text": "先退半步，還來得及。"},
+        {"id": "teasing-cool-05", "text": "別急著跟著衝動走，先看清楚它。"},
+        {"id": "teasing-cool-06", "text": "讓肩膀鬆掉，讓下巴也鬆掉。"},
+        {"id": "teasing-cool-07", "text": "你不是要忍住一切，只是先把它留住。"},
+        {"id": "teasing-cool-08", "text": "熱度可以在，速度先降下來。"},
+        {"id": "teasing-cool-09", "text": "不要硬撐，溫柔一點把自己拉回來。"},
+        {"id": "teasing-cool-10", "text": "先留住自己，再決定要不要往前。"}
+      ],
+      "phaseOpen": [
+        {"id": "teasing-open-01", "target": "3-4", "text": "這一段，先讓自己慢慢進到狀態就好。"},
+        {"id": "teasing-open-02", "target": "4-5", "text": "這一段，把感覺養到四到五分，先不要急。"},
+        {"id": "teasing-open-03", "target": "5", "text": "這一段，讓熱度穩穩留在五分上下。"},
+        {"id": "teasing-open-04", "target": "6", "text": "這一段，可以再高一點，但記得把自己帶在身上。"},
+        {"id": "teasing-open-05", "target": "6-7", "text": "這一段，如果開始太靠近邊緣，就溫柔地退半步。"}
+      ]
+    }
+  }
+}

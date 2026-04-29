@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "createdAt": "2026-04-28",
+  "style": "whispery",
+  "label": "曖昧耳語版",
+  "notes": "Close, low-volume, breathy companion tone. Short lines, more pauses, less directive, suitable for edge holding and intimate guidance.",
+  "scoreCalibration": [
+    {"id": "whispery-score-01", "scoreRange": "3-4", "text": "現在這樣……剛剛好。"},
+    {"id": "whispery-score-02", "scoreRange": "3-4", "text": "先讓感覺慢慢醒來。"},
+    {"id": "whispery-score-03", "scoreRange": "3-4", "text": "不用急……先有感就好。"},
+    {"id": "whispery-score-04", "scoreRange": "4-5", "text": "已經開始清楚了。"},
+    {"id": "whispery-score-05", "scoreRange": "4-5", "text": "很好……先停在這裡。"},
+    {"id": "whispery-score-06", "scoreRange": "5-6", "text": "嗯……已經很有感覺了。"},
+    {"id": "whispery-score-07", "scoreRange": "5-6", "text": "這個熱度……先抱住。"},
+    {"id": "whispery-score-08", "scoreRange": "6-7", "text": "快靠近了……先慢一點。"},
+    {"id": "whispery-score-09", "scoreRange": "6-7", "text": "很好，但先不要過去。"},
+    {"id": "whispery-score-10", "scoreRange": "7-8", "text": "就停在門口……先不要再多。"},
+    {"id": "whispery-score-11", "scoreRange": "7-8", "text": "不要一下子交出去……先留住。"}
+  ],
+  "holdSteady": [
+    {"id": "whispery-hold-01", "text": "很好……就這樣。"},
+    {"id": "whispery-hold-02", "text": "先留在這裡。"},
+    {"id": "whispery-hold-03", "text": "不要急，再多停一下。"},
+    {"id": "whispery-hold-04", "text": "讓感覺自己待著。"},
+    {"id": "whispery-hold-05", "text": "先不要給滿。"},
+    {"id": "whispery-hold-06", "text": "留一點點，就好。"},
+    {"id": "whispery-hold-07", "text": "熱度留著……速度慢一點。"},
+    {"id": "whispery-hold-08", "text": "先不要放掉。"},
+    {"id": "whispery-hold-09", "text": "就這樣，再一下下。"},
+    {"id": "whispery-hold-10", "text": "把這種想要……輕輕留住。"}
+  ],
+  "warmUp": [
+    {"id": "whispery-warm-01", "text": "再靠近一點點。"},
+    {"id": "whispery-warm-02", "text": "不用快……只要更清楚一點。"},
+    {"id": "whispery-warm-03", "text": "讓注意力回來。"},
+    {"id": "whispery-warm-04", "text": "再深一點點，就好。"},
+    {"id": "whispery-warm-05", "text": "讓期待慢慢長出來。"},
+    {"id": "whispery-warm-06", "text": "只要再近一點……就夠了。"},
+    {"id": "whispery-warm-07", "text": "把呼吸放進去。"},
+    {"id": "whispery-warm-08", "text": "讓那種想要，慢慢浮上來。"},
+    {"id": "whispery-warm-09", "text": "不用追，讓它自己上來。"},
+    {"id": "whispery-warm-10", "text": "靠近就好，先不要到底。"}
+  ],
+  "coolDown": [
+    {"id": "whispery-cool-01", "text": "先慢一點。"},
+    {"id": "whispery-cool-02", "text": "呼吸拉回來。"},
+    {"id": "whispery-cool-03", "text": "退半步……就好。"},
+    {"id": "whispery-cool-04", "text": "先別跟上去。"},
+    {"id": "whispery-cool-05", "text": "熱度留著，速度先收。"},
+    {"id": "whispery-cool-06", "text": "不用一下退很遠。"},
+    {"id": "whispery-cool-07", "text": "把自己帶回來。"},
+    {"id": "whispery-cool-08", "text": "先穩住……沒關係。"},
+    {"id": "whispery-cool-09", "text": "先把清醒留著。"},
+    {"id": "whispery-cool-10", "text": "慢慢來……還來得及。"}
+  ],
+  "phaseOpen": [
+    {"id": "whispery-open-01", "target": "3-4", "text": "這一段，先慢慢醒來就好。"},
+    {"id": "whispery-open-02", "target": "4-5", "text": "這一段，停在四到五分就很好。"},
+    {"id": "whispery-open-03", "target": "5-6", "text": "這一段，把感覺留在五到六分。"},
+    {"id": "whispery-open-04", "target": "6-7", "text": "這一段，可以靠近，但先別過去。"},
+    {"id": "whispery-open-05", "target": "7-8", "text": "這一段，就停在門口。"}
+  ]
+}
