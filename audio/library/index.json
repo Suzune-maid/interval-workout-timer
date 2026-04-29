@@ -21,6 +21,17 @@
       "entryCount": 5,
       "schemaVersion": "timeline-events-v1",
       "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-04-29",
+      "sourceDate": "2026-04-29",
+      "weekNumber": 1,
+      "dayNumber": 3,
+      "sessionTitle": "放鬆日",
+      "manifestFile": "audio/library/2026-04-29/manifest.json",
+      "entryCount": 3,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
     }
   ],
   "schemaVersion": "timeline-events-v1",

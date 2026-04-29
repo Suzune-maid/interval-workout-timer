@@ -72,7 +72,7 @@
   - 今日語音素材的來源資料，同步使用 `timeline-events-v1`
 - `audio/library/index.json`
   - 已建立日期的語音索引，並指向對應 timeline schema
-  - 目前收錄 `2026-04-27` 與 `2026-04-28` 兩天素材
+  - 目前收錄 `2026-04-27`、`2026-04-28` 與 `2026-04-29` 三天素材
 - `audio/library/<date>/manifest.json`
   - 該日期每一段的文本、音檔、長度、sha256，以及 `timelineClips` / `timelineEvents`
 - `audio/schema/timeline-event.schema.json`
