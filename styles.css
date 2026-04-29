@@ -251,6 +251,7 @@ button.primary {
 
 .plan-panel,
 .score-panel,
+.arousal-panel,
 .schedule-panel {
   margin-top: 24px;
 }
@@ -290,7 +291,8 @@ button.primary {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.score-card {
+.score-card,
+.arousal-card {
   padding: 18px;
 }
 
@@ -299,6 +301,37 @@ button.primary {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--warn);
+}
+
+.arousal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.arousal-card {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.arousal-title {
+  margin-bottom: 10px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--warn);
+}
+
+.arousal-hints {
+  margin-top: 12px;
+}
+
+.arousal-callout {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border: 1px solid rgba(141, 180, 255, 0.2);
+  border-radius: 20px;
+  background: rgba(141, 180, 255, 0.08);
 }
 
 .schedule-grid {
@@ -386,7 +419,8 @@ button.primary {
 @media (max-width: 1024px) {
   .top-grid,
   .schedule-grid,
-  .score-grid {
+  .score-grid,
+  .arousal-grid {
     grid-template-columns: 1fr;
   }
 }
