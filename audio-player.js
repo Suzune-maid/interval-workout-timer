@@ -22,13 +22,9 @@ export function createNarrationPlayer(manifest, options = {}) {
   const playedGuidanceEvents = new Set();
 
   async function playPhaseIntro(phaseIndex, playbackMode = 'full') {
-    const entry = entries.find((item) => item.phaseIndex === phaseIndex);
+    const entry = entries.find((item) => item.phaseIndex === phaseIndex) ?? null;
 
-    if (!entry) {
-      return null;
-    }
-
-    if (playbackMode === 'full') {
+    if (playbackMode === 'full' && entry?.audioFile) {
       if (lastPlayedId === entry.id) {
         return entry;
       }
@@ -60,7 +56,7 @@ export function createNarrationPlayer(manifest, options = {}) {
       }
     }
 
-    return entry;
+    return entry ?? { phaseIndex, phaseLabel: null };
   }
 
   async function playCountdownGuidance(phaseIndex, elapsedSecond) {

@@ -37,23 +37,31 @@ const timeline = createTimelineOrchestrator({
   hasNarrationAudio: hasNarrationAudioForSelectedDay,
   setIntervalFn: window.setInterval.bind(window),
   clearIntervalFn: window.clearInterval.bind(window),
-  onPhasePreparing({ phase, playbackMode, hasNarrationAudio }) {
+  onPhasePreparing({ phase, state, playbackMode, hasNarrationAudio, willPlayStartCue }) {
+    const isResuming = state.remainingSeconds < phase.seconds;
     refs.statusMessage.textContent = hasNarrationAudio
       ? playbackMode === 'full'
         ? `先播放 ${phase.label} 的階段說明與開始音效，之後才會開始倒數。`
         : `準備恢復 ${phase.label}，先播放開始音效。`
-      : `${phase.label} 目前會直接開始倒數，這一天尚未配置專用語音。`;
+      : willPlayStartCue
+        ? isResuming
+          ? `準備恢復 ${phase.label}，先播放開始音效。`
+          : `準備開始 ${phase.label}，先播放開始音效。`
+        : `${phase.label} 目前會直接開始倒數，這一天尚未配置專用語音。`;
     syncTimerViews();
     syncGuidanceLive();
   },
-  onPhaseIntroFinished({ entry, playbackMode, sequenceId }) {
-    if (!entry || sequenceId !== timeline.getSequenceId()) {
+  onPhaseIntroFinished({ entry, phase, playbackMode, hasNarrationAudio, sequenceId }) {
+    if (sequenceId !== timeline.getSequenceId()) {
       return;
     }
 
+    const phaseLabel = hasNarrationAudio
+      ? entry?.phaseLabel ?? phase?.label ?? '目前段落'
+      : phase?.label ?? '目前段落';
     refs.narrationStatusElement.textContent = playbackMode === 'full'
-      ? `階段說明與開始音效已播完：${entry.phaseLabel}`
-      : `開始音效已播完：${entry.phaseLabel}`;
+      ? `階段說明與開始音效已播完：${phaseLabel}`
+      : `開始音效已播完：${phaseLabel}`;
   },
   onPhaseIntroError({ sequenceId }) {
     if (sequenceId !== timeline.getSequenceId()) {
@@ -62,10 +70,10 @@ const timeline = createTimelineOrchestrator({
 
     refs.narrationStatusElement.textContent = '語音或開始音效播放失敗，仍會直接開始倒數。';
   },
-  onPhaseStarted({ phase, playbackMode }) {
-    refs.statusMessage.textContent = playbackMode === 'full'
-      ? `${phase.label} 開始倒數。`
-      : `${phase.label} 已恢復倒數。`;
+  onPhaseStarted({ phase, state }) {
+    refs.statusMessage.textContent = state.remainingSeconds < phase.seconds
+      ? `${phase.label} 已恢復倒數。`
+      : `${phase.label} 開始倒數。`;
     syncTimerViews();
     syncGuidanceLive();
   },
@@ -168,7 +176,9 @@ refs.skipButton.addEventListener('click', () => {
   if (result.kind === 'session-complete') {
     refs.statusMessage.textContent = '已跳到目前課表最後。這一天的主要流程完成。';
   } else {
-    refs.statusMessage.textContent = `已切換到 ${currentPhase().label}。按開始後會先播階段說明，再開始倒數。`;
+    refs.statusMessage.textContent = hasNarrationAudioForSelectedDay()
+      ? `已切換到 ${currentPhase().label}。按開始後會先播階段說明，再開始倒數。`
+      : `已切換到 ${currentPhase().label}。按開始後會先播開始音效，再開始倒數。`;
   }
 
   syncTimerViews();

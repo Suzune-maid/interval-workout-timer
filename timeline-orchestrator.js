@@ -157,7 +157,10 @@ export function createTimelineOrchestrator({
     }
 
     const sequenceId = ++phaseSequenceId;
+    const player = getPlayer();
     const narrationEnabled = hasNarrationAudio();
+    const effectivePlaybackMode = narrationEnabled ? playbackMode : 'cue-only';
+    const willPlayStartCue = Boolean(player?.playPhaseIntro);
     isPreparingPhase = true;
     updateState({
       ...state,
@@ -167,20 +170,23 @@ export function createTimelineOrchestrator({
     onPhasePreparing?.({
       phase,
       state: getState(),
-      playbackMode,
+      playbackMode: effectivePlaybackMode,
       hasNarrationAudio: narrationEnabled,
+      willPlayStartCue,
       sequenceId,
     });
 
-    if (narrationEnabled) {
+    if (willPlayStartCue) {
       try {
-        const entry = await getPlayer()?.playPhaseIntro?.(getState().currentPhaseIndex, playbackMode);
+        const entry = await player?.playPhaseIntro?.(getState().currentPhaseIndex, effectivePlaybackMode);
         if (sequenceId === phaseSequenceId) {
           onPhaseIntroFinished?.({
             entry,
             phase: currentPhase(),
             state: getState(),
-            playbackMode,
+            playbackMode: effectivePlaybackMode,
+            hasNarrationAudio: narrationEnabled,
+            willPlayStartCue,
             sequenceId,
           });
         }
@@ -190,7 +196,9 @@ export function createTimelineOrchestrator({
             error,
             phase: currentPhase(),
             state: getState(),
-            playbackMode,
+            playbackMode: effectivePlaybackMode,
+            hasNarrationAudio: narrationEnabled,
+            willPlayStartCue,
             sequenceId,
           });
         }
@@ -210,8 +218,9 @@ export function createTimelineOrchestrator({
     onPhaseStarted?.({
       phase: currentPhase(),
       state: getState(),
-      playbackMode,
+      playbackMode: effectivePlaybackMode,
       hasNarrationAudio: narrationEnabled,
+      willPlayStartCue,
       sequenceId,
     });
 
