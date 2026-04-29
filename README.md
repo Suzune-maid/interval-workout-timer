@@ -1,6 +1,6 @@
 # interval-workout-timer
 
-乾式高潮導向訓練儀表板，包含 6 週日程、今日課表計時器、可重用的語音引導素材，以及已完成 Phase 5 的 monotonic time scheduling 基礎。
+乾式高潮導向訓練儀表板，包含 6 週日程、今日課表計時器、可重用的語音引導素材，以及以 monotonic clock 支撐的穩定倒數與播放排程。
 
 ## 目前功能
 
@@ -20,7 +20,7 @@
 - 提供可重用的語音素材清單與歷史音檔索引
 - 語音資料已升級為 `timeline-events-v1`，以 `timelineClips` / `timelineEvents` 驅動播放資料
 
-## 目前行為基線（Phase 0 guardrails）
+## 目前行為基線
 
 以下行為已由 regression tests 鎖住，後續重構不可破壞：
 
@@ -30,7 +30,7 @@
 - 按「跳到下一段」時，必須先停止目前音訊，再切到下一個 phase。
 - 被取消或過期的非同步語音播放流程，不可以在完成後回頭覆寫新的畫面狀態。
 
-## 目前架構（截至 Phase 5）
+## 目前架構
 
 - `app.js`
   - 頁面組裝層，負責初始化、事件綁定與把 orchestrator / view / audio 接起來
@@ -63,6 +63,7 @@
   - 今日語音素材的來源資料，同步使用 `timeline-events-v1`
 - `audio/library/index.json`
   - 已建立日期的語音索引，並指向對應 timeline schema
+  - 目前收錄 `2026-04-27` 與 `2026-04-28` 兩天素材
 - `audio/library/<date>/manifest.json`
   - 該日期每一段的文本、音檔、長度、sha256，以及 `timelineClips` / `timelineEvents`
 - `audio/schema/timeline-event.schema.json`
@@ -82,7 +83,7 @@ python3 -m http.server 8124
 
 ## 測試
 
-目前測試基線為 **46/46 通過**。
+目前測試基線為 **47/47 通過**。
 
 ```bash
 npm test
