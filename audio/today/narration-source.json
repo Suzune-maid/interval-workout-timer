@@ -1,11 +1,12 @@
 {
-  "generatedAt": "2026-04-30T11:55:02+08:00",
-  "sourceDate": "2026-04-30",
+  "schemaVersion": "timeline-events-v1",
+  "generatedAt": "2026-04-30T12:17:02+08:00",
+  "sourceDate": "2026-05-01",
   "programStartDate": "2026-04-27",
   "weekNumber": 1,
-  "dayNumber": 4,
-  "weekdayLabel": "四",
-  "sessionTitle": "凱格爾普通日",
+  "dayNumber": 5,
+  "weekdayLabel": "五",
+  "sessionTitle": "正式訓練日",
   "voiceTool": {
     "command": "uv run gemini-tts",
     "project": "gemini-tts-cli",
@@ -16,61 +17,68 @@
     {
       "id": "phase-01",
       "phaseIndex": 0,
-      "phaseLabel": "準備放鬆",
+      "phaseLabel": "準備期",
       "startsAtSecond": 0,
-      "durationSeconds": 60,
-      "text": "現在開始：準備放鬆。這一段約 1 分鐘。腹式呼吸，放鬆腹部、臀部與大腿。",
-      "textFile": "audio/library/2026-04-27/texts/phase-01.txt",
-      "audioFile": "audio/library/2026-04-27/generated/phase-01.wav",
-      "audioDurationSeconds": 13.64,
-      "audioSha256": "f3bdd92b9e87cff2861a6a7b004c934ad212e09305eacd8b3df3f68e9e2b0f61",
+      "durationSeconds": 120,
+      "text": "現在開始：準備期。這一段約 2 分鐘。呼吸、放鬆與設定今天只做地圖建立。",
+      "textFile": "audio/library/2026-04-28/texts/phase-01.txt",
+      "audioFile": "audio/library/2026-04-28/generated/phase-01.wav",
+      "audioDurationSeconds": 13.56,
+      "audioSha256": "a7529be3093826f0684da10144a54802a924cd83da513a68e5b4c057c6b9d97b",
       "ttsModel": "google/gemini-3.1-flash-tts-preview",
       "ttsVoice": "Leda",
       "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
-      "countdownGuidance": {
-        "summary": "4 秒吸氣、6 秒吐氣，共 6 輪",
-        "mode": "timed-breathing",
-        "breathPattern": {
-          "inhaleSeconds": 4,
-          "exhaleSeconds": 6,
-          "cycles": 6
-        }
-      },
       "timelineClips": {
-        "inhale": {
-          "id": "inhale",
-          "text": "吸氣",
-          "textFile": "audio/library/2026-04-27/texts/phase-01-inhale.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-01-inhale.wav",
-          "audioDurationSeconds": 1.32,
-          "audioSha256": "32cfbd27e0ae863d73bffef2a7bf099e68e7a6e34175f12f3201ea31e22dcdc2",
-          "ttsStyle": "請用自然、穩定、像教練帶呼吸的台灣中文口吻，簡短清楚地說出：吸氣。"
+        "score-4-check": {
+          "id": "score-4-check",
+          "text": "先找 4 分附近：有感覺，但停一下就會退回，不會自己一路往上衝。",
+          "textFile": "audio/library/2026-05-01/texts/phase-01-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-01/guidance/phase-01-guidance-01.wav",
+          "audioDurationSeconds": 11.44,
+          "audioSha256": "502b51d5f0fa089ef021d7f3feeb49515cfddc555506ee9b5da6b9baf331c216",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
         },
-        "exhale": {
-          "id": "exhale",
-          "text": "吐氣",
-          "textFile": "audio/library/2026-04-27/texts/phase-01-exhale.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-01-exhale.wav",
-          "audioDurationSeconds": 1.92,
-          "audioSha256": "71846f3b58ba42e116decc2bd762719bfbc747ef57a7365e84b17680effb85fd",
-          "ttsStyle": "請用自然、穩定、像教練帶呼吸的台灣中文口吻，簡短清楚地說出：吐氣。"
+        "whisper-just-right": {
+          "id": "whisper-just-right",
+          "text": "現在這樣……剛剛好。",
+          "textFile": "audio/library/2026-04-28/texts/phase-01-guidance-02.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-01-guidance-02.wav",
+          "audioDurationSeconds": 3.4,
+          "audioSha256": "b91c951b01fdd009836e9656e4a398599fcdceaad9b6e433fdecb93d492a555c",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
+        },
+        "whisper-hold": {
+          "id": "whisper-hold",
+          "text": "很好……先停在這裡。",
+          "textFile": "audio/library/2026-04-28/texts/phase-01-guidance-03.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-01-guidance-03.wav",
+          "audioDurationSeconds": 3.16,
+          "audioSha256": "5d4e373a5a3c19d8faa4a5c229bbe4aba3249a458d839aab8f6dfd9a32ed40f9",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
+        },
+        "whisper-linger": {
+          "id": "whisper-linger",
+          "text": "把這種想靠近的感覺，先多留一下。",
+          "textFile": "audio/library/2026-04-28/texts/phase-01-guidance-04.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-01-guidance-04.wav",
+          "audioDurationSeconds": 5.76,
+          "audioSha256": "20e8ad84b23c8abfd3dd68edee7af91d87442d4bb43e8d762495e3b23d2d69ba",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
         }
       },
       "timelineEvents": [
         {
-          "id": "phase-01-inhale-000",
-          "startAtSecond": 0,
-          "clipId": "inhale",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-01-exhale-001",
+          "id": "phase-01-score-4-check-000",
           "startAtSecond": 4,
-          "clipId": "exhale",
+          "clipId": "score-4-check",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -78,9 +86,9 @@
           "volume": 1
         },
         {
-          "id": "phase-01-inhale-002",
-          "startAtSecond": 10,
-          "clipId": "inhale",
+          "id": "phase-01-whisper-just-right-001",
+          "startAtSecond": 25,
+          "clipId": "whisper-just-right",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -88,9 +96,9 @@
           "volume": 1
         },
         {
-          "id": "phase-01-exhale-003",
-          "startAtSecond": 14,
-          "clipId": "exhale",
+          "id": "phase-01-whisper-hold-002",
+          "startAtSecond": 55,
+          "clipId": "whisper-hold",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -98,135 +106,108 @@
           "volume": 1
         },
         {
-          "id": "phase-01-inhale-004",
-          "startAtSecond": 20,
-          "clipId": "inhale",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-01-exhale-005",
-          "startAtSecond": 24,
-          "clipId": "exhale",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-01-inhale-006",
-          "startAtSecond": 30,
-          "clipId": "inhale",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-01-exhale-007",
-          "startAtSecond": 34,
-          "clipId": "exhale",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-01-inhale-008",
-          "startAtSecond": 40,
-          "clipId": "inhale",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-01-exhale-009",
-          "startAtSecond": 44,
-          "clipId": "exhale",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-01-inhale-010",
-          "startAtSecond": 50,
-          "clipId": "inhale",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-01-exhale-011",
-          "startAtSecond": 54,
-          "clipId": "exhale",
+          "id": "phase-01-whisper-linger-003",
+          "startAtSecond": 85,
+          "clipId": "whisper-linger",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
           "duckingGroup": "speech",
           "volume": 1
         }
-      ]
+      ],
+      "countdownGuidance": {
+        "summary": "1 句 4 分暖機判斷＋3 句曖昧耳語",
+        "mode": "formal-guidance-mixed"
+      }
     },
     {
       "id": "phase-02",
       "phaseIndex": 1,
-      "phaseLabel": "慢速凱格爾（10 次）",
-      "startsAtSecond": 60,
-      "durationSeconds": 90,
-      "text": "現在開始：慢速凱格爾（10 次）。這一段約 1 分 30 秒。每次收 3 秒、放 6 秒。",
-      "textFile": "audio/library/2026-04-27/texts/phase-02.txt",
-      "audioFile": "audio/library/2026-04-27/generated/phase-02.wav",
-      "audioDurationSeconds": 13.2,
-      "audioSha256": "ccd65052bf2ef7a61a7b3a46d91c4a152e2455afe4cc9dd78b55650ecd745511",
+      "phaseLabel": "第 1 回：到 5 分停",
+      "startsAtSecond": 120,
+      "durationSeconds": 180,
+      "text": "現在開始：第 1 回：到 5 分停。這一段約 3 分鐘。穩定上升到 5 分後停止。",
+      "textFile": "audio/library/2026-04-28/texts/phase-02.txt",
+      "audioFile": "audio/library/2026-04-28/generated/phase-02.wav",
+      "audioDurationSeconds": 9.84,
+      "audioSha256": "32add62b6c96175d4f7d522dd5a0c56015387416bd91a85befd78d87091862f5",
       "ttsModel": "google/gemini-3.1-flash-tts-preview",
       "ttsVoice": "Leda",
       "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
-      "countdownGuidance": {
-        "summary": "3 秒收、6 秒放，共 10 次",
-        "mode": "timed-kegel",
-        "kegelPattern": {
-          "contractSeconds": 3,
-          "releaseSeconds": 6,
-          "cycles": 10
-        }
-      },
       "timelineClips": {
-        "contract": {
-          "id": "contract",
-          "text": "收緊，上提",
-          "textFile": "audio/library/2026-04-27/texts/phase-02-contract.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-02-contract.wav",
-          "audioDurationSeconds": 2.4,
-          "audioSha256": "d0c99e0796eb7b923fced8c109cc224a9b535e1c45a2eafb327303a23ad8c6a7",
-          "ttsStyle": "請用自然、穩定、像教練帶動作的台灣中文口吻，簡短清楚地說出：收緊，上提。"
+        "score-5-check": {
+          "id": "score-5-check",
+          "text": "這一回先找 5 分：興奮已經很清楚，但你一停下來，還不會自己往上衝到失控。",
+          "textFile": "audio/library/2026-05-01/texts/phase-02-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-01/guidance/phase-02-guidance-01.wav",
+          "audioDurationSeconds": 9.52,
+          "audioSha256": "71bb0b3bb5b2bb5bffe64b7034110e6b15c4ceac76debdaa4d703899ffc6f015",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
         },
-        "release": {
-          "id": "release",
-          "text": "放掉，臀腿放鬆",
-          "textFile": "audio/library/2026-04-27/texts/phase-02-release.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-02-release.wav",
-          "audioDurationSeconds": 3.76,
-          "audioSha256": "e6acfb5287b1f922b9e53df4eeee1253bc7b1b4cc369867f09e9552157b0f52f",
-          "ttsStyle": "請用自然、穩定、像教練帶動作的台灣中文口吻，簡短清楚地說出：放掉，臀腿放鬆。"
+        "tease-not-more": {
+          "id": "tease-not-more",
+          "text": "很好，就先停在這裡，不要再多了。",
+          "textFile": "audio/library/2026-04-28/texts/phase-02-guidance-02.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-02.wav",
+          "audioDurationSeconds": 4.92,
+          "audioSha256": "f17429bc66d8fcc11fcaf518abd7184b74530aa7ff285845e66b797eaadee1c1",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
+        },
+        "whisper-heat-hold": {
+          "id": "whisper-heat-hold",
+          "text": "這個熱度……先抱住。",
+          "textFile": "audio/library/2026-04-28/texts/phase-02-guidance-03.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-03.wav",
+          "audioDurationSeconds": 4.12,
+          "audioSha256": "00399bc57b073e4ab00cb546eccc5f61746273c20186d0b70e39f5398a7cf7d3",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
+        },
+        "tease-dont-give": {
+          "id": "tease-dont-give",
+          "text": "先把這種想要維持住，不要太快把自己交出去。",
+          "textFile": "audio/library/2026-04-28/texts/phase-02-guidance-04.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-04.wav",
+          "audioDurationSeconds": 6.24,
+          "audioSha256": "7453bb98aa5100b6fd1fbeee051829937eeb881935b4f8508bcda43f4d0ab4c2",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
+        },
+        "whisper-feeling": {
+          "id": "whisper-feeling",
+          "text": "嗯……已經很有感覺了。",
+          "textFile": "audio/library/2026-04-28/texts/phase-02-guidance-05.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-05.wav",
+          "audioDurationSeconds": 3.88,
+          "audioSha256": "9f32387b5b9faf3e984339682d7ef8a691cae97617cca1e16f606cddcf32dda9",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
+        },
+        "tease-want-more": {
+          "id": "tease-want-more",
+          "text": "你不用立刻得到更多，只要先讓自己更想要。",
+          "textFile": "audio/library/2026-04-28/texts/phase-02-guidance-06.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-02-guidance-06.wav",
+          "audioDurationSeconds": 8.8,
+          "audioSha256": "2495046003a50827148120bc3c6bd5a68307e39a97e7ccc2f22236af9b1b2c38",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
         }
       },
       "timelineEvents": [
         {
-          "id": "phase-02-contract-000",
-          "startAtSecond": 0,
-          "clipId": "contract",
+          "id": "phase-02-score-5-check-000",
+          "startAtSecond": 4,
+          "clipId": "score-5-check",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -234,99 +215,9 @@
           "volume": 1
         },
         {
-          "id": "phase-02-release-001",
-          "startAtSecond": 3,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-002",
-          "startAtSecond": 9,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-003",
-          "startAtSecond": 12,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-004",
-          "startAtSecond": 18,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-005",
-          "startAtSecond": 21,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-006",
-          "startAtSecond": 27,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-007",
-          "startAtSecond": 30,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-008",
-          "startAtSecond": 36,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-009",
-          "startAtSecond": 39,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-010",
+          "id": "phase-02-tease-not-more-001",
           "startAtSecond": 45,
-          "clipId": "contract",
+          "clipId": "tease-not-more",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -334,69 +225,9 @@
           "volume": 1
         },
         {
-          "id": "phase-02-release-011",
-          "startAtSecond": 48,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-012",
-          "startAtSecond": 54,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-013",
-          "startAtSecond": 57,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-014",
-          "startAtSecond": 63,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-015",
-          "startAtSecond": 66,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-contract-016",
-          "startAtSecond": 72,
-          "clipId": "contract",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-02-release-017",
+          "id": "phase-02-whisper-heat-hold-002",
           "startAtSecond": 75,
-          "clipId": "release",
+          "clipId": "whisper-heat-hold",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -404,9 +235,9 @@
           "volume": 1
         },
         {
-          "id": "phase-02-contract-018",
-          "startAtSecond": 81,
-          "clipId": "contract",
+          "id": "phase-02-tease-dont-give-003",
+          "startAtSecond": 105,
+          "clipId": "tease-dont-give",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -414,100 +245,118 @@
           "volume": 1
         },
         {
-          "id": "phase-02-release-019",
-          "startAtSecond": 84,
-          "clipId": "release",
+          "id": "phase-02-whisper-feeling-004",
+          "startAtSecond": 135,
+          "clipId": "whisper-feeling",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-tease-want-more-005",
+          "startAtSecond": 160,
+          "clipId": "tease-want-more",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
           "duckingGroup": "speech",
           "volume": 1
         }
-      ]
+      ],
+      "countdownGuidance": {
+        "summary": "1 句 5 分判斷＋3 句加強挑逗＋2 句曖昧耳語",
+        "mode": "formal-guidance-mixed"
+      }
     },
     {
       "id": "phase-03",
       "phaseIndex": 2,
-      "phaseLabel": "快速凱格爾（10 次）",
-      "startsAtSecond": 150,
-      "durationSeconds": 20,
-      "text": "現在開始：快速凱格爾（10 次）。這一段約 20 秒。輕點一下，立刻完全放掉。",
-      "textFile": "audio/library/2026-04-27/texts/phase-03.txt",
-      "audioFile": "audio/library/2026-04-27/generated/phase-03.wav",
-      "audioDurationSeconds": 10.48,
-      "audioSha256": "7db73d25386f5d2b794cbc070efe98042b81ded564a560e65955b49abea058b1",
+      "phaseLabel": "第 2 回：到 6 分停",
+      "startsAtSecond": 300,
+      "durationSeconds": 240,
+      "text": "現在開始：第 2 回：到 6 分停。這一段約 4 分鐘。感受高原區與可控感。",
+      "textFile": "audio/library/2026-04-28/texts/phase-03.txt",
+      "audioFile": "audio/library/2026-04-28/generated/phase-03.wav",
+      "audioDurationSeconds": 12.48,
+      "audioSha256": "2571b038ddb8235113a9a4da079c34869b0009ba442ddaa34c939bf27a0ac92c",
       "ttsModel": "google/gemini-3.1-flash-tts-preview",
       "ttsVoice": "Leda",
       "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
-      "countdownGuidance": {
-        "summary": "1 秒點收、1 秒全放，共 10 次",
-        "mode": "fast-kegel"
-      },
       "timelineClips": {
-        "pulse": {
-          "id": "pulse",
-          "text": "收",
-          "textFile": "audio/library/2026-04-27/texts/phase-03-pulse.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-03-pulse.wav",
-          "audioDurationSeconds": 0.92,
-          "audioSha256": "064d0a6561cb7b39e94c6610171b9736ba8c7ff24b0982ebc391ef3654c16df1",
-          "ttsStyle": "請用乾淨、短促、像節拍口令的台灣中文口吻，非常短地說出：收。"
+        "score-6-check": {
+          "id": "score-6-check",
+          "text": "這一回要找 6 分：快感已經穩定而明顯，但你還能說慢就慢、說停就停。",
+          "textFile": "audio/library/2026-05-01/texts/phase-03-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-01/guidance/phase-03-guidance-01.wav",
+          "audioDurationSeconds": 9.4,
+          "audioSha256": "504eb8f6088b1e6d3c1e3f8ab1d2088b8b8cc00a596335fa139ba7484a672965",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
         },
-        "release": {
-          "id": "release",
-          "text": "放",
-          "textFile": "audio/library/2026-04-27/texts/phase-03-release.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-03-release.wav",
-          "audioDurationSeconds": 0.96,
-          "audioSha256": "f160eb534503fc0eaf636269506d7dc0458621432f3c8d7b7aebb2f06fd220f0",
-          "ttsStyle": "請用乾淨、短促、像節拍口令的台灣中文口吻，非常短地說出：放。"
+        "tease-hold-self": {
+          "id": "tease-hold-self",
+          "text": "這個區間最迷人，因為你明明想更近，卻還能留住自己。",
+          "textFile": "audio/library/2026-04-28/texts/phase-03-guidance-02.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-02.wav",
+          "audioDurationSeconds": 7.8,
+          "audioSha256": "451f12ffd69ff340bcc1801ed4b203d3baa7fad41682a88d7ad2db592013f903",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
+        },
+        "whisper-slow-near": {
+          "id": "whisper-slow-near",
+          "text": "快靠近了……先慢一點。",
+          "textFile": "audio/library/2026-04-28/texts/phase-03-guidance-03.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-03.wav",
+          "audioDurationSeconds": 3.44,
+          "audioSha256": "df744c679a05a846cff1aed58b0899774136091dce4313948d081ec61713ebc3",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
+        },
+        "tease-hang-desire": {
+          "id": "tease-hang-desire",
+          "text": "越是想快一點，就越先慢下來，先留在這裡。",
+          "textFile": "audio/library/2026-04-28/texts/phase-03-guidance-04.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-04.wav",
+          "audioDurationSeconds": 6.48,
+          "audioSha256": "560b2f65f9773bb16650dfa70cb00f3edb8d5f7c0e538f4eabe7b35222f4eb59",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
+        },
+        "whisper-stay-clear": {
+          "id": "whisper-stay-clear",
+          "text": "先把清醒留著。",
+          "textFile": "audio/library/2026-04-28/texts/phase-03-guidance-05.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-05.wav",
+          "audioDurationSeconds": 2.64,
+          "audioSha256": "a1a6f58e5afad438a86f7df33187a84f4b3b45fa66bebdd7a2ec288cdfbac8b8",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
+        },
+        "tease-keep-yourself": {
+          "id": "tease-keep-yourself",
+          "text": "先留住你自己，再決定要不要更近。",
+          "textFile": "audio/library/2026-04-28/texts/phase-03-guidance-06.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-03-guidance-06.wav",
+          "audioDurationSeconds": 6.12,
+          "audioSha256": "7c85fe7f4e368d30a36ab75450d5b1e93133e6526fde2e63143c0174d928d2df",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
         }
       },
       "timelineEvents": [
         {
-          "id": "phase-03-pulse-000",
-          "startAtSecond": 0,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-001",
-          "startAtSecond": 1,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-002",
-          "startAtSecond": 2,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-003",
-          "startAtSecond": 3,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-004",
+          "id": "phase-03-score-6-check-000",
           "startAtSecond": 4,
-          "clipId": "pulse",
+          "clipId": "score-6-check",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -515,9 +364,9 @@
           "volume": 1
         },
         {
-          "id": "phase-03-release-005",
-          "startAtSecond": 5,
-          "clipId": "release",
+          "id": "phase-03-tease-hold-self-001",
+          "startAtSecond": 55,
+          "clipId": "tease-hold-self",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -525,9 +374,9 @@
           "volume": 1
         },
         {
-          "id": "phase-03-pulse-006",
-          "startAtSecond": 6,
-          "clipId": "pulse",
+          "id": "phase-03-whisper-slow-near-002",
+          "startAtSecond": 90,
+          "clipId": "whisper-slow-near",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -535,9 +384,9 @@
           "volume": 1
         },
         {
-          "id": "phase-03-release-007",
-          "startAtSecond": 7,
-          "clipId": "release",
+          "id": "phase-03-tease-hang-desire-003",
+          "startAtSecond": 130,
+          "clipId": "tease-hang-desire",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -545,9 +394,9 @@
           "volume": 1
         },
         {
-          "id": "phase-03-pulse-008",
-          "startAtSecond": 8,
-          "clipId": "pulse",
+          "id": "phase-03-whisper-stay-clear-004",
+          "startAtSecond": 170,
+          "clipId": "whisper-stay-clear",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -555,170 +404,86 @@
           "volume": 1
         },
         {
-          "id": "phase-03-release-009",
-          "startAtSecond": 9,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-010",
-          "startAtSecond": 10,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-011",
-          "startAtSecond": 11,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-012",
-          "startAtSecond": 12,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-013",
-          "startAtSecond": 13,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-014",
-          "startAtSecond": 14,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-015",
-          "startAtSecond": 15,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-016",
-          "startAtSecond": 16,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-017",
-          "startAtSecond": 17,
-          "clipId": "release",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-pulse-018",
-          "startAtSecond": 18,
-          "clipId": "pulse",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-03-release-019",
-          "startAtSecond": 19,
-          "clipId": "release",
+          "id": "phase-03-tease-keep-yourself-005",
+          "startAtSecond": 210,
+          "clipId": "tease-keep-yourself",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
           "duckingGroup": "speech",
           "volume": 1
         }
-      ]
+      ],
+      "countdownGuidance": {
+        "summary": "1 句 6 分判斷＋3 句加強挑逗＋2 句曖昧耳語",
+        "mode": "formal-guidance-mixed"
+      }
     },
     {
       "id": "phase-04",
       "phaseIndex": 3,
-      "phaseLabel": "反向凱格爾",
-      "startsAtSecond": 170,
-      "durationSeconds": 120,
-      "text": "現在開始：反向凱格爾。這一段約 2 分鐘。吸氣下沉，吐氣時保持鬆開。",
-      "textFile": "audio/library/2026-04-27/texts/phase-04.txt",
-      "audioFile": "audio/library/2026-04-27/generated/phase-04.wav",
-      "audioDurationSeconds": 12.96,
-      "audioSha256": "0ad339a0900e62fcafb4238a81f587e48fc461e6c3be66c6922045123f4ce7c5",
+      "phaseLabel": "第 3 回：接近 7 分立刻停",
+      "startsAtSecond": 540,
+      "durationSeconds": 240,
+      "text": "現在開始：第 3 回：接近 7 分立刻停。這一段約 4 分鐘。有射精感冒出就停，不強求波峰。",
+      "textFile": "audio/library/2026-04-28/texts/phase-04.txt",
+      "audioFile": "audio/library/2026-04-28/generated/phase-04.wav",
+      "audioDurationSeconds": 11.72,
+      "audioSha256": "c160ec155db09f5e973b41e1d9690531b6e095df759b1f670c6b1a60cb62a1c9",
       "ttsModel": "google/gemini-3.1-flash-tts-preview",
       "ttsVoice": "Leda",
       "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
-      "countdownGuidance": {
-        "summary": "4 秒吸氣下沉、8 秒吐氣保持鬆，共 10 輪",
-        "mode": "reverse-kegel-breathing"
-      },
       "timelineClips": {
-        "inhaleDrop": {
-          "id": "inhaleDrop",
-          "text": "吸氣，下沉",
-          "textFile": "audio/library/2026-04-27/texts/phase-04-inhale-drop.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-04-inhale-drop.wav",
-          "audioDurationSeconds": 3.72,
-          "audioSha256": "e9b3d12f8f4937db75ba09ba84f6394d3e839cd3bfd0ac93e2e20f62e5964d60",
-          "ttsStyle": "請用自然、穩定、像教練帶呼吸的台灣中文口吻，簡短清楚地說出：吸氣，下沉。"
+        "score-7-edge": {
+          "id": "score-7-edge",
+          "text": "這一回接近 7 分就停：如果開始出現「再一下就好」的急迫感，就已經到邊界了。",
+          "textFile": "audio/library/2026-05-01/texts/phase-04-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-01/guidance/phase-04-guidance-01.wav",
+          "audioDurationSeconds": 11.16,
+          "audioSha256": "124867758c0b93b53683d7883bf4fd845c6fd999edaa6a55eeaf20e556835014",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
         },
-        "exhaleSoft": {
-          "id": "exhaleSoft",
-          "text": "吐氣，保持鬆",
-          "textFile": "audio/library/2026-04-27/texts/phase-04-exhale-soft.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-04-exhale-soft.wav",
-          "audioDurationSeconds": 3.28,
-          "audioSha256": "e7926f2a1f12b63658eccfa936d962f18d8845a288944d805a61cd187d233a3c",
-          "ttsStyle": "請用自然、穩定、像教練帶呼吸的台灣中文口吻，簡短清楚地說出：吐氣，保持鬆。"
+        "tease-doorway": {
+          "id": "tease-doorway",
+          "text": "靠近七八分了，先別急，讓它在門口多停一下。",
+          "textFile": "audio/library/2026-04-28/texts/phase-04-guidance-02.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-04-guidance-02.wav",
+          "audioDurationSeconds": 8.36,
+          "audioSha256": "8a7edfe8e2f5984b503bb42c218fa24ae39c3cc6d6abaab9f563213e81f51f1f",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用溫柔、低沉、帶一點拉扯與期待感的台灣中文口吻朗讀，像成熟的引導語音。保持克制，不要露骨，不要太快。"
+        },
+        "whisper-doorway": {
+          "id": "whisper-doorway",
+          "text": "就停在門口……先不要再多。",
+          "textFile": "audio/library/2026-04-28/texts/phase-04-guidance-03.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-04-guidance-03.wav",
+          "audioDurationSeconds": 4.64,
+          "audioSha256": "fc91c53d77188ff69d7579a57c5fe8b17072553acd50cddd4cc08de08eea2514",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
+        },
+        "whisper-step-back": {
+          "id": "whisper-step-back",
+          "text": "退半步……就好。",
+          "textFile": "audio/library/2026-04-28/texts/phase-04-guidance-04.txt",
+          "audioFile": "audio/library/2026-04-28/guidance/phase-04-guidance-04.wav",
+          "audioDurationSeconds": 2.88,
+          "audioSha256": "f2f330576431849cad7f728d483acb93f7c2208069e611368ac8a5e1fb7230f5",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
         }
       },
       "timelineEvents": [
         {
-          "id": "phase-04-inhaleDrop-000",
-          "startAtSecond": 0,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-001",
+          "id": "phase-04-score-7-edge-000",
           "startAtSecond": 4,
-          "clipId": "exhaleSoft",
+          "clipId": "score-7-edge",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -726,9 +491,9 @@
           "volume": 1
         },
         {
-          "id": "phase-04-inhaleDrop-002",
-          "startAtSecond": 12,
-          "clipId": "inhaleDrop",
+          "id": "phase-04-tease-doorway-001",
+          "startAtSecond": 75,
+          "clipId": "tease-doorway",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -736,9 +501,9 @@
           "volume": 1
         },
         {
-          "id": "phase-04-exhaleSoft-003",
-          "startAtSecond": 16,
-          "clipId": "exhaleSoft",
+          "id": "phase-04-whisper-doorway-002",
+          "startAtSecond": 130,
+          "clipId": "whisper-doorway",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
@@ -746,286 +511,64 @@
           "volume": 1
         },
         {
-          "id": "phase-04-inhaleDrop-004",
-          "startAtSecond": 24,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-005",
-          "startAtSecond": 28,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-006",
-          "startAtSecond": 36,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-007",
-          "startAtSecond": 40,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-008",
-          "startAtSecond": 48,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-009",
-          "startAtSecond": 52,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-010",
-          "startAtSecond": 60,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-011",
-          "startAtSecond": 64,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-012",
-          "startAtSecond": 72,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-013",
-          "startAtSecond": 76,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-014",
-          "startAtSecond": 84,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-015",
-          "startAtSecond": 88,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-016",
-          "startAtSecond": 96,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-017",
-          "startAtSecond": 100,
-          "clipId": "exhaleSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-inhaleDrop-018",
-          "startAtSecond": 108,
-          "clipId": "inhaleDrop",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-04-exhaleSoft-019",
-          "startAtSecond": 112,
-          "clipId": "exhaleSoft",
+          "id": "phase-04-whisper-step-back-003",
+          "startAtSecond": 190,
+          "clipId": "whisper-step-back",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
           "duckingGroup": "speech",
           "volume": 1
         }
-      ]
+      ],
+      "countdownGuidance": {
+        "summary": "1 句 7 分邊界判斷＋1 句加強挑逗＋2 句曖昧耳語",
+        "mode": "formal-guidance-mixed"
+      }
     },
     {
       "id": "phase-05",
       "phaseIndex": 4,
-      "phaseLabel": "收尾掃描",
-      "startsAtSecond": 290,
-      "durationSeconds": 60,
-      "text": "現在開始：收尾掃描。這一段約 1 分鐘。檢查會陰、臀部、大腿與排尿感是否有緊繃。",
-      "textFile": "audio/library/2026-04-27/texts/phase-05.txt",
-      "audioFile": "audio/library/2026-04-27/generated/phase-05.wav",
-      "audioDurationSeconds": 13.4,
-      "audioSha256": "9fc91bee24a5e8b841217b6795e52a62760dc6d5547f2a1b2053a7505c1dc648",
+      "phaseLabel": "收尾放鬆",
+      "startsAtSecond": 780,
+      "durationSeconds": 180,
+      "text": "現在開始：收尾放鬆。這一段約 3 分鐘。可正常結束，最後做呼吸與反向凱格爾。",
+      "textFile": "audio/library/2026-04-28/texts/phase-05.txt",
+      "audioFile": "audio/library/2026-04-28/generated/phase-05.wav",
+      "audioDurationSeconds": 10.68,
+      "audioSha256": "b70896e705fbdc5df070ff12b86af57b4d8ebbb2a11fdcec7df81d33934021a8",
       "ttsModel": "google/gemini-3.1-flash-tts-preview",
       "ttsVoice": "Leda",
       "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
-      "countdownGuidance": {
-        "summary": "每 12 秒帶一次放鬆檢查，共 5 個提示",
-        "mode": "cooldown-body-scan",
-        "coachPrompt": "收尾掃描段落用溫和短句依序檢查腹部、臀部、大腿、會陰與排尿感，重點是確認有沒有殘留緊繃。"
-      },
       "timelineClips": {
-        "abdomenRelax": {
-          "id": "abdomenRelax",
-          "text": "腹部，放鬆",
-          "textFile": "audio/library/2026-04-27/texts/phase-05-abdomen-relax.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-05-abdomen-relax.wav",
-          "audioDurationSeconds": 3.68,
-          "audioSha256": "684ad0078ec966d61e50dbeba70779792b1e5edbfd6be472638fcb3614bac27a",
-          "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：腹部，放鬆。"
-        },
-        "glutesRelease": {
-          "id": "glutesRelease",
-          "text": "臀部，不要夾",
-          "textFile": "audio/library/2026-04-27/texts/phase-05-glutes-release.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-05-glutes-release.wav",
-          "audioDurationSeconds": 2.96,
-          "audioSha256": "cc7e352f71652976653e8828246290c1082d1a2cb1d1715bf775bd616ace2c41",
-          "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：臀部，不要夾。"
-        },
-        "quadRelax": {
-          "id": "quadRelax",
-          "text": "大腿，放鬆",
-          "textFile": "audio/library/2026-04-27/texts/phase-05-quad-relax.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-05-quad-relax.wav",
-          "audioDurationSeconds": 3.28,
-          "audioSha256": "71912eca2e4c5079d2c865cfcc33d5e0a6962c9d966c76155743cc75467ef337",
-          "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：大腿，放鬆。"
-        },
-        "pelvicFloorSoft": {
-          "id": "pelvicFloorSoft",
-          "text": "會陰，鬆開",
-          "textFile": "audio/library/2026-04-27/texts/phase-05-pelvic-floor-soft.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-05-pelvic-floor-soft.wav",
-          "audioDurationSeconds": 3.2,
-          "audioSha256": "179d4aabfb805ccdbcc05bd2d9fdda21ecb3f58cc5b52da2f86fddf267920817",
-          "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：會陰，鬆開。"
-        },
-        "urinaryCheck": {
-          "id": "urinaryCheck",
-          "text": "留意排尿感",
-          "textFile": "audio/library/2026-04-27/texts/phase-05-urinary-check.txt",
-          "audioFile": "audio/library/2026-04-27/guidance/phase-05-urinary-check.wav",
-          "audioDurationSeconds": 2.12,
-          "audioSha256": "d5e19e7144dfe6fc6885c59960e98f07733be395df326238d667b53a063f2813",
-          "ttsStyle": "請用自然、溫和、像教練帶放鬆掃描的台灣中文口吻，簡短清楚地說出：留意排尿感。"
+        "settle-below-four": {
+          "id": "settle-below-four",
+          "text": "現在不是往上走，是往下退；讓分數慢慢回到 4 分以下，呼吸重新放穩。",
+          "textFile": "audio/library/2026-05-01/texts/phase-05-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-01/guidance/phase-05-guidance-01.wav",
+          "audioDurationSeconds": 5.64,
+          "audioSha256": "488afc84a7547a3af579eb682c2e63e6866f38b59f62db0f502c43c530f49840",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "請用低聲、貼近耳邊、帶氣聲感但清楚可懂的台灣中文口吻朗讀，像陪在身邊的引導語音。速度偏慢，句尾微微收住，不要過度做作。"
         }
       },
       "timelineEvents": [
         {
-          "id": "phase-05-abdomenRelax-000",
-          "startAtSecond": 0,
-          "clipId": "abdomenRelax",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-05-glutesRelease-001",
-          "startAtSecond": 12,
-          "clipId": "glutesRelease",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-05-quadRelax-002",
-          "startAtSecond": 24,
-          "clipId": "quadRelax",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-05-pelvicFloorSoft-003",
-          "startAtSecond": 36,
-          "clipId": "pelvicFloorSoft",
-          "track": "guidance-primary",
-          "priority": "primary",
-          "interruptPolicy": "replace-track",
-          "duckingGroup": "speech",
-          "volume": 1
-        },
-        {
-          "id": "phase-05-urinaryCheck-004",
-          "startAtSecond": 48,
-          "clipId": "urinaryCheck",
+          "id": "phase-05-settle-below-four-000",
+          "startAtSecond": 4,
+          "clipId": "settle-below-four",
           "track": "guidance-primary",
           "priority": "primary",
           "interruptPolicy": "replace-track",
           "duckingGroup": "speech",
           "volume": 1
         }
-      ]
+      ],
+      "countdownGuidance": {
+        "summary": "收尾分數回降提醒，共 1 句",
+        "mode": "formal-guidance-mixed"
+      }
     }
-  ],
-  "schemaVersion": "timeline-events-v1"
+  ]
 }

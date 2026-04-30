@@ -7,7 +7,7 @@ const TODAY_MANIFEST_PATH = new URL('../audio/today/narration-manifest.json', im
 const TODAY_SOURCE_PATH = new URL('../audio/today/narration-source.json', import.meta.url);
 const LIBRARY_INDEX_PATH = new URL('../audio/library/index.json', import.meta.url);
 const GUIDED_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-04-27/manifest.json', import.meta.url);
-const REUSED_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-04-30/manifest.json', import.meta.url);
+const FORMAL_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-01/manifest.json', import.meta.url);
 
 async function readJson(url) {
   const raw = await readFile(url, 'utf8');
@@ -18,7 +18,7 @@ function findEntry(document, id) {
   return document.entries.find((item) => item.id === id);
 }
 
-test('today narration manifest 會沿用 2026-04-27 的凱格爾普通日音檔與 guidance 結構', async () => {
+test('today narration manifest 會切到 2026-05-01 正式訓練日，並在每段 countdown 開場加入分數判斷 guidance', async () => {
   const raw = await readJson(TODAY_MANIFEST_PATH);
   const phase01 = findEntry(raw, 'phase-01');
   const phase02 = findEntry(raw, 'phase-02');
@@ -27,36 +27,50 @@ test('today narration manifest 會沿用 2026-04-27 的凱格爾普通日音檔�
   const phase05 = findEntry(raw, 'phase-05');
 
   assert.equal(raw.schemaVersion, 'timeline-events-v1');
-  assert.equal(raw.sourceDate, '2026-04-30');
-  assert.equal(raw.sessionTitle, '凱格爾普通日');
+  assert.equal(raw.sourceDate, '2026-05-01');
+  assert.equal(raw.sessionTitle, '正式訓練日');
   assert.equal(raw.entries.length, 5);
 
   assert.deepEqual(
     raw.entries.map((item) => item.phaseLabel),
-    ['準備放鬆', '慢速凱格爾（10 次）', '快速凱格爾（10 次）', '反向凱格爾', '收尾掃描'],
+    ['準備期', '第 1 回：到 5 分停', '第 2 回：到 6 分停', '第 3 回：接近 7 分立刻停', '收尾放鬆'],
   );
 
-  assert.equal(phase01.audioFile, 'audio/library/2026-04-27/generated/phase-01.wav');
-  assert.equal(phase02.audioFile, 'audio/library/2026-04-27/generated/phase-02.wav');
-  assert.equal(phase03.audioFile, 'audio/library/2026-04-27/generated/phase-03.wav');
-  assert.equal(phase04.audioFile, 'audio/library/2026-04-27/generated/phase-04.wav');
-  assert.equal(phase05.audioFile, 'audio/library/2026-04-27/generated/phase-05.wav');
+  assert.equal(phase01.audioFile, 'audio/library/2026-04-28/generated/phase-01.wav');
+  assert.equal(phase02.audioFile, 'audio/library/2026-04-28/generated/phase-02.wav');
+  assert.equal(phase03.audioFile, 'audio/library/2026-04-28/generated/phase-03.wav');
+  assert.equal(phase04.audioFile, 'audio/library/2026-04-28/generated/phase-04.wav');
+  assert.equal(phase05.audioFile, 'audio/library/2026-04-28/generated/phase-05.wav');
 
-  assert.equal(phase01.countdownGuidance?.summary, '4 秒吸氣、6 秒吐氣，共 6 輪');
-  assert.equal(phase02.countdownGuidance?.summary, '3 秒收、6 秒放，共 10 次');
-  assert.equal(phase03.countdownGuidance?.summary, '1 秒點收、1 秒全放，共 10 次');
-  assert.equal(phase04.countdownGuidance?.summary, '4 秒吸氣下沉、8 秒吐氣保持鬆，共 10 輪');
-  assert.equal(phase05.countdownGuidance?.summary, '每 12 秒帶一次放鬆檢查，共 5 個提示');
+  assert.deepEqual(phase01.timelineEvents.map((item) => item.startAtSecond), [4, 25, 55, 85]);
+  assert.deepEqual(phase02.timelineEvents.map((item) => item.startAtSecond), [4, 45, 75, 105, 135, 160]);
+  assert.deepEqual(phase03.timelineEvents.map((item) => item.startAtSecond), [4, 55, 90, 130, 170, 210]);
+  assert.deepEqual(phase04.timelineEvents.map((item) => item.startAtSecond), [4, 75, 130, 190]);
+  assert.deepEqual(phase05.timelineEvents.map((item) => item.startAtSecond), [4]);
 
-  assert.deepEqual(phase01.timelineEvents.map((item) => item.startAtSecond), [0, 4, 10, 14, 20, 24, 30, 34, 40, 44, 50, 54]);
-  assert.deepEqual(phase03.timelineEvents.map((item) => item.startAtSecond), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
-  assert.deepEqual(phase05.timelineEvents.map((item) => item.startAtSecond), [0, 12, 24, 36, 48]);
+  assert.equal(phase01.timelineEvents[0].clipId, 'score-4-check');
+  assert.equal(phase02.timelineEvents[0].clipId, 'score-5-check');
+  assert.equal(phase03.timelineEvents[0].clipId, 'score-6-check');
+  assert.equal(phase04.timelineEvents[0].clipId, 'score-7-edge');
+  assert.equal(phase05.timelineEvents[0].clipId, 'settle-below-four');
 
-  assert.deepEqual(Object.keys(phase01.timelineClips), ['inhale', 'exhale']);
-  assert.deepEqual(Object.keys(phase02.timelineClips), ['contract', 'release']);
-  assert.deepEqual(Object.keys(phase03.timelineClips), ['pulse', 'release']);
-  assert.deepEqual(Object.keys(phase04.timelineClips), ['inhaleDrop', 'exhaleSoft']);
-  assert.deepEqual(Object.keys(phase05.timelineClips), ['abdomenRelax', 'glutesRelease', 'quadRelax', 'pelvicFloorSoft', 'urinaryCheck']);
+  assert.equal(phase01.timelineClips['score-4-check']?.text, '先找 4 分附近：有感覺，但停一下就會退回，不會自己一路往上衝。');
+  assert.equal(phase02.timelineClips['score-5-check']?.text, '這一回先找 5 分：興奮已經很清楚，但你一停下來，還不會自己往上衝到失控。');
+  assert.equal(phase03.timelineClips['score-6-check']?.text, '這一回要找 6 分：快感已經穩定而明顯，但你還能說慢就慢、說停就停。');
+  assert.equal(phase04.timelineClips['score-7-edge']?.text, '這一回接近 7 分就停：如果開始出現「再一下就好」的急迫感，就已經到邊界了。');
+  assert.equal(phase05.timelineClips['settle-below-four']?.text, '現在不是往上走，是往下退；讓分數慢慢回到 4 分以下，呼吸重新放穩。');
+
+  assert.equal(phase01.timelineClips['score-4-check']?.audioFile, 'audio/library/2026-05-01/guidance/phase-01-guidance-01.wav');
+  assert.equal(phase02.timelineClips['score-5-check']?.audioFile, 'audio/library/2026-05-01/guidance/phase-02-guidance-01.wav');
+  assert.equal(phase03.timelineClips['score-6-check']?.audioFile, 'audio/library/2026-05-01/guidance/phase-03-guidance-01.wav');
+  assert.equal(phase04.timelineClips['score-7-edge']?.audioFile, 'audio/library/2026-05-01/guidance/phase-04-guidance-01.wav');
+  assert.equal(phase05.timelineClips['settle-below-four']?.audioFile, 'audio/library/2026-05-01/guidance/phase-05-guidance-01.wav');
+
+  assert.equal(phase01.countdownGuidance?.summary, '1 句 4 分暖機判斷＋3 句曖昧耳語');
+  assert.equal(phase02.countdownGuidance?.summary, '1 句 5 分判斷＋3 句加強挑逗＋2 句曖昧耳語');
+  assert.equal(phase03.countdownGuidance?.summary, '1 句 6 分判斷＋3 句加強挑逗＋2 句曖昧耳語');
+  assert.equal(phase04.countdownGuidance?.summary, '1 句 7 分邊界判斷＋1 句加強挑逗＋2 句曖昧耳語');
+  assert.equal(phase05.countdownGuidance?.summary, '收尾分數回降提醒，共 1 句');
 });
 
 test('normalizeNarrationManifest 仍會從 guided library 的 timeline/event schema 還原相容 countdownGuidance 檢視資料', async () => {
@@ -89,39 +103,40 @@ test('normalizeNarrationManifest 仍會從 guided library 的 timeline/event sch
   );
 });
 
-test('today narration source、2026-04-30 library manifest 與 library index 會同步記錄沿用 2026-04-27 的資產', async () => {
-  const [source, reusedLibraryManifest, libraryIndex] = await Promise.all([
+test('today narration source、2026-05-01 library manifest 與 library index 會同步記錄新的開場分數判斷素材', async () => {
+  const [source, formalLibraryManifest, libraryIndex] = await Promise.all([
     readJson(TODAY_SOURCE_PATH),
-    readJson(REUSED_LIBRARY_MANIFEST_PATH),
+    readJson(FORMAL_LIBRARY_MANIFEST_PATH),
     readJson(LIBRARY_INDEX_PATH),
   ]);
 
   const sourcePhase02 = findEntry(source, 'phase-02');
   const sourcePhase05 = findEntry(source, 'phase-05');
-  const libraryPhase03 = findEntry(reusedLibraryManifest, 'phase-03');
-  const libraryPhase05 = findEntry(reusedLibraryManifest, 'phase-05');
-  const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-04-30');
+  const libraryPhase03 = findEntry(formalLibraryManifest, 'phase-03');
+  const libraryPhase05 = findEntry(formalLibraryManifest, 'phase-05');
+  const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-05-01');
 
   assert.equal(source.schemaVersion, 'timeline-events-v1');
-  assert.equal(reusedLibraryManifest.schemaVersion, 'timeline-events-v1');
-  assert.equal(source.sourceDate, '2026-04-30');
-  assert.equal(reusedLibraryManifest.sourceDate, '2026-04-30');
+  assert.equal(formalLibraryManifest.schemaVersion, 'timeline-events-v1');
+  assert.equal(source.sourceDate, '2026-05-01');
+  assert.equal(formalLibraryManifest.sourceDate, '2026-05-01');
   assert.equal(source.entries.length, 5);
-  assert.equal(reusedLibraryManifest.entries.length, 5);
+  assert.equal(formalLibraryManifest.entries.length, 5);
 
-  assert.equal(sourcePhase02.audioFile, 'audio/library/2026-04-27/generated/phase-02.wav');
-  assert.equal(sourcePhase02.timelineClips.contract?.audioFile, 'audio/library/2026-04-27/guidance/phase-02-contract.wav');
-  assert.equal(sourcePhase02.timelineClips.release?.audioFile, 'audio/library/2026-04-27/guidance/phase-02-release.wav');
-  assert.equal(sourcePhase05.timelineEvents.length, 5);
+  assert.equal(sourcePhase02.timelineClips['score-5-check']?.audioFile, 'audio/library/2026-05-01/guidance/phase-02-guidance-01.wav');
+  assert.equal(sourcePhase02.timelineClips['tease-not-more']?.audioFile, 'audio/library/2026-04-28/guidance/phase-02-guidance-02.wav');
+  assert.deepEqual(sourcePhase05.timelineEvents.map((item) => item.startAtSecond), [4]);
 
-  assert.equal(libraryPhase03.countdownGuidance?.summary, '1 秒點收、1 秒全放，共 10 次');
-  assert.deepEqual(libraryPhase03.timelineEvents.map((item) => item.startAtSecond), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
-  assert.equal(libraryPhase05.timelineClips.urinaryCheck?.audioFile, 'audio/library/2026-04-27/guidance/phase-05-urinary-check.wav');
-  assert.equal(libraryPhase05.timelineClips.urinaryCheck?.text, '留意排尿感');
+  assert.equal(libraryPhase03.countdownGuidance?.summary, '1 句 6 分判斷＋3 句加強挑逗＋2 句曖昧耳語');
+  assert.deepEqual(libraryPhase03.timelineEvents.map((item) => item.startAtSecond), [4, 55, 90, 130, 170, 210]);
+  assert.equal(libraryPhase03.timelineClips['score-6-check']?.textFile, 'audio/library/2026-05-01/texts/phase-03-guidance-01.txt');
+  assert.equal(libraryPhase03.timelineClips['tease-hold-self']?.audioFile, 'audio/library/2026-04-28/guidance/phase-03-guidance-02.wav');
+  assert.equal(libraryPhase05.timelineClips['settle-below-four']?.text, '現在不是往上走，是往下退；讓分數慢慢回到 4 分以下，呼吸重新放穩。');
+  assert.equal(libraryPhase05.timelineClips['settle-below-four']?.audioFile, 'audio/library/2026-05-01/guidance/phase-05-guidance-01.wav');
 
-  assert.ok(libraryItem, 'library index 應包含 2026-04-30 凱格爾普通日條目');
+  assert.ok(libraryItem, 'library index 應包含 2026-05-01 正式訓練日條目');
   assert.equal(libraryItem.entryCount, 5);
-  assert.equal(libraryItem.manifestFile, 'audio/library/2026-04-30/manifest.json');
+  assert.equal(libraryItem.manifestFile, 'audio/library/2026-05-01/manifest.json');
   assert.equal(libraryItem.schemaVersion, 'timeline-events-v1');
   assert.equal(libraryItem.timelineSchemaFile, 'audio/schema/timeline-event.schema.json');
 });
