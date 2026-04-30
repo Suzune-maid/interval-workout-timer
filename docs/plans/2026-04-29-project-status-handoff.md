@@ -1,22 +1,24 @@
-# 2026-04-29 Project status handoff
+# 2026-04-29 Project status handoff（updated 2026-04-30）
 
 > 目的：讓之後的新 session 能在 3～5 分鐘內理解這個 repo 的**目前狀態、最近進度、已知基線、部署方式、驗證流程與實戰經驗**，避免重新踩同一批坑。
+>
+> 備註：這份 handoff 仍沿用舊檔名，是因為 `README.md` 目前直接引用這個路徑；內容已更新到 2026-04-30 當下的最新狀態。
 
 ## TL;DR
 
 - 目前分支：`main`
 - git 狀態：`main...origin/main`
 - working tree：乾淨
-- 最新 commit：`82ec697` — `[verified] feat: add arousal level guide section`
+- 最新 commit：`2af76c0` — `feat: add 2026-05-01 formal day arousal guidance`
 - 目前測試基線：`npm test` **49/49 pass**
-- 已建立的語音庫日期：`2026-04-27`、`2026-04-28`、`2026-04-29`
+- 已建立的語音庫日期：`2026-04-27`、`2026-04-28`、`2026-04-29`、`2026-04-30`、`2026-05-01`
+- `audio/today/*` 目前指向：`2026-05-01`（W1D5，正式訓練日）
 - 正式站：<https://suzune-maid.github.io/interval-workout-timer/>
 - 部署方式：GitHub Pages branch-based deployment，**push 到 `main` 後會自動上線**
 - repo 內目前**沒有** `.github/workflows` deploy pipeline
-- 目前沒有未完成中的 code change；最近幾輪已把：
-  1. fallback narration day 的開始 cue bug 修掉
-  2. 2026-04-29 放鬆日整包語音素材補齊
-  3. 首頁新增「興奮度差異與分辨方式」區塊
+- 本輪已完成兩件關鍵素材更新：
+  1. `2026-04-30` 凱格爾普通日：直接重用 `2026-04-27` 資產
+  2. `2026-05-01` 正式訓練日：以 `2026-04-28` 為骨架，新增每段 countdown 開場的分數判斷 guidance
 
 ---
 
@@ -39,10 +41,11 @@
 - monotonic countdown scheduling
 - phase intro / cue / end cue 流程
 - 倒數中 guidance 的 `timeline-events-v1` 資料驅動播放
-- 2026-04-27、2026-04-28、2026-04-29 三天語音庫
+- `2026-04-27`、`2026-04-28`、`2026-04-29`、`2026-04-30`、`2026-05-01` 五天語音庫
 - fallback narration day 的開始 cue 修復與 regression test
 - 首頁新增靜態教育區塊：`興奮度差異與分辨方式`
-- GitHub Pages 正式站可直接使用，且已驗證 push-to-main 後會更新 live
+- `2026-05-01` 正式訓練日的「phase 開場分數判斷 guidance」版本
+- GitHub Pages 正式站可直接使用，且已知 push-to-main 會更新 live（但每次仍要等 propagation）
 
 ### 目前沒有卡住的 blocker
 - 無未解 blocker
@@ -54,18 +57,7 @@
 ## 最近完成的重點進度
 
 ### 1. fallback narration day 的開始 cue bug 已修復
-使用者先前回報：「某些日子倒數開始時沒有播放開始音效。」
-
-根因不是音檔缺失，而是流程判斷把：
-
-- `是否有專用旁白` 與
-- `是否需要播放開始 cue`
-
-錯誤綁在一起。
-
-因此像沒有專用旁白、只有文字腳本的日子，會直接跳進倒數，漏掉 `countdown-start.wav`。
-
-目前修正後的產品語意是：
+先前曾修掉一個重要流程 bug：
 
 - **有專用旁白**：先播 phase narration，再播開始 cue，再開始倒數
 - **沒有專用旁白**：至少先播開始 cue，再開始倒數
@@ -75,12 +67,6 @@
 - `2c29ec6` — `[verified] fix: play start cue on fallback narration days`
 
 ### 2. 2026-04-29 放鬆日整包語音已落地
-今天課表已確認是：
-
-- 日期：`2026-04-29`
-- week/day：`W1D3`
-- session：`放鬆日`
-
 已完成：
 
 - 主旁白文字稿
@@ -95,9 +81,29 @@
 對應 commit：
 - `cd24038` — `[verified] feat: add 2026-04-29 relax day narration`
 
-### 3. 首頁新增「興奮度差異與分辨方式」區塊
-這輪又補了一個靜態說明區塊，讓首頁不只顯示訓練流程，也提供辨識興奮度區間的說明。
+### 3. 2026-04-30 凱格爾普通日已用重複課表重用模式補齊
+live code 已確認：
 
+- `2026-04-30 = W1D4 = 凱格爾普通日`
+- 課表與 `2026-04-27 = W1D1` 完全相同
+
+因此這天沒有重跑 TTS，而是直接建立新日期 manifest，資產沿用：
+
+- `audio/library/2026-04-27/generated/*.wav`
+- `audio/library/2026-04-27/guidance/*.wav`
+
+已完成：
+
+- `audio/library/2026-04-30/manifest.json`
+- `audio/today/narration-manifest.json`
+- `audio/today/narration-source.json`
+- `audio/library/index.json`
+- `tests/narration-manifest.test.js`
+
+對應 commit：
+- `fdbccf9` — `feat: add 2026-04-30 reused narration manifest`
+
+### 4. 首頁新增「興奮度差異與分辨方式」區塊
 新增內容包含：
 
 - `4 分`：可重新開始的暖機區
@@ -111,11 +117,52 @@
 對應 commit：
 - `82ec697` — `[verified] feat: add arousal level guide section`
 
-### 4. 過時 roadmap 已移除
-舊的 audio architecture refactor roadmap 已刪掉，避免新 session 誤判那份文件仍在進行中。
+### 5. 2026-05-01 正式訓練日已升級為 phase 開場分數判斷版本
+live code 已確認：
+
+- `2026-05-01 = W1D5 = 正式訓練日`
+- 課表與 `2026-04-28 = W1D2` 完全相同
+
+但使用者額外要求：
+- 在 **phase 剛開始倒數時**，加入當下目標分數的判斷說明
+
+因此這次不是純重用，而是做成**混合重用模式**：
+
+- **phase narration**：沿用 `2026-04-28/generated/*.wav`
+- **原本後段 guidance**：沿用 `2026-04-28/guidance/*.wav`
+- **每段第一句 guidance**：改用 `2026-05-01` 新生成的 wav
+- **phase 5**：原本沒有 guidance，新增 1 句收尾回降提醒
+
+這次新加的 5 句開場 guidance 分別是：
+
+- phase 1：`4 分暖機區`
+- phase 2：`5 分判斷`
+- phase 3：`6 分可控高原區`
+- phase 4：`7 分邊界`
+- phase 5：`回到 4 分以下的收尾提醒`
+
+實際 timeline 調整為：
+
+- 每段第一個 `timelineEvents[0].startAtSecond = 4`
+- phase 1 後續事件保留 `25 / 55 / 85`
+- phase 2 後續事件保留 `45 / 75 / 105 / 135 / 160`
+- phase 3 後續事件保留 `55 / 90 / 130 / 170 / 210`
+- phase 4 後續事件保留 `75 / 130 / 190`
+- phase 5 為新加的單句 event：`4`
+
+已完成：
+
+- `audio/library/2026-05-01/texts/*.txt`（5 個新開場 guidance 文本）
+- `audio/library/2026-05-01/guidance/*.wav`（5 個新開場 guidance wav）
+- `audio/library/2026-05-01/manifest.json`
+- `audio/today/narration-manifest.json`
+- `audio/today/narration-source.json`
+- `audio/library/index.json`
+- `tests/narration-manifest.test.js`
+- 本機 browser smoke test
 
 對應 commit：
-- `af78a29` — `docs: remove completed refactor roadmap`
+- `2af76c0` — `feat: add 2026-05-01 formal day arousal guidance`
 
 ---
 
@@ -131,6 +178,8 @@
 6. 過期或被取消的 async playback，不可以回頭覆寫新的 UI 狀態
 7. phase intro 的 promise 必須等實際播完，而不是只等 `audio.play()` resolve
 8. countdown 使用 monotonic clock；heartbeat 延遲時要 catch up，不是單純慢一拍
+9. 如果使用者要求「phase 一開始就講某件事」，**一定要檢查 timelineEvents，不要只改文案**
+10. `audio/today/` 是否顯示某些檔名不重要；**manifest 才是 source of truth**
 
 建議優先關注的測試檔：
 
@@ -167,13 +216,15 @@
 
 ### 語音素材結構
 - `audio/today/narration-manifest.json`
-  - 今天頁面直接載入的語音清單
+  - 今天頁面直接載入的語音清單；目前指向 `2026-05-01`
 - `audio/today/narration-source.json`
-  - today 素材來源描述
+  - today 素材來源描述；目前指向 `2026-05-01`
 - `audio/library/index.json`
-  - 日期索引，已收錄 `2026-04-27`、`2026-04-28`、`2026-04-29`
+  - 日期索引；目前已收錄 `2026-04-27`～`2026-05-01`
 - `audio/library/<date>/manifest.json`
   - 對應日期的 phase 文本、檔案、duration、sha256、`timelineClips`、`timelineEvents`
+- `audio/library/2026-05-01/manifest.json`
+  - 值得特別看；它示範了「formal day 混合重用」策略
 - `audio/today/guidance/`、`audio/library/<date>/guidance/`
   - 倒數中段 guidance 短語音
 - `audio/schema/timeline-event.schema.json`
@@ -203,6 +254,15 @@ npm test
 
 這個數字是本次 handoff 更新時重新實跑確認過的，不是沿用舊文件估值。
 
+### 2026-05-01 相關測試重點
+`tests/narration-manifest.test.js` 目前會驗：
+
+- today 已切到 `2026-05-01`
+- phase 1～5 的第一個 guidance event 都在 `4 秒`
+- 新的開場分數判斷 clip 與音檔路徑存在
+- `audio/library/index.json` 已含 `2026-05-01`
+- guided library 的 legacy normalization 測試仍保留
+
 ### 本機 smoke test 建議
 ```bash
 cd /home/atmjin/.hermes/archive/github/interval-workout-timer
@@ -211,25 +271,42 @@ python3 -m http.server 8124
 
 打開：<http://127.0.0.1:8124/>
 
-建議至少驗兩種情境：
+建議至少驗三種情境：
 
-1. **有專用旁白的日子**（例如 4/28）
-   - 先播 phase narration + start cue
-   - 再開始倒數
-2. **fallback narration day**（例如 4/29 或其他沒有專用旁白日）
-   - 先播 start cue
-   - 不應直接跳進倒數
+1. **2026-04-28 formal day**
+   - phase narration
+   - start cue
+   - 舊版 formal guidance
+2. **2026-04-30 reused day**
+   - 使用 `2026-04-27` 資產，但日期/課表身份是 `2026-04-30`
+3. **2026-05-01 formal day**
+   - phase narration
+   - `countdown-start.wav`
+   - 4 秒左右播新的分數判斷 guidance
 
 若要抓更硬的證據，可 monkeypatch `HTMLMediaElement.play()` 看播放順序。
+
+### 已知 smoke test 小坑
+瀏覽器自動 click 有一次沒有真正進入播放流程，但在 page context 直接執行：
+
+```js
+document.querySelector('#start-button').click()
+```
+
+後就成功觸發。
+
+如果 snapshot 看起來按鈕存在、console 也沒報錯，但播放狀態沒變，先補做 page-context click 驗證，不要太早判定 app 壞掉。
 
 ### live 驗證現況
 正式站：
 - <https://suzune-maid.github.io/interval-workout-timer/>
 
-已確認：
-- live 站可正常開啟
+已知事實：
+- GitHub Pages 正常啟用
 - push 到 `main` 後 GitHub Pages 會更新內容
 - 但更新有 propagation delay，需要等一下再查，不是 instant
+
+目前 `2af76c0` 已 push 到 `origin/main`，但這份 handoff 更新時**尚未再對 live 站做一次 2026-05-01 專屬驗證**；若要確認，請再補做一次 cache-busting / asset existence check。
 
 ---
 
@@ -256,7 +333,7 @@ git push origin main
 目前依據有兩類：
 
 1. **事實**
-   - GitHub repo API 回傳 `has_pages = true`
+   - `origin` 就是 GitHub repo
    - repo 內找不到 `.github/workflows`
    - 正式站可存取
 2. **實測結果**
@@ -276,13 +353,10 @@ git push origin main
 ## 重要經驗與注意事項
 
 ### 1. `HTMLMediaElement.play()` resolve 不等於播完
-這是這個 repo 非常重要的坑。
-
 - `await audio.play()` 只表示瀏覽器接受開始播放
 - **不表示音檔已完整播放完畢**
 
 如果流程語意是：
-
 - 先播 narration
 - 再播 cue
 - 然後才開始倒數
@@ -290,17 +364,14 @@ git push origin main
 那邏輯就一定要等 `ended` / `error`，不能只等 `play()` promise resolve。
 
 ### 2. narration 與 start cue 是不同層的語意
-這次 bug 的核心教訓：
-
 - narration 是 narration
 - cue 是 cue
 - fallback day 沒有 narration，不代表不需要 cue
 
-所以不要再把 `hasNarrationAudio()` 當成「是否要播開始 cue」的唯一開關。
+所以不要把 `hasNarrationAudio()` 當成「是否要播開始 cue」的唯一開關。
 
 ### 3. stale async 很容易覆寫新 UI
 這個專案有很多：
-
 - 切日
 - skip
 - reset
@@ -310,19 +381,57 @@ git push origin main
 如果沒有 sequence id / cancellation guard，舊流程很容易在完成後回頭覆蓋新畫面狀態。
 
 ### 4. 內容型首頁區塊適合加小型靜態測試
-這輪新增「興奮度差異與分辨方式」時，用的是：
+像 `興奮度差異與分辨方式` 這類 FAQ / 教育內容，適合用小型靜態測試鎖住，不要只依賴 JS 流程測試。
 
-- 先補 `tests/static-page-content.test.js`
-- 再改 `index.html`
-- 最後補 `styles.css`
+### 5. 以 live code 為準，不要直接相信 handoff / planning 文件
+這個 repo 已實際踩過一次：文件摘要很像定案，但真正課表仍要重新用：
 
-這種做法很適合 FAQ、說明卡、安全提示、分數口訣這類**靜態教育內容**。
+```js
+resolveProgramDay(startDate, targetDate)
+buildDailySession(weekNumber, dayNumber)
+```
 
-因為就算 JS 測試全綠，純 HTML 區塊還是可能在日後 layout 調整時被不小心刪掉。
+驗證，才能確定那天到底是什麼 session。
 
-### 5. README 很容易半新半舊
+### 6. formal day 若要「一開始就說」，通常要同時改文案與 timeline
+如果使用者要求：
+- phase 一開始就講分數判斷
+- 一開始就提醒呼吸／身體訊號
+- 一開始就插入某句 guidance
+
+那通常要一起做：
+- 改第一句 guidance 文案
+- 把第一個 event 秒數拉到 countdown 起始附近
+- 必要時新增原本沒有 guidance 的 phase event
+
+### 7. 5 分通常不是 repo 內既有靜態定義，要自己補運作型口語說明
+repo 目前靜態 guide 中明確寫死的是：
+- `4 分`
+- `6 分`
+- `7 分`
+- `8 分`
+
+若 phase 目標需要講 `5 分`，通常要自己補成：
+- 介於 4 與 6 之間的運作型說明
+- 例如：「感覺很清楚，但一停下來還不會自己暴衝」
+
+### 8. `audio/today` 內容可能殘留舊檔，不要只看目錄表面
+要判斷今天實際在用什麼，優先看：
+- `audio/today/narration-manifest.json`
+- `audio/today/narration-source.json`
+
+不是只看 `audio/today/guidance/` 或 `audio/today/generated/` 內有什麼檔案。
+
+### 9. 不要把 TTS 生成過程檔一起 commit
+這次 2026-05-01 製作時曾短暫產生：
+- 批次輸入 json
+- debug json
+- summary json
+
+正式 commit 前已刪除。這類 `tts-batches/` 檔案屬於操作中間產物，不該當成產品素材提交。
+
+### 10. README 很容易半新半舊
 這個 repo 最近更新密度高，README 最容易落後的是：
-
 - 測試數量
 - 已支援的語音庫日期
 - GitHub Pages 發版方式
@@ -330,24 +439,16 @@ git push origin main
 
 只要又補了新測試、新日期素材或改了部署／流程，記得同步 README，不然下一個 session 很容易被舊 baseline 誤導。
 
-### 6. GitHub Pages 驗證不要只看 push 成功
-這個 repo 目前不是自訂 CI deploy pipeline，而是直接靠 Pages 發佈。
-
-所以發版驗證的正確心態是：
-
-- `git push` 成功 ≠ live 一定已更新
-- 要另外檢查正式站內容
-- 必要時用 cache-busting query string 或輪詢 deterministic marker
-
 ---
 
 ## 最近關鍵 commit 速查
 
+- `2af76c0` — `feat: add 2026-05-01 formal day arousal guidance`
+- `fdbccf9` — `feat: add 2026-04-30 reused narration manifest`
+- `67508e4` — `docs: refresh deployment notes and project handoff`
 - `82ec697` — `[verified] feat: add arousal level guide section`
 - `cd24038` — `[verified] feat: add 2026-04-29 relax day narration`
-- `75b032f` — `docs: add project status handoff guide`
 - `2c29ec6` — `[verified] fix: play start cue on fallback narration days`
-- `af78a29` — `docs: remove completed refactor roadmap`
 
 如果之後要理解最近專案怎麼演進，從這幾個 commit 往下看會最快。
 
@@ -372,7 +473,7 @@ git push origin main
 - `audio/today/narration-manifest.json`
 - `audio/today/narration-source.json`
 - `audio/library/index.json`
-- `audio/library/2026-04-29/manifest.json`
+- `audio/library/2026-05-01/manifest.json`
 - `narration-manifest.js`
 - `tests/narration-manifest.test.js`
 
@@ -385,10 +486,11 @@ git push origin main
 
 ## 之後可能值得做，但目前不是 blocker 的項目
 
-1. 若之後希望 deploy 狀態更可觀察，可再考慮改成 GitHub Actions Pages workflow
-2. 補更多對 `player 不可用` / cue disabled / 異常中止 的 UI regression tests
-3. 若語音庫持續擴充，最好把「新增一天素材需要同步更新哪些檔」整理成固定流程文件或 skill
-4. 若首頁靜態教育內容越來越多，可考慮把內容區塊切成更明確的 partial / render 結構，但目前還不急
+1. 補一次 `2af76c0` push 後的 live site 驗證，確認 `2026-05-01` manifest 與新 guidance wav 已在正式站可取用
+2. 若之後希望 deploy 狀態更可觀察，可再考慮改成 GitHub Actions Pages workflow
+3. 補更多對 `player 不可用` / cue disabled / 異常中止 的 UI regression tests
+4. 若語音庫持續擴充，最好把「新增一天素材需要同步更新哪些檔」整理成固定流程文件或 skill
+5. 若首頁靜態教育內容越來越多，可考慮把內容區塊切成更明確的 partial / render 結構，但目前還不急
 
 ---
 
@@ -407,6 +509,7 @@ git push origin main
 5. 若是改語音素材／manifest：再讀
    - `audio/today/narration-manifest.json`
    - `audio/library/index.json`
+   - `audio/library/2026-05-01/manifest.json`
    - `narration-manifest.js`
 6. 若是改首頁說明內容：再讀
    - `index.html`
