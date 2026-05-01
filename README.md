@@ -15,6 +15,7 @@
 - 依起始日自動推算今天是第幾週第幾天
 - 顯示目前選取日的訓練摘要、注意事項與完整 6 週日程
 - 日程表可直接點選任一天，立即切換課表與計時器內容
+- 若選取日已存在 `audio/library/<date>/manifest.json`，會優先載入該日專用語音；否則退回文字腳本模式
 - 每段開始前會先播放階段說明（若有）與開始音效，之後才開始倒數
 - 第一階段支援倒數中的教練式呼吸引導，會按 4 秒吸氣、6 秒吐氣節奏播放短語音
 - 第二階段支援慢速凱格爾教練引導，會按 3 秒收、6 秒放的節奏帶 10 次
@@ -33,6 +34,7 @@
 以下行為已由 regression tests 鎖住，後續重構不可破壞：
 
 - 切換日程時，會取消目前 active playback、重設 phase 與 timer，並載入新選取日的流程。
+- 如果切到已有專用語音素材的日子，介面必須切換成該日 library manifest，不可沿用 today 或前一天的語音狀態。
 - 如果切到沒有專用語音素材的日子，介面必須退回文字腳本模式，不能殘留上一天的語音狀態。
 - 沒有專用語音素材的日子，開始前也要先播放開始音效，不能直接跳進倒數。
 - 倒數已開始後按暫停，再按開始恢復時，只會重播開始音效，不會把整段 phase narration 從頭再播一次。
@@ -65,14 +67,14 @@
 ## 語音素材結構
 
 - `audio/today/narration-manifest.json`
-  - 今日直接載入的語音清單
+  - 今日預設載入的語音清單；若使用者切到其他已有 library 的日期，app 會改載入該日 `audio/library/<date>/manifest.json`
   - 使用 `schemaVersion: timeline-events-v1`
   - `phase-01` 到 `phase-05` 以 `timelineClips` / `timelineEvents` 描述 phase narration、cue 與倒數中的 guidance
 - `audio/today/narration-source.json`
   - 今日語音素材的來源資料，同步使用 `timeline-events-v1`
 - `audio/library/index.json`
   - 已建立日期的語音索引，並指向對應 timeline schema
-  - 目前收錄 `2026-04-27`、`2026-04-28` 與 `2026-04-29` 三天素材
+  - 目前收錄 `2026-04-27`、`2026-04-28`、`2026-04-29`、`2026-04-30`、`2026-05-01` 五天素材
 - `audio/library/<date>/manifest.json`
   - 該日期每一段的文本、音檔、長度、sha256，以及 `timelineClips` / `timelineEvents`
 - `audio/schema/timeline-event.schema.json`
@@ -92,7 +94,7 @@ python3 -m http.server 8124
 
 ## 測試
 
-目前測試基線為 **49/49 通過**。
+目前測試基線為 **50/50 通過**。
 
 ```bash
 npm test

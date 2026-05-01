@@ -336,13 +336,55 @@ function buildManifestForEntry(entry, options = {}) {
   };
 }
 
-function installFakeFetch(manifest) {
-  globalThis.fetch = async () => ({
-    ok: true,
-    async json() {
-      return manifest;
-    },
-  });
+function installFakeFetch(routes) {
+  const fetchCalls = [];
+
+  globalThis.fetch = async (url) => {
+    const normalizedUrl = String(url);
+    fetchCalls.push(normalizedUrl);
+    const payload = routes[normalizedUrl];
+
+    if (!payload) {
+      return {
+        ok: false,
+        status: 404,
+        async json() {
+          return null;
+        },
+      };
+    }
+
+    return {
+      ok: true,
+      status: 200,
+      async json() {
+        return payload;
+      },
+    };
+  };
+
+  return { fetchCalls };
+}
+
+function buildLibraryIndex(calendar, daysWithLibrary = []) {
+  return {
+    items: daysWithLibrary.map((dayOffset) => {
+      const entry = calendar[dayOffset];
+      return {
+        libraryKey: entry.date,
+        sourceDate: entry.date,
+        weekNumber: entry.weekNumber,
+        dayNumber: entry.dayNumber,
+        sessionTitle: entry.session.title,
+        manifestFile: `audio/library/${entry.date}/manifest.json`,
+        entryCount: entry.session.phases.length,
+        schemaVersion: 'timeline-events-v1',
+        timelineSchemaFile: 'audio/schema/timeline-event.schema.json',
+      };
+    }),
+    schemaVersion: 'timeline-events-v1',
+    timelineSchemaFile: 'audio/schema/timeline-event.schema.json',
+  };
 }
 
 function findDayButton(root, dayOffset) {
@@ -363,6 +405,8 @@ async function bootApp({
   isoString = '2026-04-27T08:00:00Z',
   manifestEntry = 0,
   manifestOptions = {},
+  libraryDays = [],
+  libraryManifestOptionsByDay = {},
 } = {}) {
   const restoreDate = installFakeDate(isoString);
   const calendar = buildProgramCalendar('2026-04-27');
@@ -370,15 +414,64 @@ async function bootApp({
   const document = installFakeDom();
   const timer = installFakeWindow();
   const audio = installFakeAudio();
-  installFakeFetch(buildManifestForEntry(todayEntry, manifestOptions));
+
+  const routes = {
+    './audio/today/narration-manifest.json': buildManifestForEntry(todayEntry, manifestOptions),
+    './audio/library/index.json': buildLibraryIndex(calendar, libraryDays),
+  };
+
+  for (const dayOffset of libraryDays) {
+    const entry = calendar[dayOffset];
+    routes[`./audio/library/${entry.date}/manifest.json`] = buildManifestForEntry(
+      entry,
+      libraryManifestOptionsByDay[dayOffset] ?? {},
+    );
+  }
+
+  const fetchState = installFakeFetch(routes);
 
   const moduleUrl = `${pathToFileURL(path.join(PROJECT_ROOT, 'app.js')).href}?test=${Date.now()}-${Math.random()}`;
   await import(moduleUrl);
   await nextTurn();
   await nextTurn();
 
-  return { calendar, document, timer, audio, restoreDate };
+  return { calendar, document, timer, audio, restoreDate, fetchCalls: fetchState.fetchCalls };
 }
+
+test('切換到已有 library 的日子時，會載入那一天的專用語音 manifest', async () => {
+  const { calendar, document, fetchCalls, restoreDate } = await bootApp({
+    libraryDays: [3],
+    libraryManifestOptionsByDay: {
+      3: {
+        audioDurations: {
+          'phase-01': 21.5,
+        },
+      },
+    },
+  });
+  try {
+    const scheduleGrid = document.querySelector('#schedule-grid');
+    const phaseLabel = document.querySelector('#phase-label');
+    const narrationStatus = document.querySelector('#narration-status');
+    const narrationText = document.querySelector('#narration-text');
+    const guidanceLive = document.querySelector('#guidance-live');
+
+    const dayFourButton = findDayButton(scheduleGrid, 3);
+    assert.ok(dayFourButton, '應能找到第 1 週第 4 天的日程按鈕');
+    dayFourButton.click();
+    await nextTurn();
+    await nextTurn();
+
+    assert.ok(fetchCalls.includes('./audio/library/index.json'));
+    assert.ok(fetchCalls.includes('./audio/library/2026-04-30/manifest.json'));
+    assert.equal(phaseLabel.textContent, calendar[3].session.phases[0].label);
+    assert.equal(narrationStatus.textContent, '語音起點：00:00 ｜ 音檔長度：約 21.5 秒');
+    assert.match(narrationText.textContent, /現在開始：準備放鬆。這一段約 1 分鐘。/);
+    assert.equal(guidanceLive.textContent, '這一段目前沒有倒數中的教練引導語音。');
+  } finally {
+    restoreDate();
+  }
+});
 
 test('切換到沒有專用語音的日子時，會重設課表並退回文字腳本模式', async () => {
   const { calendar, document, audio, restoreDate } = await bootApp();

@@ -1,24 +1,22 @@
-# 2026-04-29 Project status handoff（updated 2026-04-30）
+# 2026-04-29 Project status handoff（updated 2026-05-01）
 
 > 目的：讓之後的新 session 能在 3～5 分鐘內理解這個 repo 的**目前狀態、最近進度、已知基線、部署方式、驗證流程與實戰經驗**，避免重新踩同一批坑。
 >
-> 備註：這份 handoff 仍沿用舊檔名，是因為 `README.md` 目前直接引用這個路徑；內容已更新到 2026-04-30 當下的最新狀態。
+> 備註：這份 handoff 仍沿用舊檔名，是因為 `README.md` 目前直接引用這個路徑；內容已更新到 2026-05-01 當下的最新狀態。
 
 ## TL;DR
 
-- 目前分支：`main`
-- git 狀態：`main...origin/main`
-- working tree：乾淨
-- 最新 commit：`2af76c0` — `feat: add 2026-05-01 formal day arousal guidance`
-- 目前測試基線：`npm test` **49/49 pass**
+- 主要分支：`main`
+- 建議先用 `git status -sb` / `git log -1 --oneline` 取得你接手當下的 HEAD 與工作樹狀態
+- 目前測試基線：`npm test` **50/50 pass**
 - 已建立的語音庫日期：`2026-04-27`、`2026-04-28`、`2026-04-29`、`2026-04-30`、`2026-05-01`
 - `audio/today/*` 目前指向：`2026-05-01`（W1D5，正式訓練日）
 - 正式站：<https://suzune-maid.github.io/interval-workout-timer/>
 - 部署方式：GitHub Pages branch-based deployment，**push 到 `main` 後會自動上線**
 - repo 內目前**沒有** `.github/workflows` deploy pipeline
-- 本輪已完成兩件關鍵素材更新：
-  1. `2026-04-30` 凱格爾普通日：直接重用 `2026-04-27` 資產
-  2. `2026-05-01` 正式訓練日：以 `2026-04-28` 為骨架，新增每段 countdown 開場的分數判斷 guidance
+- 本輪關鍵更新：
+  1. `2026-05-01` 正式訓練日：phase 開場分數判斷 guidance 版本
+  2. 切到任一天時，若已有 `audio/library/<date>/manifest.json`，會自動改載入該日專用語音
 
 ---
 
@@ -42,6 +40,7 @@
 - phase intro / cue / end cue 流程
 - 倒數中 guidance 的 `timeline-events-v1` 資料驅動播放
 - `2026-04-27`、`2026-04-28`、`2026-04-29`、`2026-04-30`、`2026-05-01` 五天語音庫
+- 切到任一天時，若 `audio/library/<date>/manifest.json` 已存在，會優先載入該日專用語音；否則才退回文字 fallback
 - fallback narration day 的開始 cue 修復與 regression test
 - 首頁新增靜態教育區塊：`興奮度差異與分辨方式`
 - `2026-05-01` 正式訓練日的「phase 開場分數判斷 guidance」版本
@@ -50,7 +49,7 @@
 ### 目前沒有卡住的 blocker
 - 無未解 blocker
 - 無待恢復的半成品修改
-- 無本機驗證 server 在跑
+- 本機若有驗證用 `http.server` 在跑，視為臨時 smoke test 環境，不屬於產品 blocker
 
 ---
 
@@ -164,6 +163,20 @@ live code 已確認：
 對應 commit：
 - `2af76c0` — `feat: add 2026-05-01 formal day arousal guidance`
 
+### 6. 歷史日期若已有 library manifest，切換後會自動改載入該日語音
+這輪修正的是一個影響歷史日體驗的行為差異：
+
+- 先前 app 初始化只會載入一次 `audio/today/narration-manifest.json`
+- 切到其他日期時，若剛好 session 結構相近，容易沿用錯誤的 today 語音狀態
+- 現在會先讀 `audio/library/index.json`
+- 若 selected day 對應日期已有 `audio/library/<date>/manifest.json`，就改載入該日 manifest
+- 若沒有 library，才回到文字腳本 fallback，但 cue-only 流程仍保留
+
+這次補上的 regression test 會鎖住兩件事：
+
+- `2026-04-30` 這類 reused day 會進入正確的 library 語音模式
+- 沒有 library 的日期仍會退回文字模式，且開始前照樣播開始 cue
+
 ---
 
 ## 目前產品行為基線
@@ -171,15 +184,16 @@ live code 已確認：
 以下是之後重構時**不能隨便破壞**的核心行為：
 
 1. 切換日程時，必須停止舊播放並重設目前 session state
-2. 切到沒有專用語音素材的日子時，UI 要退回文字腳本模式
-3. 沒有專用語音素材的日子，開始前也要先播放開始 cue
-4. pause 後 resume，只能重播開始 cue，不應重播整段 narration
-5. skip 到下一段前，要先取消／停止舊播放
-6. 過期或被取消的 async playback，不可以回頭覆寫新的 UI 狀態
-7. phase intro 的 promise 必須等實際播完，而不是只等 `audio.play()` resolve
-8. countdown 使用 monotonic clock；heartbeat 延遲時要 catch up，不是單純慢一拍
-9. 如果使用者要求「phase 一開始就講某件事」，**一定要檢查 timelineEvents，不要只改文案**
-10. `audio/today/` 是否顯示某些檔名不重要；**manifest 才是 source of truth**
+2. 切到已有專用語音素材的日子時，必須改載入對應 `audio/library/<date>/manifest.json`，不能沿用 today 或上一天狀態
+3. 切到沒有專用語音素材的日子時，UI 要退回文字腳本模式
+4. 沒有專用語音素材的日子，開始前也要先播放開始 cue
+5. pause 後 resume，只能重播開始 cue，不應重播整段 narration
+6. skip 到下一段前，要先取消／停止舊播放
+7. 過期或被取消的 async playback，不可以回頭覆寫新的 UI 狀態
+8. phase intro 的 promise 必須等實際播完，而不是只等 `audio.play()` resolve
+9. countdown 使用 monotonic clock；heartbeat 延遲時要 catch up，不是單純慢一拍
+10. 如果使用者要求「phase 一開始就講某件事」，**一定要檢查 timelineEvents，不要只改文案**
+11. `audio/today/` 是否顯示某些檔名不重要；**manifest 才是 source of truth**
 
 建議優先關注的測試檔：
 
@@ -216,7 +230,7 @@ live code 已確認：
 
 ### 語音素材結構
 - `audio/today/narration-manifest.json`
-  - 今天頁面直接載入的語音清單；目前指向 `2026-05-01`
+  - 今日預設載入的語音清單；若 selected day 在 `audio/library/index.json` 有對應條目，app 會改載入該日 library manifest
 - `audio/today/narration-source.json`
   - today 素材來源描述；目前指向 `2026-05-01`
 - `audio/library/index.json`
@@ -250,7 +264,7 @@ npm test
 ```
 
 結果：
-- `49/49 pass`
+- `50/50 pass`
 
 這個數字是本次 handoff 更新時重新實跑確認過的，不是沿用舊文件估值。
 
@@ -271,15 +285,18 @@ python3 -m http.server 8124
 
 打開：<http://127.0.0.1:8124/>
 
-建議至少驗三種情境：
+建議至少驗四種情境：
 
 1. **2026-04-28 formal day**
    - phase narration
    - start cue
    - 舊版 formal guidance
-2. **2026-04-30 reused day**
+2. **2026-04-29 relax day**
+   - 會從 `audio/library/2026-04-29/manifest.json` 進入語音模式
+   - 若 manifest 較大，切日後可多等一小段 async render
+3. **2026-04-30 reused day**
    - 使用 `2026-04-27` 資產，但日期/課表身份是 `2026-04-30`
-3. **2026-05-01 formal day**
+4. **2026-05-01 formal day**
    - phase narration
    - `countdown-start.wav`
    - 4 秒左右播新的分數判斷 guidance
@@ -306,7 +323,7 @@ document.querySelector('#start-button').click()
 - push 到 `main` 後 GitHub Pages 會更新內容
 - 但更新有 propagation delay，需要等一下再查，不是 instant
 
-目前 `2af76c0` 已 push 到 `origin/main`，但這份 handoff 更新時**尚未再對 live 站做一次 2026-05-01 專屬驗證**；若要確認，請再補做一次 cache-busting / asset existence check。
+每次只要改到語音素材、manifest routing、或首頁靜態內容，都建議再補一次 cache-busting / asset existence check；不要只因為 `git push` 成功，就直接假設 live 已同步完成。
 
 ---
 
@@ -486,7 +503,7 @@ repo 目前靜態 guide 中明確寫死的是：
 
 ## 之後可能值得做，但目前不是 blocker 的項目
 
-1. 補一次 `2af76c0` push 後的 live site 驗證，確認 `2026-05-01` manifest 與新 guidance wav 已在正式站可取用
+1. 每次影響語音 routing 或新增素材後，都補一次 live site 驗證，確認 today 與 historical library asset 都能從正式站取用
 2. 若之後希望 deploy 狀態更可觀察，可再考慮改成 GitHub Actions Pages workflow
 3. 補更多對 `player 不可用` / cue disabled / 異常中止 的 UI regression tests
 4. 若語音庫持續擴充，最好把「新增一天素材需要同步更新哪些檔」整理成固定流程文件或 skill

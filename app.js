@@ -4,7 +4,11 @@ import {
   formatClock,
   resolveProgramDay,
 } from './timer-core.js';
-import { createNarrationPlayer, loadNarrationManifest } from './audio-player.js';
+import {
+  createNarrationPlayer,
+  loadNarrationLibraryIndex,
+  loadNarrationManifest,
+} from './audio-player.js';
 import { collectDomRefs } from './dom-refs.js';
 import { createSessionController } from './session-controller.js';
 import { renderSchedule, renderStaticContent } from './schedule-view.js';
@@ -30,6 +34,9 @@ const sessionController = createSessionController({
 
 let narrationPlayer = null;
 let narrationManifest = null;
+let narrationLibraryItems = null;
+let activeNarrationDate = null;
+let narrationLoadRequestId = 0;
 
 const timeline = createTimelineOrchestrator({
   sessionController,
@@ -187,10 +194,66 @@ refs.skipButton.addEventListener('click', () => {
 });
 
 async function initializeNarration() {
-  narrationManifest = await loadNarrationManifest();
-  narrationPlayer = createNarrationPlayer(narrationManifest);
+  await ensureNarrationLibraryIndex();
+  await syncNarrationForSelectedDay();
   syncNarrationInfo();
   syncGuidanceLive();
+}
+
+async function ensureNarrationLibraryIndex() {
+  if (Array.isArray(narrationLibraryItems)) {
+    return narrationLibraryItems;
+  }
+
+  try {
+    narrationLibraryItems = await loadNarrationLibraryIndex();
+  } catch {
+    narrationLibraryItems = [];
+  }
+
+  return narrationLibraryItems;
+}
+
+async function syncNarrationForSelectedDay() {
+  const requestId = ++narrationLoadRequestId;
+  const entry = selectedEntry();
+  const manifestUrl = await resolveNarrationManifestUrl(entry);
+
+  if (!manifestUrl) {
+    if (requestId === narrationLoadRequestId) {
+      clearNarrationAudio();
+    }
+    return false;
+  }
+
+  const manifest = await loadNarrationManifest(manifestUrl);
+  if (requestId !== narrationLoadRequestId || entry.date !== selectedEntry().date) {
+    return false;
+  }
+
+  narrationManifest = manifest;
+  narrationPlayer = createNarrationPlayer(manifest);
+  activeNarrationDate = entry.date;
+  return true;
+}
+
+async function resolveNarrationManifestUrl(entry) {
+  const libraryItems = await ensureNarrationLibraryIndex();
+  const libraryItem = libraryItems.find((item) => item.libraryKey === entry.date || item.sourceDate === entry.date);
+
+  if (libraryItem?.manifestFile) {
+    return `./${libraryItem.manifestFile}`;
+  }
+
+  if (entry.dayOffset === todayInfo.dayOffset) {
+    return './audio/today/narration-manifest.json';
+  }
+
+  return null;
+}
+
+function clearNarrationAudio() {
+  activeNarrationDate = null;
 }
 
 function renderAll() {
@@ -280,23 +343,11 @@ function getNarrationEntriesForSelectedDay() {
 }
 
 function hasNarrationAudioForSelectedDay() {
-  if (!narrationPlayer || !Array.isArray(narrationManifest?.entries)) {
-    return false;
-  }
-
-  const phases = selectedEntry().session?.phases ?? [];
-  const manifestEntries = narrationManifest.entries;
-
-  if (phases.length !== manifestEntries.length) {
-    return false;
-  }
-
-  return phases.every((phase, index) => {
-    const manifestEntry = manifestEntries[index];
-    return manifestEntry
-      && manifestEntry.phaseLabel === phase.label
-      && manifestEntry.durationSeconds === phase.seconds;
-  });
+  return Boolean(
+    narrationPlayer
+      && activeNarrationDate === selectedEntry().date
+      && Array.isArray(narrationManifest?.entries),
+  );
 }
 
 function shouldReplayNarrationForCurrentPhase() {
@@ -304,7 +355,7 @@ function shouldReplayNarrationForCurrentPhase() {
   return Boolean(phase && getState().remainingSeconds === phase.seconds);
 }
 
-function switchSelectedDay(dayOffset) {
+async function switchSelectedDay(dayOffset) {
   if (dayOffset === sessionController.getDaySelection().selectedDayOffset) {
     return;
   }
@@ -316,6 +367,15 @@ function switchSelectedDay(dayOffset) {
     : `已切換到第 ${entry.weekNumber} 週第 ${entry.dayNumber} 天。按開始後會載入這一天的流程。`;
 
   renderAll();
+
+  try {
+    await syncNarrationForSelectedDay();
+  } catch {
+    clearNarrationAudio();
+  }
+
+  syncNarrationInfo();
+  syncGuidanceLive();
 }
 
 function getLocalDateString(date) {

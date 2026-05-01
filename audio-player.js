@@ -12,6 +12,17 @@ export async function loadNarrationManifest(url = './audio/today/narration-manif
   return normalizeNarrationManifest(raw);
 }
 
+export async function loadNarrationLibraryIndex(url = './audio/library/index.json') {
+  const response = await fetch(url, { cache: 'no-store' });
+
+  if (!response.ok) {
+    throw new Error(`無法讀取語音庫索引：${response.status}`);
+  }
+
+  const raw = await response.json();
+  return Array.isArray(raw?.items) ? raw.items : [];
+}
+
 export function createNarrationPlayer(manifest, options = {}) {
   const normalizedManifest = normalizeNarrationManifest(manifest);
   const entries = Array.isArray(normalizedManifest?.entries) ? normalizedManifest.entries : [];
