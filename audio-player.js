@@ -1,7 +1,7 @@
 import { createAudioEngine } from './audio-engine.js';
 import { normalizeNarrationManifest } from './narration-manifest.js';
 
-export async function loadNarrationManifest(url = './audio/today/narration-manifest.json') {
+export async function loadNarrationManifest(url) {
   const response = await fetch(url, { cache: 'no-store' });
 
   if (!response.ok) {

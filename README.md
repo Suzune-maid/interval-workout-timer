@@ -66,21 +66,20 @@
 
 ## 語音素材結構
 
-- `audio/today/narration-manifest.json`
-  - 今日預設載入的語音清單；若使用者切到其他已有 library 的日期，app 會改載入該日 `audio/library/<date>/manifest.json`
-  - 使用 `schemaVersion: timeline-events-v1`
-  - `phase-01` 到 `phase-05` 以 `timelineClips` / `timelineEvents` 描述 phase narration、cue 與倒數中的 guidance
-- `audio/today/narration-source.json`
-  - 今日語音素材的來源資料，同步使用 `timeline-events-v1`
 - `audio/library/index.json`
-  - 已建立日期的語音索引，並指向對應 timeline schema
+  - app 只透過這份索引決定某一天有沒有專用語音素材
+  - 若索引中存在該日期，app 會載入對應的 `audio/library/<date>/manifest.json`
+  - 若索引中不存在該日期，app 會直接退回文字腳本 + 開始音效模式
   - 目前收錄 `2026-04-27`、`2026-04-28`、`2026-04-29`、`2026-04-30`、`2026-05-01` 五天素材
 - `audio/library/<date>/manifest.json`
   - 該日期每一段的文本、音檔、長度、sha256，以及 `timelineClips` / `timelineEvents`
+  - 使用 `schemaVersion: timeline-events-v1`
 - `audio/schema/timeline-event.schema.json`
   - timeline/event schema 定義
-- `audio/today/guidance/` 與 `audio/library/<date>/guidance/`
+- `audio/library/<date>/guidance/`
   - 倒數中段引導的短語音，目前已實作第 1 階段呼吸節奏、第 2 階段慢速凱格爾、第 3 階段快速凱格爾、第 4 階段反向凱格爾呼吸引導，以及第 5 階段收尾掃描引導
+- `audio/today/`
+  - 已自 repo 移除；新的執行時與素材維護流程一律以 `audio/library/` 為準
 - `narration-manifest.js`
   - 若上層仍需要舊介面，會從新 schema 產生 legacy `countdownGuidance` 相容檢視，而不是再把它當成主要資料來源
 
@@ -94,7 +93,7 @@ python3 -m http.server 8124
 
 ## 測試
 
-目前測試基線為 **50/50 通過**。
+目前測試基線為 **52/52 通過**。
 
 ```bash
 npm test

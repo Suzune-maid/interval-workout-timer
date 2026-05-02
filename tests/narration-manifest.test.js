@@ -3,8 +3,6 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { normalizeNarrationManifest } from '../narration-manifest.js';
 
-const TODAY_MANIFEST_PATH = new URL('../audio/today/narration-manifest.json', import.meta.url);
-const TODAY_SOURCE_PATH = new URL('../audio/today/narration-source.json', import.meta.url);
 const LIBRARY_INDEX_PATH = new URL('../audio/library/index.json', import.meta.url);
 const GUIDED_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-04-27/manifest.json', import.meta.url);
 const FORMAL_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-01/manifest.json', import.meta.url);
@@ -18,8 +16,8 @@ function findEntry(document, id) {
   return document.entries.find((item) => item.id === id);
 }
 
-test('today narration manifest 會切到 2026-05-01 正式訓練日，並在每段 countdown 開場加入分數判斷 guidance', async () => {
-  const raw = await readJson(TODAY_MANIFEST_PATH);
+test('2026-05-01 library manifest 會保留每段 countdown 開場的分數判斷 guidance', async () => {
+  const raw = await readJson(FORMAL_LIBRARY_MANIFEST_PATH);
   const phase01 = findEntry(raw, 'phase-01');
   const phase02 = findEntry(raw, 'phase-02');
   const phase03 = findEntry(raw, 'phase-03');
@@ -103,30 +101,23 @@ test('normalizeNarrationManifest 仍會從 guided library 的 timeline/event sch
   );
 });
 
-test('today narration source、2026-05-01 library manifest 與 library index 會同步記錄新的開場分數判斷素材', async () => {
-  const [source, formalLibraryManifest, libraryIndex] = await Promise.all([
-    readJson(TODAY_SOURCE_PATH),
+test('2026-05-01 library manifest 與 library index 會同步記錄同一批開場分數判斷素材', async () => {
+  const [formalLibraryManifest, libraryIndex] = await Promise.all([
     readJson(FORMAL_LIBRARY_MANIFEST_PATH),
     readJson(LIBRARY_INDEX_PATH),
   ]);
 
-  const sourcePhase02 = findEntry(source, 'phase-02');
-  const sourcePhase05 = findEntry(source, 'phase-05');
+  const libraryPhase02 = findEntry(formalLibraryManifest, 'phase-02');
   const libraryPhase03 = findEntry(formalLibraryManifest, 'phase-03');
   const libraryPhase05 = findEntry(formalLibraryManifest, 'phase-05');
   const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-05-01');
 
-  assert.equal(source.schemaVersion, 'timeline-events-v1');
   assert.equal(formalLibraryManifest.schemaVersion, 'timeline-events-v1');
-  assert.equal(source.sourceDate, '2026-05-01');
   assert.equal(formalLibraryManifest.sourceDate, '2026-05-01');
-  assert.equal(source.entries.length, 5);
   assert.equal(formalLibraryManifest.entries.length, 5);
 
-  assert.equal(sourcePhase02.timelineClips['score-5-check']?.audioFile, 'audio/library/2026-05-01/guidance/phase-02-guidance-01.wav');
-  assert.equal(sourcePhase02.timelineClips['tease-not-more']?.audioFile, 'audio/library/2026-04-28/guidance/phase-02-guidance-02.wav');
-  assert.deepEqual(sourcePhase05.timelineEvents.map((item) => item.startAtSecond), [4]);
-
+  assert.equal(libraryPhase02.timelineClips['score-5-check']?.audioFile, 'audio/library/2026-05-01/guidance/phase-02-guidance-01.wav');
+  assert.equal(libraryPhase02.timelineClips['tease-not-more']?.audioFile, 'audio/library/2026-04-28/guidance/phase-02-guidance-02.wav');
   assert.equal(libraryPhase03.countdownGuidance?.summary, '1 句 6 分判斷＋3 句加強挑逗＋2 句曖昧耳語');
   assert.deepEqual(libraryPhase03.timelineEvents.map((item) => item.startAtSecond), [4, 55, 90, 130, 170, 210]);
   assert.equal(libraryPhase03.timelineClips['score-6-check']?.textFile, 'audio/library/2026-05-01/texts/phase-03-guidance-01.txt');

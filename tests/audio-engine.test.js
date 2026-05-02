@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createAudioEngine } from '../audio-engine.js';
 
-const NARRATION_A = './audio/today/generated/phase-01.wav';
-const NARRATION_B = './audio/today/generated/phase-02.wav';
-const GUIDANCE_A = './audio/today/guidance/phase-01-inhale.wav';
+const NARRATION_A = './audio/library/test-fixtures/generated/phase-01.wav';
+const NARRATION_B = './audio/library/test-fixtures/generated/phase-02.wav';
+const GUIDANCE_A = './audio/library/test-fixtures/guidance/phase-01-inhale.wav';
 const START_CUE = './audio/fx/countdown-start.wav';
 
 function installFakeAudio() {

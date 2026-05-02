@@ -32,7 +32,91 @@ const sessionController = createSessionController({
   todayEntry,
 });
 
-let narrationPlayer = null;
+function createCueOnlyNarrationPlayer() {
+  let cueAudio = null;
+  let activePlayback = null;
+
+  function clearActivePlayback() {
+    if (!activePlayback) {
+      return;
+    }
+
+    cueAudio?.removeEventListener?.('ended', activePlayback.handleEnded);
+    cueAudio?.removeEventListener?.('error', activePlayback.handleError);
+    activePlayback = null;
+  }
+
+  function finish(result) {
+    const playback = activePlayback;
+    if (!playback) {
+      return;
+    }
+
+    clearActivePlayback();
+    playback.resolve(result);
+  }
+
+  function fail(error) {
+    const playback = activePlayback;
+    if (!playback) {
+      return;
+    }
+
+    clearActivePlayback();
+    playback.reject(error);
+  }
+
+  function stopActivePlayback(reason = 'cancelled') {
+    const playback = activePlayback;
+    if (!playback) {
+      return;
+    }
+
+    cueAudio?.pause?.();
+    if (cueAudio) {
+      cueAudio.currentTime = 0;
+    }
+    clearActivePlayback();
+    playback.resolve(reason);
+  }
+
+  return {
+    playPhaseIntro(phaseIndex) {
+      stopActivePlayback('interrupted');
+      cueAudio = cueAudio ?? (typeof Audio !== 'undefined' ? new Audio() : null);
+      if (cueAudio) {
+        cueAudio.preload = 'auto';
+        cueAudio.currentTime = 0;
+        cueAudio.src = './audio/fx/countdown-start.wav';
+      }
+
+      return new Promise((resolve, reject) => {
+        if (!cueAudio) {
+          resolve({ phaseIndex, phaseLabel: null });
+          return;
+        }
+
+        const handleEnded = () => finish({ phaseIndex, phaseLabel: null });
+        const handleError = () => fail(new Error('開始音效播放失敗。'));
+        activePlayback = { resolve, reject, handleEnded, handleError };
+        cueAudio.addEventListener('ended', handleEnded, { once: true });
+        cueAudio.addEventListener('error', handleError, { once: true });
+        Promise.resolve(cueAudio.play()).catch(handleError);
+      });
+    },
+    async playCountdownGuidance() {
+      return null;
+    },
+    stopAll() {
+      stopActivePlayback('cancelled');
+    },
+    reset() {
+      stopActivePlayback('cancelled');
+    },
+  };
+}
+
+let narrationPlayer = createCueOnlyNarrationPlayer();
 let narrationManifest = null;
 let narrationLibraryItems = null;
 let activeNarrationDate = null;
@@ -245,14 +329,12 @@ async function resolveNarrationManifestUrl(entry) {
     return `./${libraryItem.manifestFile}`;
   }
 
-  if (entry.dayOffset === todayInfo.dayOffset) {
-    return './audio/today/narration-manifest.json';
-  }
-
   return null;
 }
 
 function clearNarrationAudio() {
+  narrationManifest = null;
+  narrationPlayer = createCueOnlyNarrationPlayer();
   activeNarrationDate = null;
 }
 
@@ -355,6 +437,16 @@ function shouldReplayNarrationForCurrentPhase() {
   return Boolean(phase && getState().remainingSeconds === phase.seconds);
 }
 
+function getSelectionStatusMessage(entry) {
+  if (entry.dayOffset === todayInfo.dayOffset) {
+    return hasNarrationAudioForSelectedDay()
+      ? '已切回今天的課表。按開始後會先播階段說明，再開始倒數。'
+      : '已切回今天的課表。按開始後會先播開始音效，再開始倒數。';
+  }
+
+  return `已切換到第 ${entry.weekNumber} 週第 ${entry.dayNumber} 天。按開始後會載入這一天的流程。`;
+}
+
 async function switchSelectedDay(dayOffset) {
   if (dayOffset === sessionController.getDaySelection().selectedDayOffset) {
     return;
@@ -362,9 +454,7 @@ async function switchSelectedDay(dayOffset) {
 
   timeline.cancel({ resetNarration: true });
   const entry = sessionController.switchSelectedDay(dayOffset);
-  refs.statusMessage.textContent = entry.dayOffset === todayInfo.dayOffset
-    ? '已切回今天的課表。按開始後會先播階段說明，再開始倒數。'
-    : `已切換到第 ${entry.weekNumber} 週第 ${entry.dayNumber} 天。按開始後會載入這一天的流程。`;
+  refs.statusMessage.textContent = `已切換到第 ${entry.weekNumber} 週第 ${entry.dayNumber} 天。按開始後會載入這一天的流程。`;
 
   renderAll();
 
@@ -374,6 +464,7 @@ async function switchSelectedDay(dayOffset) {
     clearNarrationAudio();
   }
 
+  refs.statusMessage.textContent = getSelectionStatusMessage(entry);
   syncNarrationInfo();
   syncGuidanceLive();
 }
