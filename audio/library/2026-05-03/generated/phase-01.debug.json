@@ -1,0 +1,39 @@
+{
+  "status": "success",
+  "model": "google/gemini-3.1-flash-tts-preview",
+  "voice": "Leda",
+  "response_format": "pcm",
+  "style_present": true,
+  "input_char_count": 43,
+  "output_path": "/home/atmjin/.hermes/archive/github/interval-workout-timer/audio/library/2026-05-03/generated/phase-01.wav",
+  "output_exists": true,
+  "output_size_bytes": 601004,
+  "response_byte_count": 600960,
+  "content_type": "audio/pcm;rate=24000;channels=1",
+  "response_headers": {
+    "date": "Sat, 02 May 2026 13:25:03 GMT",
+    "content-type": "audio/pcm;rate=24000;channels=1",
+    "transfer-encoding": "chunked",
+    "connection": "keep-alive",
+    "access-control-allow-origin": "*",
+    "x-generation-id": "gen-tts-1777728302-T9MNZi2U6wLJ5upZ2I6t",
+    "access-control-expose-headers": "X-Generation-Id,cf-ray",
+    "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+    "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+    "x-content-type-options": "nosniff",
+    "server": "cloudflare",
+    "cf-ray": "9f57597f49768f1f-TPE"
+  },
+  "retry_enabled": true,
+  "retry_limit": 2,
+  "attempt_count": 1,
+  "error": null,
+  "wav_metadata": {
+    "size_bytes": 601004,
+    "frame_count": 300480,
+    "sample_rate": 24000,
+    "channel_count": 1,
+    "sample_width_bytes": 2,
+    "duration_seconds": 12.52
+  }
+}

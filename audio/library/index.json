@@ -54,6 +54,28 @@
       "entryCount": 5,
       "schemaVersion": "timeline-events-v1",
       "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-05-02",
+      "sourceDate": "2026-05-02",
+      "weekNumber": 1,
+      "dayNumber": 6,
+      "sessionTitle": "凱格爾普通日（可依狀態改放鬆）",
+      "manifestFile": "audio/library/2026-05-02/manifest.json",
+      "entryCount": 5,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-05-03",
+      "sourceDate": "2026-05-03",
+      "weekNumber": 1,
+      "dayNumber": 7,
+      "sessionTitle": "休息／輕放鬆日",
+      "manifestFile": "audio/library/2026-05-03/manifest.json",
+      "entryCount": 1,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
     }
   ],
   "schemaVersion": "timeline-events-v1",
