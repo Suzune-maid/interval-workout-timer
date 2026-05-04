@@ -4,20 +4,20 @@
 >
 > 之後若要看最新狀態，請以 `docs/plans/project-status-handoff.md` 為主；這份只保留作為本次整理時點的記錄。
 >
-> Snapshot time: **2026-05-04 15:27 CST**
+> Snapshot time: **2026-05-04 16:38 CST**
 
 ## TL;DR
 
 - **主要分支**：`main`
-- **測試基線**：`npm test` → **52/52 pass**
-- **語音庫覆蓋**：完整第一週 W1D1～W1D7（`2026-04-27`～`2026-05-03`）
+- **測試基線**：`npm test` → **54/54 pass**
+- **語音庫覆蓋**：第一週 W1D1～W1D7（`2026-04-27`～`2026-05-03`）＋ `2026-05-04`（W2D1）
 - **正式站**：<https://suzune-maid.github.io/interval-workout-timer/>
 - **部署方式**：GitHub Pages branch-based deployment；push 到 `main` 後自動上線（有 propagation delay）
 - repo 內**沒有** `.github/workflows` deploy pipeline
 - `audio/today/` 已自 repo 移除
 - runtime 語音路由目前是 **library-only**
 - 若 selected day 沒有 library manifest，app 會退回 **文字腳本 + start cue** fallback
-- 以 live code 確認：**2026-05-04 = W2D1 = 凱格爾普通日**；因目前只補齊第一週語音庫，今天預設載入應走 fallback 模式
+- 以 live code 確認：**2026-05-04 = W2D1 = 凱格爾普通日**；現已補上對應 library manifest，預設載入會命中 `audio/library/2026-05-04/manifest.json`
 
 ---
 
@@ -55,6 +55,7 @@
 - phase intro / cue / end cue 流程
 - 倒數中 guidance 的 `timeline-events-v1` 資料驅動播放
 - 完整第一週語音庫（W1D1～W1D7）
+- `2026-05-04`（W2D1）library manifest 已建立，沿用 `2026-04-27` 的凱格爾普通日資產
 - library-only audio routing：**不再有 `audio/today` 特例**
 - `audio/today/` 已從 repo 完全移除
 - 首頁靜態教育區塊：`興奮度差異與分辨方式`
@@ -83,7 +84,7 @@
 - 有對應條目 → 載入 `audio/library/<date>/manifest.json`
 - 沒有對應條目 → 退回 cue-only + 文字腳本 fallback
 
-### 3. 第一週語音庫已完整補齊
+### 3. 第一週語音庫已完整補齊，W2D1 也已接上 library coverage
 
 目前 `audio/library/index.json` 已收錄：
 
@@ -94,14 +95,16 @@
 - `2026-05-01`
 - `2026-05-02`
 - `2026-05-03`
+- `2026-05-04`
 
-### 4. 目前 live 日期已進入第二週
+### 4. 目前 live 日期已進入第二週，今天預設已有專用語音
 
 以 `timer-core.js` live 計算確認：
 
 - `2026-05-04` → `W2D1`
 - session title：`凱格爾普通日`
-- 因第二週尚未建立 library，預設載入應走 fallback
+- `audio/library/2026-05-04/manifest.json` 已建立
+- 預設載入今天時，會直接命中該 manifest，而不是 fallback
 
 ---
 
@@ -152,7 +155,8 @@ audio/
     ├── 2026-04-30/
     ├── 2026-05-01/
     ├── 2026-05-02/
-    └── 2026-05-03/
+    ├── 2026-05-03/
+    └── 2026-05-04/
 ```
 
 ---
@@ -165,15 +169,15 @@ audio/
 npm test
 ```
 
-結果：**52/52 pass**
+結果：**54/54 pass**（本快照更新前的既有基線）
 
 ### 本機 smoke test 建議
 
-1. **預設載入（2026-05-04）** → fallback
+1. **預設載入（2026-05-04）** → 應直接顯示專用語音資訊
 2. **切到 2026-05-01** → 正式訓練日，有分數判斷 guidance
 3. **切到 2026-05-03** → 單 phase 休息日
-4. **切回 2026-05-04** → fallback 狀態文案
-5. **按下開始** → start cue 有播放
+4. **切到尚未收錄 library 的日期** → 應回到 fallback 狀態文案
+5. **按下開始** → `2026-05-04` 應先播 phase narration，再進 cue / 倒數
 
 ---
 

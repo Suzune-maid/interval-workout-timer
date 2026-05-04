@@ -2,22 +2,22 @@
 
 > 這是目前的 **單一追蹤 handoff**。之後若要更新專案現況，請優先更新這份檔案。
 >
-> Last updated: **2026-05-04 15:27 CST**
+> Last updated: **2026-05-04 16:38 CST**
 >
 > 本次 dated 記錄：`docs/plans/2026-05-04-project-status-handoff.md`
 
 ## TL;DR
 
 - **主要分支**：`main`
-- **測試基線**：`npm test` → **52/52 pass**
-- **語音庫覆蓋**：完整第一週 W1D1～W1D7（`2026-04-27`～`2026-05-03`）
+- **測試基線**：`npm test` → **54/54 pass**
+- **語音庫覆蓋**：第一週 W1D1～W1D7（`2026-04-27`～`2026-05-03`）＋ `2026-05-04`（W2D1）
 - **正式站**：<https://suzune-maid.github.io/interval-workout-timer/>
 - **部署方式**：GitHub Pages branch-based deployment；push 到 `main` 後自動上線（有 propagation delay）
 - repo 內**沒有** `.github/workflows` deploy pipeline
 - `audio/today/` 已自 repo 移除
 - runtime 語音路由目前是 **library-only**
 - 若 selected day 沒有 library manifest，app 會退回 **文字腳本 + start cue** fallback
-- 以 live code 確認：**2026-05-04 = W2D1 = 凱格爾普通日**；因目前只補齊第一週語音庫，今天預設載入應走 fallback 模式
+- 以 live code 確認：**2026-05-04 = W2D1 = 凱格爾普通日**；現已補上對應 library manifest，預設載入會命中 `audio/library/2026-05-04/manifest.json`
 
 ---
 
@@ -69,6 +69,7 @@
 - phase intro / cue / end cue 流程
 - 倒數中 guidance 的 `timeline-events-v1` 資料驅動播放
 - 完整第一週語音庫（W1D1～W1D7）
+- `2026-05-04`（W2D1）library manifest 已建立，沿用 `2026-04-27` 的凱格爾普通日資產
 - library-only audio routing：**不再有 `audio/today` 特例**
 - `audio/today/` 已從 repo 完全移除
 - 首頁靜態教育區塊：`興奮度差異與分辨方式`
@@ -103,7 +104,7 @@
 - `audio/today/` 已不是來源
 - 若文件還提到 `audio/today`，應視為歷史脈絡，不是目前實作
 
-### 3. 第一週語音庫已完整補齊
+### 3. 第一週語音庫已完整補齊，W2D1 也已接上 library coverage
 目前 `audio/library/index.json` 已收錄：
 
 - `2026-04-27` — W1D1 — 凱格爾普通日
@@ -113,19 +114,20 @@
 - `2026-05-01` — W1D5 — 正式訓練日（混合重用）
 - `2026-05-02` — W1D6 — 凱格爾普通日（可依狀態改放鬆，複用 W1D1）
 - `2026-05-03` — W1D7 — 休息／輕放鬆日（全新生成）
+- `2026-05-04` — W2D1 — 凱格爾普通日（metadata 屬於今天，資產沿用 `2026-04-27`）
 
-### 4. 目前 live 日期已進入第二週
+### 4. 目前 live 日期已進入第二週，今天預設已有專用語音
 以 `timer-core.js` live 計算確認：
 
 - `2026-05-04` → `W2D1`
 - session title：`凱格爾普通日`
+- `audio/library/2026-05-04/manifest.json` 已建立
+- 預設載入今天時，會直接命中該 manifest，而不是 fallback
 
-但目前 library 只覆蓋到第一週，所以：
+這點會影響 smoke test 與後續語音素材規劃：
 
-- **今天預設載入時不會有專用語音 manifest**
-- 應落回文字腳本 + start cue fallback
-
-這點會影響 smoke test 與後續語音素材規劃，不要再沿用 5/2 當成「今天」的預設驗證案例。
+- **預設載入（2026-05-04）現在應顯示專用語音資訊**
+- fallback 驗證需改用其他尚未收錄的日期，不要再把 5/4 當成 fallback 範例
 
 ---
 
@@ -217,6 +219,7 @@ audio/library/<date>/
   - 單 phase 休息／輕放鬆日範例
 - `audio/library/index.json`
   - app 的日期 → manifest source of truth
+  - 目前已收錄 `2026-04-27`～`2026-05-04`
 
 ---
 
@@ -228,7 +231,7 @@ audio/library/<date>/
 npm test
 ```
 
-結果：**52/52 pass**
+結果：**54/54 pass**
 
 ### 本機 smoke test 建議
 
@@ -242,15 +245,16 @@ python3 -m http.server 8124
 建議至少驗這五種情境：
 
 1. **預設載入（2026-05-04）**
-   - 今天是 W2D1，因尚未補第二週 library，應顯示文字腳本 fallback
+   - 今天是 W2D1，應直接載入 `audio/library/2026-05-04/manifest.json`
+   - UI 應顯示專用語音資訊，而不是 fallback 文案
 2. **切到 2026-05-01**
    - 正式訓練日，有分數判斷 guidance
 3. **切到 2026-05-03**
    - 休息日，單 phase 呼吸放鬆
-4. **切回 2026-05-04**
-   - 確認狀態訊息回到開始音效 fallback 模式
+4. **切到尚未收錄 library 的日期**
+   - 確認會退回開始音效 + 文字腳本 fallback 模式
 5. **按下開始**
-   - 確認 start cue 有播放
+   - 確認 `2026-05-04` 會先播 phase narration，再進 cue / 倒數
 
 若要抓更硬的證據，可 monkeypatch `HTMLMediaElement.play()` 觀察播放順序。
 
@@ -335,10 +339,15 @@ buildDailySession(weekNumber, dayNumber)
 
 ### 8. 第二週之後的日期要重新看 library 覆蓋範圍
 
-目前只完成第一週語音庫，所以：
+目前已補到：
 
-- 新一天不一定有專用語音
-- 不要把「今天應該有 library」當成前提
+- `2026-05-04`（W2D1）已有 library manifest
+- 之後的第二週日期是否已有 coverage，仍要先查 `audio/library/index.json`
+
+所以：
+
+- 不要把「第二週都還沒有 library」當成前提
+- 但也不要直接假設後續日期已全補齊
 - 新增第二週素材前，先查 `audio/library/index.json`
 
 ---

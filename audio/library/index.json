@@ -76,6 +76,17 @@
       "entryCount": 1,
       "schemaVersion": "timeline-events-v1",
       "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-05-04",
+      "sourceDate": "2026-05-04",
+      "weekNumber": 2,
+      "dayNumber": 1,
+      "sessionTitle": "凱格爾普通日",
+      "manifestFile": "audio/library/2026-05-04/manifest.json",
+      "entryCount": 5,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
     }
   ],
   "schemaVersion": "timeline-events-v1",
