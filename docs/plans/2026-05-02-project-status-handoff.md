@@ -1,5 +1,7 @@
 # 2026-05-02 Project status handoff
 
+> 歷史快照：目前統一追蹤檔已改為 `docs/plans/project-status-handoff.md`；這份保留為 2026-05-02 當次紀錄。
+>
 > 目的：讓之後的新 session 能在 3～5 分鐘內理解這個 repo 的**目前狀態、最近進度、已知基線、部署方式、驗證流程與實戰經驗**，避免重新踩同一批坑。
 
 ## TL;DR

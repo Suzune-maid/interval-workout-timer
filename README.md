@@ -6,9 +6,9 @@
 
 如果是新 session 要快速接手目前專案狀態，建議先看：
 
-- `docs/plans/2026-04-29-project-status-handoff.md`
+- `docs/plans/project-status-handoff.md`
 
-這份文件整理了目前進度、最近完成的工作、關鍵行為基線、驗證方式，以及這個 repo 最近踩過的坑與注意事項。
+這份是固定追蹤檔，之後持續覆蓋更新即可。若要回看某次整理當下的快照，再到 `docs/plans/` 查看 dated handoff 記錄。
 
 ## 目前功能
 
