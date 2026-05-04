@@ -13,6 +13,7 @@ export function collectDomRefs(document) {
     timeDisplay: document.querySelector('#time-display'),
     statusMessage: document.querySelector('#status-message'),
     phasePlan: document.querySelector('#phase-plan'),
+    scheduleWeekTabs: document.querySelector('#schedule-week-tabs'),
     scheduleGrid: document.querySelector('#schedule-grid'),
     narrationStatusElement: document.querySelector('#narration-status'),
     narrationTextElement: document.querySelector('#narration-text'),

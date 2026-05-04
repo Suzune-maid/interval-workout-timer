@@ -8,6 +8,18 @@ async function readIndexHtml() {
   return readFile(INDEX_HTML_PATH, 'utf8');
 }
 
+test('首頁會把日程表移到今日流程預覽下方，並提供週切換容器', async () => {
+  const html = await readIndexHtml();
+  const planIndex = html.indexOf('<h2>今日流程預覽</h2>');
+  const scheduleIndex = html.indexOf('<h2>日程表</h2>');
+  const scoreIndex = html.indexOf('<h2>分數口訣</h2>');
+
+  assert.ok(planIndex >= 0, '應包含今日流程預覽');
+  assert.ok(scheduleIndex > planIndex, '日程表應位於今日流程預覽之後');
+  assert.ok(scoreIndex > scheduleIndex, '分數口訣應位於日程表之後');
+  assert.match(html, /id="schedule-week-tabs"/);
+});
+
 test('首頁會提供興奮度差異與分辨方式區塊', async () => {
   const html = await readIndexHtml();
 

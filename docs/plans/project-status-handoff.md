@@ -2,14 +2,14 @@
 
 > 這是目前的 **單一追蹤 handoff**。之後若要更新專案現況，請優先更新這份檔案。
 >
-> Last updated: **2026-05-04 16:38 CST**
+> Last updated: **2026-05-04 17:22 CST**
 >
 > 本次 dated 記錄：`docs/plans/2026-05-04-project-status-handoff.md`
 
 ## TL;DR
 
 - **主要分支**：`main`
-- **測試基線**：`npm test` → **54/54 pass**
+- **測試基線**：`npm test` → **59/59 pass**
 - **語音庫覆蓋**：第一週 W1D1～W1D7（`2026-04-27`～`2026-05-03`）＋ `2026-05-04`（W2D1）
 - **正式站**：<https://suzune-maid.github.io/interval-workout-timer/>
 - **部署方式**：GitHub Pages branch-based deployment；push 到 `main` 後自動上線（有 propagation delay）
@@ -65,6 +65,7 @@
 
 - timetable / summary / timer 基本功能
 - 手動切換任一天課表
+- 日程表改為位於「今日流程預覽」下方，且支援單週切換瀏覽
 - monotonic countdown scheduling
 - phase intro / cue / end cue 流程
 - 倒數中 guidance 的 `timeline-events-v1` 資料驅動播放
@@ -129,6 +130,17 @@
 - **預設載入（2026-05-04）現在應顯示專用語音資訊**
 - fallback 驗證需改用其他尚未收錄的日期，不要再把 5/4 當成 fallback 範例
 
+### 5. 日程表已改為單週切換 UI
+目前首頁的日程表行為是：
+
+- 區塊位置移到 **「今日流程預覽」下方**
+- 上方有 **第 1 週～第 6 週**切換按鈕
+- 每次只顯示 **當前瀏覽週的 7 天**
+- 切換週次 **只改變可見內容，不會立刻切換課表**
+- 必須再點選該週某一天，才會真正切換 today summary / timer / narration 狀態
+
+這個 UX 已有單元測試、app-flow 測試與 browser smoke test 鎖住。
+
 ---
 
 ## 目前產品行為基線
@@ -165,7 +177,7 @@
 - `dom-refs.js`
   - 主要 DOM refs 收斂
 - `schedule-view.js`
-  - 日程表與摘要 render
+  - 日程表與摘要 render（含單週切換 tab 與單週 7 天列表）
 - `timer-view.js`
   - timer、phase plan、narration / guidance 狀態 render
 - `session-controller.js`
@@ -231,7 +243,7 @@ audio/library/<date>/
 npm test
 ```
 
-結果：**54/54 pass**
+結果：**59/59 pass**
 
 ### 本機 smoke test 建議
 
@@ -247,13 +259,18 @@ python3 -m http.server 8124
 1. **預設載入（2026-05-04）**
    - 今天是 W2D1，應直接載入 `audio/library/2026-05-04/manifest.json`
    - UI 應顯示專用語音資訊，而不是 fallback 文案
-2. **切到 2026-05-01**
+2. **切換日程表週次**
+   - 切到第 3 週後，日程表只應顯示該週 7 天
+   - today summary / timer 不應立刻改變
+3. **在切換後的週次中點某一天**
+   - 確認 today summary / timer / narration 狀態才真正切換到該日
+4. **切到 2026-05-01**
    - 正式訓練日，有分數判斷 guidance
-3. **切到 2026-05-03**
+5. **切到 2026-05-03**
    - 休息日，單 phase 呼吸放鬆
-4. **切到尚未收錄 library 的日期**
+6. **切到尚未收錄 library 的日期**
    - 確認會退回開始音效 + 文字腳本 fallback 模式
-5. **按下開始**
+7. **按下開始**
    - 確認 `2026-05-04` 會先播 phase narration，再進 cue / 倒數
 
 若要抓更硬的證據，可 monkeypatch `HTMLMediaElement.play()` 觀察播放順序。
@@ -350,6 +367,19 @@ buildDailySession(weekNumber, dayNumber)
 - 但也不要直接假設後續日期已全補齊
 - 新增第二週素材前，先查 `audio/library/index.json`
 
+### 9. 日程表互動現在分成「瀏覽週次」與「切換日期」兩層
+
+目前 `session-controller` / `timer-core` 將日程表狀態拆成：
+
+- `visibleWeekNumber`：只控制日程表目前顯示哪一週
+- `selectedDayOffset`：真正決定 today summary / timer / narration 的選取日
+
+這代表：
+
+- 切換週次 tab 時，不應順手改掉目前課表
+- 只有點選某一天時，才會切換 session state
+- 後續若調整 schedule UX，不能把這兩層狀態重新混在一起
+
 ---
 
 ## 最近關鍵 commit 速查
@@ -371,6 +401,7 @@ buildDailySession(weekNumber, dayNumber)
 - `README.md`
 - `docs/plans/project-status-handoff.md`（這份，固定追蹤）
 - `docs/plans/2026-05-04-project-status-handoff.md`（本次快照）
+- `index.html`（首頁日程表區塊位置與週切換 UI）
 
 ### 如果要改 phase flow / audio 行為
 

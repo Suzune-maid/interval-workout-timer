@@ -379,6 +379,7 @@ function syncSchedule() {
     daySelection: sessionController.getDaySelection(),
     formatDisplayDate,
     onSelectDay: switchSelectedDay,
+    onSelectWeek: switchVisibleWeek,
   });
 }
 
@@ -467,6 +468,16 @@ async function switchSelectedDay(dayOffset) {
   refs.statusMessage.textContent = getSelectionStatusMessage(entry);
   syncNarrationInfo();
   syncGuidanceLive();
+}
+
+function switchVisibleWeek(weekNumber) {
+  const currentSelection = sessionController.getDaySelection();
+  if (weekNumber === currentSelection.visibleWeekNumber) {
+    return;
+  }
+
+  sessionController.switchVisibleWeek(weekNumber);
+  syncSchedule();
 }
 
 function getLocalDateString(date) {

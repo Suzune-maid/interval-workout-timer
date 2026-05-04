@@ -145,6 +145,7 @@ function installFakeDom() {
     'time-display',
     'status-message',
     'phase-plan',
+    'schedule-week-tabs',
     'schedule-grid',
     'narration-status',
     'narration-text',
@@ -401,6 +402,20 @@ function findDayButton(root, dayOffset) {
   return null;
 }
 
+function findWeekButton(root, weekNumber) {
+  const queue = [...root.children];
+
+  while (queue.length > 0) {
+    const node = queue.shift();
+    if (node?.dataset?.weekNumber === String(weekNumber)) {
+      return node;
+    }
+    queue.push(...(node?.children ?? []));
+  }
+
+  return null;
+}
+
 async function bootApp({
   isoString = '2026-04-27T08:00:00Z',
   manifestEntry = 0,
@@ -543,6 +558,33 @@ test('切換到已有 library 的日子時，會載入那一天的專用語音 m
     assert.equal(narrationStatus.textContent, '語音起點：00:00 ｜ 音檔長度：約 21.5 秒');
     assert.match(narrationText.textContent, /現在開始：準備放鬆。這一段約 1 分鐘。/);
     assert.equal(guidanceLive.textContent, '這一段目前沒有倒數中的教練引導語音。');
+  } finally {
+    restoreDate();
+  }
+});
+
+test('切換週 tab 時只更新可見日程，點選某一天後才真正切換課表', async () => {
+  const { document, restoreDate } = await bootApp();
+  try {
+    const scheduleGrid = document.querySelector('#schedule-grid');
+    const scheduleWeekTabs = document.querySelector('#schedule-week-tabs');
+    const todayWeekday = document.querySelector('#today-weekday');
+
+    const weekThreeButton = findWeekButton(scheduleWeekTabs, 3);
+    assert.ok(weekThreeButton, '應能找到第 3 週切換按鈕');
+
+    weekThreeButton.click();
+    await nextTurn();
+
+    assert.equal(todayWeekday.textContent, '第 1 週・第 1 天（週一）');
+    assert.equal(findDayButton(scheduleGrid, 0), null);
+    assert.ok(findDayButton(scheduleGrid, 14), '切到第 3 週後應顯示第 3 週第 1 天');
+
+    findDayButton(scheduleGrid, 14).click();
+    await nextTurn();
+    await nextTurn();
+
+    assert.equal(todayWeekday.textContent, '第 3 週・第 1 天（週一）');
   } finally {
     restoreDate();
   }

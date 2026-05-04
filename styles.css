@@ -334,8 +334,41 @@ button.primary {
   background: rgba(141, 180, 255, 0.08);
 }
 
+.schedule-week-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.week-tab {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.week-tab.active {
+  border-color: rgba(171, 141, 255, 0.88);
+  background: rgba(171, 141, 255, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(171, 141, 255, 0.22);
+}
+
+.week-tab-label {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.week-tab-focus {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .schedule-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .week-card {
@@ -357,6 +390,7 @@ button.primary {
 
 .week-list {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -418,9 +452,10 @@ button.primary {
 
 @media (max-width: 1024px) {
   .top-grid,
-  .schedule-grid,
   .score-grid,
-  .arousal-grid {
+  .arousal-grid,
+  .week-list,
+  .schedule-week-tabs {
     grid-template-columns: 1fr;
   }
 }

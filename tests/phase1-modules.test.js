@@ -7,6 +7,7 @@ import {
   createSessionStateFromPhases,
   formatClock,
   selectCalendarEntry,
+  selectCalendarWeek,
 } from '../timer-core.js';
 import { FakeDocument, collectByDatasetValue } from './support/fake-dom.js';
 import { collectDomRefs } from '../dom-refs.js';
@@ -34,6 +35,7 @@ function createRefs() {
     'time-display',
     'status-message',
     'phase-plan',
+    'schedule-week-tabs',
     'schedule-grid',
     'narration-status',
     'narration-text',
@@ -74,6 +76,7 @@ test('collectDomRefs 會回傳 app 初始化需要的所有 DOM refs', () => {
   assert.ok(refs.timeDisplay);
   assert.ok(refs.statusMessage);
   assert.ok(refs.phasePlan);
+  assert.ok(refs.scheduleWeekTabs);
   assert.ok(refs.scheduleGrid);
   assert.ok(refs.narrationStatusElement);
   assert.ok(refs.narrationTextElement);
@@ -100,21 +103,27 @@ test('createSessionController 會同步 selected day、fallback narration 與 se
   controller.switchSelectedDay(2);
 
   assert.equal(controller.selectedEntry().dayOffset, 2);
+  assert.equal(controller.getDaySelection().visibleWeekNumber, 1);
   assert.equal(controller.getState().remainingSeconds, calendar[2].session.phases[0].seconds);
   assert.equal(controller.getFallbackNarrationEntries().length, calendar[2].session.phases.length);
+
+  controller.switchVisibleWeek(3);
+  assert.equal(controller.selectedEntry().dayOffset, 2);
+  assert.equal(controller.getDaySelection().visibleWeekNumber, 3);
 
   controller.resetSessionState();
   assert.equal(controller.getState().currentPhaseIndex, 0);
   assert.equal(controller.getState().remainingSeconds, calendar[2].session.phases[0].seconds);
 });
 
-test('renderStaticContent 與 renderSchedule 會根據 selected day 更新畫面與按鈕狀態', () => {
+test('renderStaticContent 與 renderSchedule 會根據 selected day 更新畫面與按鈕狀態，且只顯示目前週次', () => {
   const calendar = buildProgramCalendar('2026-04-27');
   const todayInfo = { dayOffset: 0, isAfterProgram: false };
   const { refs } = createRefs();
   const daySelection = selectCalendarEntry(createSelectedDayState(calendar, 0), 2);
   const entry = daySelection.entry;
   const clicks = [];
+  const weekClicks = [];
 
   renderStaticContent({
     refs,
@@ -133,10 +142,15 @@ test('renderStaticContent 與 renderSchedule 會根據 selected day 更新畫面
     onSelectDay(dayOffset) {
       clicks.push(dayOffset);
     },
+    onSelectWeek(weekNumber) {
+      weekClicks.push(weekNumber);
+    },
   });
 
   const selectedButton = collectByDatasetValue(refs.scheduleGrid, 'dayOffset', 2);
   const todayButton = collectByDatasetValue(refs.scheduleGrid, 'dayOffset', 0);
+  const weekTwoButton = collectByDatasetValue(refs.scheduleWeekTabs, 'weekNumber', 2);
+  const hiddenWeekButton = collectByDatasetValue(refs.scheduleGrid, 'dayOffset', 9);
 
   assert.equal(refs.todayTitleElement.textContent, entry.session.title);
   assert.equal(refs.todaySummaryElement.textContent, entry.session.summary);
@@ -146,9 +160,40 @@ test('renderStaticContent 與 renderSchedule 會根據 selected day 更新畫面
   assert.ok(selectedButton.classList.contains('selected'));
   assert.equal(selectedButton.getAttribute('aria-pressed'), 'true');
   assert.ok(todayButton.classList.contains('current'));
+  assert.ok(weekTwoButton);
+  assert.equal(weekTwoButton.getAttribute('aria-pressed'), 'false');
+  assert.equal(refs.scheduleWeekTabs.children.length, 6);
+  assert.equal(hiddenWeekButton, null);
 
   selectedButton.click();
+  weekTwoButton.click();
   assert.deepEqual(clicks, [2]);
+  assert.deepEqual(weekClicks, [2]);
+});
+
+test('renderSchedule 切換瀏覽週次時，只會顯示該週 7 天並標記目前週 tab', () => {
+  const calendar = buildProgramCalendar('2026-04-27');
+  const { refs } = createRefs();
+  const daySelection = selectCalendarWeek(createSelectedDayState(calendar, 2), 3);
+
+  renderSchedule({
+    refs,
+    calendar,
+    todayInfo: { dayOffset: 0, isAfterProgram: false },
+    daySelection,
+    formatDisplayDate,
+  });
+
+  const weekThreeTab = collectByDatasetValue(refs.scheduleWeekTabs, 'weekNumber', 3);
+  const firstVisibleDay = collectByDatasetValue(refs.scheduleGrid, 'dayOffset', 14);
+  const lastVisibleDay = collectByDatasetValue(refs.scheduleGrid, 'dayOffset', 20);
+  const hiddenSelectedDay = collectByDatasetValue(refs.scheduleGrid, 'dayOffset', 2);
+
+  assert.ok(weekThreeTab.classList.contains('active'));
+  assert.equal(weekThreeTab.getAttribute('aria-pressed'), 'true');
+  assert.ok(firstVisibleDay);
+  assert.ok(lastVisibleDay);
+  assert.equal(hiddenSelectedDay, null);
 });
 
 test('renderTimer / renderPhasePlan / renderNarrationInfo / renderGuidanceLive 會正確反映 session state', () => {

@@ -4,6 +4,7 @@ import {
   createSelectedDayState,
   createSessionStateFromPhases,
   selectCalendarEntry,
+  selectCalendarWeek,
 } from './timer-core.js';
 
 export function createSessionController({ calendar, todayInfo, todayEntry }) {
@@ -20,6 +21,11 @@ export function createSessionController({ calendar, todayInfo, todayEntry }) {
     fallbackNarrationEntries = buildNarrationEntries(selectedEntry().session);
     state = createSessionStateFromPhases(selectedEntry().session.phases);
     return selectedEntry();
+  }
+
+  function switchVisibleWeek(weekNumber) {
+    daySelection = selectCalendarWeek(daySelection, weekNumber);
+    return daySelection;
   }
 
   function resetSessionState() {
@@ -54,6 +60,7 @@ export function createSessionController({ calendar, todayInfo, todayEntry }) {
     advancePhase: advanceSessionPhase,
     selectedEntry,
     switchSelectedDay,
+    switchVisibleWeek,
     resetSessionState,
     getFallbackNarrationEntries() {
       return fallbackNarrationEntries;

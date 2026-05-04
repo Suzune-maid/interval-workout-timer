@@ -10,6 +10,38 @@ function groupByWeek(entries) {
   return groups;
 }
 
+function buildWeekTabs({ refs, weeks, visibleWeekNumber, onSelectWeek }) {
+  if (!refs.scheduleWeekTabs) {
+    return;
+  }
+
+  refs.scheduleWeekTabs.innerHTML = '';
+
+  weeks.forEach((weekEntries, index) => {
+    const weekNumber = index + 1;
+    const weekButton = document.createElement('button');
+    weekButton.type = 'button';
+    weekButton.className = 'week-tab';
+    weekButton.dataset.weekNumber = String(weekNumber);
+    weekButton.setAttribute('aria-pressed', String(weekNumber === visibleWeekNumber));
+
+    if (weekNumber === visibleWeekNumber) {
+      weekButton.classList.add('active');
+    }
+
+    weekButton.innerHTML = `
+      <span class="week-tab-label">第 ${weekNumber} 週</span>
+      <span class="week-tab-focus">${weekEntries[0]?.session?.weekFocus ?? ''}</span>
+    `;
+
+    weekButton.addEventListener('click', () => {
+      onSelectWeek?.(weekNumber);
+    });
+
+    refs.scheduleWeekTabs.appendChild(weekButton);
+  });
+}
+
 export function renderStaticContent({ refs, entry, todayInfo, todayEntry, formatDisplayDate }) {
   refs.todayDateElement.textContent = formatDisplayDate(entry.date);
   refs.todayWeekdayElement.textContent = `第 ${entry.weekNumber} 週・第 ${entry.dayNumber} 天（週${entry.weekdayLabel}）`;
@@ -30,61 +62,68 @@ export function renderStaticContent({ refs, entry, todayInfo, todayEntry, format
   }
 }
 
-export function renderSchedule({ refs, calendar, todayInfo, daySelection, formatDisplayDate, onSelectDay }) {
+export function renderSchedule({ refs, calendar, todayInfo, daySelection, formatDisplayDate, onSelectDay, onSelectWeek }) {
   refs.scheduleGrid.innerHTML = '';
 
   const weeks = groupByWeek(calendar);
+  const visibleWeekNumber = daySelection?.visibleWeekNumber ?? daySelection?.entry?.weekNumber ?? 1;
+  const visibleWeekEntries = weeks[visibleWeekNumber - 1] ?? [];
 
-  weeks.forEach((weekEntries, weekIndex) => {
-    const weekCard = document.createElement('section');
-    weekCard.className = 'week-card';
+  buildWeekTabs({
+    refs,
+    weeks,
+    visibleWeekNumber,
+    onSelectWeek,
+  });
 
-    const heading = document.createElement('div');
-    heading.className = 'week-heading';
-    heading.innerHTML = `
-      <h3>第 ${weekIndex + 1} 週</h3>
-      <p>${weekEntries[0].session.weekFocus}</p>
+  const weekCard = document.createElement('section');
+  weekCard.className = 'week-card';
+
+  const heading = document.createElement('div');
+  heading.className = 'week-heading';
+  heading.innerHTML = `
+    <h3>第 ${visibleWeekNumber} 週</h3>
+    <p>${visibleWeekEntries[0]?.session?.weekFocus ?? ''}</p>
+  `;
+  weekCard.appendChild(heading);
+
+  const list = document.createElement('div');
+  list.className = 'week-list';
+
+  visibleWeekEntries.forEach((entry) => {
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'day-card day-card-button';
+    item.dataset.dayOffset = String(entry.dayOffset);
+    item.setAttribute('aria-pressed', String(entry.dayOffset === daySelection.selectedDayOffset));
+
+    if (entry.dayOffset < (todayInfo?.dayOffset ?? 0)) {
+      item.classList.add('past');
+    }
+
+    if (entry.dayOffset === todayInfo?.dayOffset) {
+      item.classList.add('current');
+    }
+
+    if (entry.dayOffset === daySelection.selectedDayOffset) {
+      item.classList.add('selected');
+    }
+
+    item.innerHTML = `
+      <p class="day-top">第 ${entry.dayNumber} 天・週${entry.weekdayLabel}</p>
+      <h4>${entry.session.title}</h4>
+      <p class="day-date">${formatDisplayDate(entry.date)}</p>
+      <p class="day-summary">${entry.session.summary}</p>
+      <p class="day-duration">${entry.session.durationLabel}</p>
     `;
-    weekCard.appendChild(heading);
 
-    const list = document.createElement('div');
-    list.className = 'week-list';
-
-    weekEntries.forEach((entry) => {
-      const item = document.createElement('button');
-      item.type = 'button';
-      item.className = 'day-card day-card-button';
-      item.dataset.dayOffset = String(entry.dayOffset);
-      item.setAttribute('aria-pressed', String(entry.dayOffset === daySelection.selectedDayOffset));
-
-      if (entry.dayOffset < (todayInfo?.dayOffset ?? 0)) {
-        item.classList.add('past');
-      }
-
-      if (entry.dayOffset === todayInfo?.dayOffset) {
-        item.classList.add('current');
-      }
-
-      if (entry.dayOffset === daySelection.selectedDayOffset) {
-        item.classList.add('selected');
-      }
-
-      item.innerHTML = `
-        <p class="day-top">第 ${entry.dayNumber} 天・週${entry.weekdayLabel}</p>
-        <h4>${entry.session.title}</h4>
-        <p class="day-date">${formatDisplayDate(entry.date)}</p>
-        <p class="day-summary">${entry.session.summary}</p>
-        <p class="day-duration">${entry.session.durationLabel}</p>
-      `;
-
-      item.addEventListener('click', () => {
-        onSelectDay?.(entry.dayOffset);
-      });
-
-      list.appendChild(item);
+    item.addEventListener('click', () => {
+      onSelectDay?.(entry.dayOffset);
     });
 
-    weekCard.appendChild(list);
-    refs.scheduleGrid.appendChild(weekCard);
+    list.appendChild(item);
   });
+
+  weekCard.appendChild(list);
+  refs.scheduleGrid.appendChild(weekCard);
 }
