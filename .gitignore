@@ -1,3 +1,7 @@
+# Local secrets
+.env
+*.env
+
 # TTS generation intermediates (local-only)
 audio/library/*/tts-batches/
 audio/library/*/tts-experiments/

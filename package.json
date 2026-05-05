@@ -6,6 +6,8 @@
   "scripts": {
     "test": "node --test",
     "audio:qa": "node scripts/verify-audio-library.mjs --all",
-    "audio:qa:date": "node scripts/verify-audio-library.mjs --date"
+    "audio:qa:date": "node scripts/verify-audio-library.mjs --date",
+    "audio:asr:date": "node scripts/verify-audio-transcripts.mjs --date",
+    "audio:verify:date": "node scripts/verify-voice-library.mjs --date"
   }
 }

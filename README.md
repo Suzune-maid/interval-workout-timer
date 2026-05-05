@@ -97,18 +97,33 @@ python3 -m http.server 8124
 
 ## 測試
 
-目前測試基線為 **73/73 通過**。
+目前測試基線為 **81/81 通過**。
 
 ```bash
 npm test
 ```
 
-語音素材的 deterministic QA 可檢查 manifest 引用、WAV header、sha256、duration、靜音與 clipping：
+語音素材驗證分成三個層級：
+
+1. deterministic QA：檢查 manifest 引用、WAV header、sha256、duration、靜音與 clipping。
+2. ASR 內容比對：使用 Groq Whisper 將音檔轉文字，再做 fuzzy matching；不要求完全字串相等，會容忍標點、空白、簡繁差異、數字讀法與少量 ASR/TTS 誤差，但會抓截斷或漏半句。
+3. 一鍵 pipeline：先跑 deterministic QA；若沒有 blocking error，才繼續跑 ASR 內容比對，避免壞 WAV 浪費 ASR request。
 
 ```bash
+# 所有日期 deterministic QA
 npm run audio:qa
+
+# 單日 deterministic QA
 npm run audio:qa:date -- 2026-05-05
+
+# 單日 ASR 內容比對，可用 limit 做 smoke test
+npm run audio:asr:date -- 2026-05-05 --limit 6 --cache audio/library/2026-05-05/tts-reports/groq-asr-smoke.json --write-cache
+
+# 單日完整語音驗證 pipeline：deterministic QA → ASR fuzzy QA
+npm run audio:verify:date -- 2026-05-05
 ```
+
+需要本機 `.env` 有 `GROQ_API_KEY`；pipeline 預設把 ASR cache 寫到 `audio/library/<date>/tts-reports/asr-transcripts.json`。`tts-reports/` 是 local-only cache，不會進入版本控制。
 
 ## GitHub Pages
 

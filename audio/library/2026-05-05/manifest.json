@@ -148,11 +148,12 @@
           "text": "這一回找 6 分：快感明顯、穩定，但你還能說慢就慢、說停就停。",
           "textFile": "audio/library/2026-05-05/texts/phase-02-guidance-01.txt",
           "audioFile": "audio/library/2026-05-05/guidance/phase-02-guidance-01.wav",
-          "audioDurationSeconds": 7.08,
-          "audioSha256": "dcdaa7101c97ce6094119f40fd0f1532222cb1aad15b4683d0fb86c3758b4acb",
+          "audioDurationSeconds": 10.24,
+          "audioSha256": "6e9d8c003773203b2a749f64d8fbbf5f309679ee1046f9f72d851ff0960fb489",
           "ttsModel": "google/gemini-3.1-flash-tts-preview",
           "ttsVoice": "Leda",
-          "ttsStyle": "AUDIO PROFILE: Suzune W2D2 — Controlled Plateau Companion. Scene: quiet private training room, close beside the listener. Speak in natural Taiwan Mandarin, low and near-field, warm, slightly breathy but always clear enough for phone speakers. Controlled intimacy, not explicit performance. Medium-slow pace with micro-pauses around score targets and action verbs. When saying control words like 停、慢、放鬆、退回 6 分, become subtly firmer with a downward, grounding cadence. Never shout, never overact, never become too quiet."
+          "ttsStyle": "AUDIO PROFILE: Suzune W2D2 — Controlled Plateau Companion. Scene: quiet private training room, close beside the listener. Speak in natural Taiwan Mandarin, low and near-field, warm, slightly breathy but always clear enough for phone speakers. Controlled intimacy, not explicit performance. Medium-slow pace with micro-pauses around score targets and action verbs. When saying control words like 停、慢、放鬆、退回 6 分, become subtly firmer with a downward, grounding cadence. Never shout, never overact, never become too quiet.",
+          "ttsActualStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm close training guidance, medium-slow pace, no omission, no truncation. Keep score numbers clear."
         },
         "build-gradually": {
           "id": "build-gradually",
@@ -661,8 +662,8 @@
       "text": "現在開始：收尾放鬆。這一段約 3 分鐘。若身體放鬆，可正常結束。",
       "textFile": "audio/library/2026-05-05/texts/phase-05.txt",
       "audioFile": "audio/library/2026-05-05/generated/phase-05.wav",
-      "audioDurationSeconds": 7.56,
-      "audioSha256": "ab0253d47bb9b8621961a772343cc8528173412fe4735e26512c7744987e5ef1",
+      "audioDurationSeconds": 10.28,
+      "audioSha256": "cd1cf1c09ada820336d72d65f6390330c024fb839a9760376a139f31b2abd35b",
       "ttsModel": "google/gemini-3.1-flash-tts-preview",
       "ttsVoice": "Leda",
       "ttsStyle": "AUDIO PROFILE: Suzune W2D2 — Controlled Plateau Companion. Scene: late evening, quiet private training room, soft blue-violet light, close companion beside the listener. Speak in natural Taiwan Mandarin with a calm, clear, stable medium-low voice, like a reliable training guide starting a new interval. No radio DJ energy, no shouting, no sales pitch, no dramatic anime acting. Pace is calm medium, with short clean pauses between sentences; do not drag. Tone is warm and reassuring, focused on control and safety.",
@@ -758,7 +759,8 @@
       "countdownGuidance": {
         "summary": "回降到 4 分以下與收尾放鬆，共 4 句",
         "mode": "formal-w2d2-guidance"
-      }
+      },
+      "ttsActualStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm close training narration, medium-slow pace, no omission, no truncation. Keep it audible on phone speakers."
     }
   ]
 }
