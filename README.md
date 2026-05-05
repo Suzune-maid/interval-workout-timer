@@ -24,6 +24,7 @@
 - 第五階段支援收尾掃描引導，會每 12 秒帶一次腹部、臀部、大腿、會陰與排尿感檢查
 - 每段倒數結束時播放結束音效，再切到下一段
 - 支援開始 / 暫停 / 重設 / 跳到下一段
+- 開始訓練時會透過 `navigator.wakeLock` 要求螢幕保持喚醒；暫停、重設、切日或完成時會釋放
 - 倒數已改用 monotonic clock 追秒；若 heartbeat 延遲，畫面會自動 catch up，不會整段慢半拍
 - 顯示今日語音引導文本、起始時間與音檔長度
 - 提供可重用的語音素材清單與歷史音檔索引
@@ -38,6 +39,7 @@
 - 如果切到沒有專用語音素材的日子，介面必須退回文字腳本模式，不能殘留上一天的語音狀態。
 - 沒有專用語音素材的日子，開始前也要先播放開始音效，不能直接跳進倒數。
 - 倒數已開始後按暫停，再按開始恢復時，只會重播開始音效，不會把整段 phase narration 從頭再播一次。
+- 開始訓練會取得 screen wake lock；暫停會釋放，恢復時會重新取得，重設也會釋放。
 - 按「跳到下一段」時，必須先停止目前音訊，再切到下一個 phase。
 - 被取消或過期的非同步語音播放流程，不可以在完成後回頭覆寫新的畫面狀態。
 
@@ -51,6 +53,8 @@
   - 日程表與今日摘要 render
 - `timer-view.js`
   - timer、phase plan、語音狀態與 guidance 文案 render
+- `screen-wake-lock.js`
+  - `navigator.wakeLock` controller，負責訓練中保持螢幕喚醒、釋放與回到可見頁面後重新取得
 - `session-controller.js`
   - selected day、session state 與 phase progression 的高階狀態切換
 - `timeline-orchestrator.js`
@@ -93,7 +97,7 @@ python3 -m http.server 8124
 
 ## 測試
 
-目前測試基線為 **59/59 通過**。
+目前測試基線為 **65/65 通過**。
 
 ```bash
 npm test

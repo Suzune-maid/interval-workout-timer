@@ -10,6 +10,7 @@ import {
   loadNarrationManifest,
 } from './audio-player.js';
 import { collectDomRefs } from './dom-refs.js';
+import { createScreenWakeLockController } from './screen-wake-lock.js';
 import { createSessionController } from './session-controller.js';
 import { renderSchedule, renderStaticContent } from './schedule-view.js';
 import {
@@ -30,6 +31,10 @@ const sessionController = createSessionController({
   calendar,
   todayInfo,
   todayEntry,
+});
+const screenWakeLock = createScreenWakeLockController({
+  navigator: globalThis.navigator,
+  document,
 });
 
 function createCueOnlyNarrationPlayer() {
@@ -201,6 +206,7 @@ const timeline = createTimelineOrchestrator({
     refs.narrationStatusElement.textContent = '結束音效播放失敗，仍會繼續切換到下一段。';
   },
   onSessionCompleted() {
+    void screenWakeLock.release();
     refs.statusMessage.textContent = '目前課表已跑完。接下來只要做收尾放鬆與身體掃描就好。';
     syncTimerViews();
     syncNarrationInfo();
@@ -227,6 +233,7 @@ refs.startButton.addEventListener('click', async () => {
     return;
   }
 
+  await screenWakeLock.request();
   await timeline.start({
     playbackMode: shouldReplayNarrationForCurrentPhase() ? 'full' : 'cue-only',
   });
@@ -236,6 +243,7 @@ refs.pauseButton.addEventListener('click', () => {
   const result = timeline.pause();
 
   if (result.kind === 'paused-preparing') {
+    void screenWakeLock.release();
     refs.statusMessage.textContent = '已暫停，目前停在倒數開始前。';
     syncTimerViews();
     syncGuidanceLive();
@@ -246,6 +254,7 @@ refs.pauseButton.addEventListener('click', () => {
     return;
   }
 
+  void screenWakeLock.release();
   refs.statusMessage.textContent = '已暫停。重新開始時會先播開始音效，再繼續倒數。';
   syncTimerViews();
   syncGuidanceLive();
@@ -253,6 +262,7 @@ refs.pauseButton.addEventListener('click', () => {
 
 refs.resetButton.addEventListener('click', () => {
   timeline.cancel({ resetNarration: true });
+  void screenWakeLock.release();
   sessionController.resetSessionState();
   const entry = selectedEntry();
   refs.statusMessage.textContent = `已重設為第 ${entry.weekNumber} 週第 ${entry.dayNumber} 天的起始課表。`;
@@ -265,6 +275,7 @@ refs.skipButton.addEventListener('click', () => {
   const result = timeline.skip({ resetNarration: true });
 
   if (result.kind === 'session-complete') {
+    void screenWakeLock.release();
     refs.statusMessage.textContent = '已跳到目前課表最後。這一天的主要流程完成。';
   } else {
     refs.statusMessage.textContent = hasNarrationAudioForSelectedDay()
@@ -454,6 +465,7 @@ async function switchSelectedDay(dayOffset) {
   }
 
   timeline.cancel({ resetNarration: true });
+  void screenWakeLock.release();
   const entry = sessionController.switchSelectedDay(dayOffset);
   refs.statusMessage.textContent = `已切換到第 ${entry.weekNumber} 週第 ${entry.dayNumber} 天。按開始後會載入這一天的流程。`;
 
