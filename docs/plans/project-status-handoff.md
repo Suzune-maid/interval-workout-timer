@@ -2,22 +2,22 @@
 
 > 這是目前的 **單一追蹤 handoff**。之後若要更新專案現況，請優先更新這份檔案。
 >
-> Last updated: **2026-05-05 14:11 CST**
+> Last updated: **2026-05-05 15:26 CST**
 >
 > 本次 dated 記錄：`docs/plans/2026-05-05-project-status-handoff.md`
 
 ## TL;DR
 
 - **主要分支**：`main`
-- **測試基線**：`npm test` → **67/67 pass**
-- **語音庫覆蓋**：第一週 W1D1～W1D7（`2026-04-27`～`2026-05-03`）＋ `2026-05-04`（W2D1）
+- **測試基線**：`npm test` → **69/69 pass**
+- **語音庫覆蓋**：第一週 W1D1～W1D7（`2026-04-27`～`2026-05-03`）＋ W2D1～W2D2（`2026-05-04`～`2026-05-05`）
 - **正式站**：<https://suzune-maid.github.io/interval-workout-timer/>
 - **部署方式**：GitHub Pages branch-based deployment；push 到 `main` 後自動上線（有 propagation delay）
 - repo 內**沒有** `.github/workflows` deploy pipeline
 - `audio/today/` 已自 repo 移除
 - runtime 語音路由目前是 **library-only**
 - 若 selected day 沒有 library manifest，app 會退回 **文字腳本 + start cue** fallback
-- 以 live code 確認：**2026-05-04 = W2D1 = 凱格爾普通日**；現已補上對應 library manifest，預設載入會命中 `audio/library/2026-05-04/manifest.json`
+- 以 live code 確認：**2026-05-05 = W2D2 = 正式訓練日**；現已補上完整 W2D2 library manifest，預設載入會命中 `audio/library/2026-05-05/manifest.json`
 
 ---
 
@@ -72,6 +72,7 @@
 - 倒數中 guidance 的 `timeline-events-v1` 資料驅動播放
 - 完整第一週語音庫（W1D1～W1D7）
 - `2026-05-04`（W2D1）library manifest 已建立，沿用 `2026-04-27` 的凱格爾普通日資產
+- `2026-05-05`（W2D2）正式訓練日 library manifest 已建立：5 段 phase narration + 29 句 countdown guidance，共 34 個 WAV
 - mobile screen wake lock：訓練開始時會要求 `navigator.wakeLock`，暫停、重設、切日或完成時會釋放
 - library-only audio routing：**不再有 `audio/today` 特例**
 - `audio/today/` 已從 repo 完全移除
@@ -92,6 +93,7 @@
 這次整理後：
 
 - `docs/plans/project-status-handoff.md` → 單一追蹤檔
+- `docs/plans/2026-05-05-project-status-handoff.md`
 - `docs/plans/2026-05-04-project-status-handoff.md` → 本次紀錄快照
 
 之後不要再把新的專案總覽 handoff 分散成多份互相接棒的主文件。
@@ -107,7 +109,7 @@
 - `audio/today/` 已不是來源
 - 若文件還提到 `audio/today`，應視為歷史脈絡，不是目前實作
 
-### 3. 第一週語音庫已完整補齊，W2D1 也已接上 library coverage
+### 3. 第一週語音庫已完整補齊，W2D1～W2D2 也已接上 library coverage
 目前 `audio/library/index.json` 已收錄：
 
 - `2026-04-27` — W1D1 — 凱格爾普通日
@@ -117,20 +119,21 @@
 - `2026-05-01` — W1D5 — 正式訓練日（混合重用）
 - `2026-05-02` — W1D6 — 凱格爾普通日（可依狀態改放鬆，複用 W1D1）
 - `2026-05-03` — W1D7 — 休息／輕放鬆日（全新生成）
-- `2026-05-04` — W2D1 — 凱格爾普通日（metadata 屬於今天，資產沿用 `2026-04-27`）
+- `2026-05-04` — W2D1 — 凱格爾普通日（metadata 屬於該日，資產沿用 `2026-04-27`）
+- `2026-05-05` — W2D2 — 正式訓練日（新生 W2D2 高原維持語音，5 段 narration + 29 句 guidance）
 
-### 4. 目前 live 日期已進入第二週，今天預設已有專用語音
+### 4. 目前 live 日期已進入 W2D2，今天預設已有正式訓練日專用語音
 以 `timer-core.js` live 計算確認：
 
-- `2026-05-04` → `W2D1`
-- session title：`凱格爾普通日`
-- `audio/library/2026-05-04/manifest.json` 已建立
+- `2026-05-05` → `W2D2`
+- session title：`正式訓練日`
+- `audio/library/2026-05-05/manifest.json` 已建立
 - 預設載入今天時，會直接命中該 manifest，而不是 fallback
 
 這點會影響 smoke test 與後續語音素材規劃：
 
-- **預設載入（2026-05-04）現在應顯示專用語音資訊**
-- fallback 驗證需改用其他尚未收錄的日期，不要再把 5/4 當成 fallback 範例
+- **預設載入（2026-05-05）現在應顯示 W2D2 專用語音資訊**
+- fallback 驗證需改用其他尚未收錄的日期，不要再把 5/4 或 5/5 當成 fallback 範例
 
 ### 5. 日程表已改為單週切換 UI
 目前首頁的日程表行為是：
@@ -142,6 +145,23 @@
 - 必須再點選該週某一天，才會真正切換 today summary / timer / narration 狀態
 
 這個 UX 已有單元測試、app-flow 測試與 browser smoke test 鎖住。
+
+### 6. W2D2 正式訓練日語音已完成，但有 2 個 fallback 產物
+`2026-05-05` 的語音素材已補齊：
+
+- 5 個 phase narration WAV
+- 29 個 countdown guidance WAV
+- 合計 34 個 WAV，總長約 241.62 秒
+- `audio/library/index.json` 已新增 `2026-05-05`
+- `audio/library/2026-05-05/manifest.json` 記錄 `ttsStyle` / `ttsActualStyle` / hash / duration
+
+生成時 `google/gemini-3.1-flash-tts-preview` 對少數短句曾回 empty payload；使用者 review 後，`phase-01-guidance-02` 與 `phase-01-guidance-04` 已重新生成並替換：
+
+- `phase-01` / `breath-scan-soften`：重新生成完整句，避免尾端截斷
+- `phase-01` / `ready-for-six`：重新生成為 Gemini / Leda 版本，不再使用 Hermes edge fallback
+- `phase-03` / `finish-controlled`：仍複用同 phase 前一句 `phase-03-guidance-06.wav`，文字稿同步為同一句
+
+目前 manifest 只剩 1 個受控 fallback：`phase-03` / `finish-controlled`。若之後要追求語氣一致，可再單獨重生這一句。
 
 ---
 
@@ -217,7 +237,8 @@ audio/
     ├── 2026-05-01/
     ├── 2026-05-02/
     ├── 2026-05-03/
-    └── 2026-05-04/
+    ├── 2026-05-04/
+    └── 2026-05-05/
 ```
 
 每個日期資料夾格式：
@@ -238,7 +259,7 @@ audio/library/<date>/
   - 單 phase 休息／輕放鬆日範例
 - `audio/library/index.json`
   - app 的日期 → manifest source of truth
-  - 目前已收錄 `2026-04-27`～`2026-05-04`
+  - 目前已收錄 `2026-04-27`～`2026-05-05`
 
 ---
 
@@ -250,7 +271,7 @@ audio/library/<date>/
 npm test
 ```
 
-結果：**67/67 pass**
+結果：**69/69 pass**
 
 ### 本機 smoke test 建議
 
@@ -263,9 +284,9 @@ python3 -m http.server 8124
 
 建議至少驗這五種情境：
 
-1. **預設載入（2026-05-04）**
-   - 今天是 W2D1，應直接載入 `audio/library/2026-05-04/manifest.json`
-   - UI 應顯示專用語音資訊，而不是 fallback 文案
+1. **預設載入（2026-05-05）**
+   - 今天是 W2D2，應直接載入 `audio/library/2026-05-05/manifest.json`
+   - UI 應顯示 W2D2 正式訓練日專用語音資訊，而不是 fallback 文案
 2. **切換日程表週次**
    - 切到第 3 週後，日程表只應顯示該週 7 天
    - today summary / timer 不應立刻改變
@@ -278,7 +299,7 @@ python3 -m http.server 8124
 6. **切到尚未收錄 library 的日期**
    - 確認會退回開始音效 + 文字腳本 fallback 模式
 7. **按下開始**
-   - 確認 `2026-05-04` 會先播 phase narration，再進 cue / 倒數
+   - 確認 `2026-05-05` 會先播 W2D2 phase narration，再進 start cue / 倒數 guidance
 8. **手機螢幕喚醒**
    - 支援 Wake Lock API 的瀏覽器中，按開始後應呼叫 `navigator.wakeLock.request('screen')`
    - 暫停、重設、切日或完成時應釋放 wake lock
@@ -369,6 +390,7 @@ buildDailySession(weekNumber, dayNumber)
 目前已補到：
 
 - `2026-05-04`（W2D1）已有 library manifest
+- `2026-05-05`（W2D2）已有完整正式訓練日 library manifest
 - 之後的第二週日期是否已有 coverage，仍要先查 `audio/library/index.json`
 
 所以：
@@ -410,7 +432,7 @@ buildDailySession(weekNumber, dayNumber)
 
 - `README.md`
 - `docs/plans/project-status-handoff.md`（這份，固定追蹤）
-- `docs/plans/2026-05-04-project-status-handoff.md`（本次快照）
+- `docs/plans/2026-05-05-project-status-handoff.md`（本次快照）
 - `index.html`（首頁日程表區塊位置與週切換 UI）
 
 ### 如果要改 phase flow / audio 行為
@@ -425,6 +447,7 @@ buildDailySession(weekNumber, dayNumber)
 ### 如果要改語音素材 / manifest
 
 - `audio/library/index.json`
+- `audio/library/2026-05-05/manifest.json`（W2D2 正式訓練日完整高原維持語音參考）
 - `audio/library/2026-05-01/manifest.json`（混合重用參考）
 - `audio/library/2026-05-03/manifest.json`（單 phase 休息日參考）
 - `narration-manifest.js`
@@ -443,6 +466,7 @@ buildDailySession(weekNumber, dayNumber)
 
 以下檔案保留作為歷史快照：
 
+- `docs/plans/2026-05-05-project-status-handoff.md`
 - `docs/plans/2026-05-04-project-status-handoff.md`
 - `docs/plans/2026-05-02-project-status-handoff.md`
 - `docs/plans/2026-04-29-project-status-handoff.md`

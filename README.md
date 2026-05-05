@@ -74,7 +74,7 @@
   - app 只透過這份索引決定某一天有沒有專用語音素材
   - 若索引中存在該日期，app 會載入對應的 `audio/library/<date>/manifest.json`
   - 若索引中不存在該日期，app 會直接退回文字腳本 + 開始音效模式
-  - 目前收錄 `2026-04-27`～`2026-05-04` 共八天素材（含 W2D1 `2026-05-04` 複用 `2026-04-27` 資產的 metadata 版本）
+  - 目前收錄 `2026-04-27`～`2026-05-05` 共九天素材（含 W2D1 `2026-05-04` 複用 `2026-04-27` 資產的 metadata 版本，以及 W2D2 `2026-05-05` 完整正式訓練日語音）
 - `audio/library/<date>/manifest.json`
   - 該日期每一段的文本、音檔、長度、sha256，以及 `timelineClips` / `timelineEvents`
   - 使用 `schemaVersion: timeline-events-v1`
@@ -97,7 +97,7 @@ python3 -m http.server 8124
 
 ## 測試
 
-目前測試基線為 **67/67 通過**。
+目前測試基線為 **69/69 通過**。
 
 ```bash
 npm test
