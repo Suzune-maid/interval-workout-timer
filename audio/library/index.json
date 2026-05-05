@@ -87,6 +87,17 @@
       "entryCount": 5,
       "schemaVersion": "timeline-events-v1",
       "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-05-05",
+      "sourceDate": "2026-05-05",
+      "weekNumber": 2,
+      "dayNumber": 2,
+      "sessionTitle": "正式訓練日",
+      "manifestFile": "audio/library/2026-05-05/manifest.json",
+      "entryCount": 5,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
     }
   ],
   "schemaVersion": "timeline-events-v1",
