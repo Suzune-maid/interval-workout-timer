@@ -1,4 +1,4 @@
-# Project status handoff
+# Project status handoff — 2026-05-05 W2D3 voice snapshot
 
 > 這是目前的 **單一追蹤 handoff**。之後若要更新專案現況，請優先更新這份檔案。
 >

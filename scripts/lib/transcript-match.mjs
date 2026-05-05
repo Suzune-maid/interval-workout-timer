@@ -48,6 +48,8 @@ const SIMPLIFIED_TO_TRADITIONAL = new Map(Object.entries({
   话: '話',
   语: '語',
   声: '聲',
+  额: '額',
+  头: '頭',
   觉: '覺',
   边: '邊',
   还: '還',

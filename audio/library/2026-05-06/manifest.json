@@ -1,0 +1,788 @@
+{
+  "schemaVersion": "timeline-events-v1",
+  "generatedAt": "2026-05-05T20:38:55+08:00",
+  "sourceDate": "2026-05-06",
+  "programStartDate": "2026-04-27",
+  "weekNumber": 2,
+  "dayNumber": 3,
+  "weekdayLabel": "三",
+  "sessionTitle": "放鬆日",
+  "voiceTool": {
+    "command": "uv run gemini-tts",
+    "project": "gemini-tts-cli",
+    "model": "google/gemini-3.1-flash-tts-preview",
+    "voice": "Leda"
+  },
+  "entries": [
+    {
+      "id": "phase-01",
+      "phaseIndex": 0,
+      "phaseLabel": "腹式呼吸",
+      "startsAtSecond": 0,
+      "durationSeconds": 120,
+      "text": "現在開始：腹部呼吸。這一段約兩分鐘。鼻子吸氣，嘴巴吐氣，讓腹部自然鼓起。",
+      "textFile": "audio/library/2026-05-06/texts/phase-01.txt",
+      "audioFile": "audio/library/2026-05-06/generated/phase-01.wav",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "AUDIO PROFILE: Suzune W2D3 — Recovery Breath Companion. Scene: quiet evening recovery room, soft blue-violet light, close but calm companion beside the listener. Speak in natural Taiwan Mandarin with a warm, steady, clear medium-low voice. This is a recovery / down-regulation day: no teasing escalation, no dramatic acting, no hype, no whisper-only delivery. Keep the pace calm medium-slow with clean pauses. Prioritize relaxation, breath rhythm, pelvic-floor release, and safety. The voice should be audible on phone speakers and gently grounding.",
+      "countdownGuidance": {
+        "summary": "4 秒吸氣、6 秒吐氣，共 12 輪",
+        "mode": "timed-breathing",
+        "breathPattern": {
+          "inhaleSeconds": 4,
+          "exhaleSeconds": 6,
+          "cycles": 12
+        }
+      },
+      "timelineClips": {
+        "soft-belly-inhale": {
+          "id": "soft-belly-inhale",
+          "text": "吸氣，讓腹部自然鼓起。",
+          "textFile": "audio/library/2026-05-06/texts/phase-01-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-06/guidance/phase-01-guidance-01.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm recovery training guidance, medium-slow pace, no omission, no truncation. Keep it audible on phone speakers.",
+          "audioDurationSeconds": 4.76,
+          "audioSha256": "4fbb55b13188d2bbda7ab7d1afb3d8d0c3787e4a581bbb9144d55edafe146e17"
+        },
+        "long-exhale-release": {
+          "id": "long-exhale-release",
+          "text": "吐氣，肩膀和骨盆底一起放掉。",
+          "textFile": "audio/library/2026-05-06/texts/phase-01-guidance-02.txt",
+          "audioFile": "audio/library/2026-05-06/guidance/phase-01-guidance-02.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm recovery training guidance, medium-slow pace, no omission, no truncation. Keep it audible on phone speakers.",
+          "audioDurationSeconds": 4.84,
+          "audioSha256": "5debb4a8784b25b81d1a2e635ed8e9b3189c17fe4b72fd5150ba9f9d62813576"
+        }
+      },
+      "timelineEvents": [
+        {
+          "id": "phase-01-soft-belly-inhale-000",
+          "startAtSecond": 0,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-001",
+          "startAtSecond": 4,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-002",
+          "startAtSecond": 10,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-003",
+          "startAtSecond": 14,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-004",
+          "startAtSecond": 20,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-005",
+          "startAtSecond": 24,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-006",
+          "startAtSecond": 30,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-007",
+          "startAtSecond": 34,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-008",
+          "startAtSecond": 40,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-009",
+          "startAtSecond": 44,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-010",
+          "startAtSecond": 50,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-011",
+          "startAtSecond": 54,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-012",
+          "startAtSecond": 60,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-013",
+          "startAtSecond": 64,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-014",
+          "startAtSecond": 70,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-015",
+          "startAtSecond": 74,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-016",
+          "startAtSecond": 80,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-017",
+          "startAtSecond": 84,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-018",
+          "startAtSecond": 90,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-019",
+          "startAtSecond": 94,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-020",
+          "startAtSecond": 100,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-021",
+          "startAtSecond": 104,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-soft-belly-inhale-022",
+          "startAtSecond": 110,
+          "clipId": "soft-belly-inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-long-exhale-release-023",
+          "startAtSecond": 114,
+          "clipId": "long-exhale-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        }
+      ],
+      "audioDurationSeconds": 14.36,
+      "audioSha256": "7a36dbe58406738cb21d18b9befd7b56dfaabc2a29726afbf54c91e213f097f4",
+      "ttsActualStyle": "Natural Taiwan Mandarin. Read the complete text exactly once, word for word, clearly and calmly. Medium-slow pace. Do not omit, paraphrase, add, or truncate any words. Keep it audible on phone speakers."
+    },
+    {
+      "id": "phase-02",
+      "phaseIndex": 1,
+      "phaseLabel": "反向凱格爾",
+      "startsAtSecond": 120,
+      "durationSeconds": 180,
+      "text": "現在開始：反向凱格爾。這一段約 3 分鐘。吸氣下沉，吐氣保持放鬆。",
+      "textFile": "audio/library/2026-05-06/texts/phase-02.txt",
+      "audioFile": "audio/library/2026-05-06/generated/phase-02.wav",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "AUDIO PROFILE: Suzune W2D3 — Recovery Breath Companion. Scene: quiet evening recovery room, soft blue-violet light, close but calm companion beside the listener. Speak in natural Taiwan Mandarin with a warm, steady, clear medium-low voice. This is a recovery / down-regulation day: no teasing escalation, no dramatic acting, no hype, no whisper-only delivery. Keep the pace calm medium-slow with clean pauses. Prioritize relaxation, breath rhythm, pelvic-floor release, and safety. The voice should be audible on phone speakers and gently grounding.",
+      "countdownGuidance": {
+        "summary": "4 秒吸氣下沉、8 秒吐氣保持鬆，共 15 輪",
+        "mode": "timed-release",
+        "breathPattern": {
+          "inhaleSeconds": 4,
+          "exhaleSeconds": 8,
+          "cycles": 15
+        }
+      },
+      "timelineClips": {
+        "inhale-drop": {
+          "id": "inhale-drop",
+          "text": "吸氣，骨盆底往下鬆。",
+          "textFile": "audio/library/2026-05-06/texts/phase-02-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-06/guidance/phase-02-guidance-01.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm recovery training guidance, medium-slow pace, no omission, no truncation. Keep it audible on phone speakers.",
+          "audioDurationSeconds": 4.48,
+          "audioSha256": "9a300efdcdf40002b555729f5ec09ef9d1d3e0c2cbb1a5b0776f3ff86d662556"
+        },
+        "exhale-open": {
+          "id": "exhale-open",
+          "text": "吐氣，保持打開，不要用力。",
+          "textFile": "audio/library/2026-05-06/texts/phase-02-guidance-02.txt",
+          "audioFile": "audio/library/2026-05-06/guidance/phase-02-guidance-02.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm recovery training guidance, medium-slow pace, no omission, no truncation. Keep it audible on phone speakers.",
+          "audioDurationSeconds": 5.88,
+          "audioSha256": "0ba3a22954cae486d5026f363afafbf4284a1916ca658f6d9f70d95c26238a82"
+        }
+      },
+      "timelineEvents": [
+        {
+          "id": "phase-02-inhale-drop-000",
+          "startAtSecond": 0,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-001",
+          "startAtSecond": 4,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-002",
+          "startAtSecond": 12,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-003",
+          "startAtSecond": 16,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-004",
+          "startAtSecond": 24,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-005",
+          "startAtSecond": 28,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-006",
+          "startAtSecond": 36,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-007",
+          "startAtSecond": 40,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-008",
+          "startAtSecond": 48,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-009",
+          "startAtSecond": 52,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-010",
+          "startAtSecond": 60,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-011",
+          "startAtSecond": 64,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-012",
+          "startAtSecond": 72,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-013",
+          "startAtSecond": 76,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-014",
+          "startAtSecond": 84,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-015",
+          "startAtSecond": 88,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-016",
+          "startAtSecond": 96,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-017",
+          "startAtSecond": 100,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-018",
+          "startAtSecond": 108,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-019",
+          "startAtSecond": 112,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-020",
+          "startAtSecond": 120,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-021",
+          "startAtSecond": 124,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-022",
+          "startAtSecond": 132,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-023",
+          "startAtSecond": 136,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-024",
+          "startAtSecond": 144,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-025",
+          "startAtSecond": 148,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-026",
+          "startAtSecond": 156,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-027",
+          "startAtSecond": 160,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-inhale-drop-028",
+          "startAtSecond": 168,
+          "clipId": "inhale-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-exhale-open-029",
+          "startAtSecond": 172,
+          "clipId": "exhale-open",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        }
+      ],
+      "audioDurationSeconds": 20.4,
+      "audioSha256": "0f3613bb85963fd43e51ed07485414a269a1e8e11e4c53273949d99651583cbd"
+    },
+    {
+      "id": "phase-03",
+      "phaseIndex": 2,
+      "phaseLabel": "收尾掃描",
+      "startsAtSecond": 300,
+      "durationSeconds": 60,
+      "text": "現在開始：收尾掃描。這一段約 1 分鐘。確認腹部、臀部與大腿都沒有偷用力。",
+      "textFile": "audio/library/2026-05-06/texts/phase-03.txt",
+      "audioFile": "audio/library/2026-05-06/generated/phase-03.wav",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "AUDIO PROFILE: Suzune W2D3 — Recovery Breath Companion. Scene: quiet evening recovery room, soft blue-violet light, close but calm companion beside the listener. Speak in natural Taiwan Mandarin with a warm, steady, clear medium-low voice. This is a recovery / down-regulation day: no teasing escalation, no dramatic acting, no hype, no whisper-only delivery. Keep the pace calm medium-slow with clean pauses. Prioritize relaxation, breath rhythm, pelvic-floor release, and safety. The voice should be audible on phone speakers and gently grounding.",
+      "countdownGuidance": {
+        "summary": "每 12 秒帶一次放鬆檢查，共 5 個提示",
+        "mode": "body-scan"
+      },
+      "timelineClips": {
+        "jaw-soft": {
+          "id": "jaw-soft",
+          "text": "額頭和下巴，放鬆。",
+          "textFile": "audio/library/2026-05-06/texts/phase-03-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-06/guidance/phase-03-guidance-01.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm recovery training guidance, medium-slow pace, no omission, no truncation. Keep it audible on phone speakers.",
+          "audioDurationSeconds": 3.92,
+          "audioSha256": "305ec41dd60da7cdf2b1c41f86c9cd75800b25d8aad595653851f82d5080fd9f",
+          "ttsActualStyle": "Natural Taiwan Mandarin. Read the complete text exactly once, word for word, clearly and calmly. Medium-slow pace. Do not omit, paraphrase, add, or truncate any words. Keep it audible on phone speakers."
+        },
+        "belly-soft": {
+          "id": "belly-soft",
+          "text": "腹部，保持柔軟。",
+          "textFile": "audio/library/2026-05-06/texts/phase-03-guidance-02.txt",
+          "audioFile": "audio/library/2026-05-06/guidance/phase-03-guidance-02.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm recovery training guidance, medium-slow pace, no omission, no truncation. Keep it audible on phone speakers.",
+          "audioDurationSeconds": 3.28,
+          "audioSha256": "0533fb0c9ff9e7aa39f7c076d1843c2d5f8fd02ee2aee6d684f807b184a16d86"
+        },
+        "legs-release": {
+          "id": "legs-release",
+          "text": "臀部和大腿，不要夾。",
+          "textFile": "audio/library/2026-05-06/texts/phase-03-guidance-03.txt",
+          "audioFile": "audio/library/2026-05-06/guidance/phase-03-guidance-03.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm recovery training guidance, medium-slow pace, no omission, no truncation. Keep it audible on phone speakers.",
+          "audioDurationSeconds": 3.24,
+          "audioSha256": "3473e3967e3b4d30575a4f1dd109677731775e0fad87789ed56ebd491dce520b"
+        },
+        "pelvic-floor-release": {
+          "id": "pelvic-floor-release",
+          "text": "會陰，往下鬆開。",
+          "textFile": "audio/library/2026-05-06/texts/phase-03-guidance-04.txt",
+          "audioFile": "audio/library/2026-05-06/guidance/phase-03-guidance-04.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm recovery training guidance, medium-slow pace, no omission, no truncation. Keep it audible on phone speakers.",
+          "audioDurationSeconds": 3.2,
+          "audioSha256": "259d1b2da4529fdd93ae264ee3fee6c01157071258fa79232eb477605a0bc003"
+        },
+        "clean-finish": {
+          "id": "clean-finish",
+          "text": "排尿感正常，就乾淨結束。",
+          "textFile": "audio/library/2026-05-06/texts/phase-03-guidance-05.txt",
+          "audioFile": "audio/library/2026-05-06/guidance/phase-03-guidance-05.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Warm recovery training guidance, medium-slow pace, no omission, no truncation. Keep it audible on phone speakers.",
+          "audioDurationSeconds": 3.8,
+          "audioSha256": "4ca446119099e78f4c29b461907a1c4ba23fd71a0e75fd04eb87dce69f022cd0"
+        }
+      },
+      "timelineEvents": [
+        {
+          "id": "phase-03-jaw-soft-000",
+          "startAtSecond": 0,
+          "clipId": "jaw-soft",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-03-belly-soft-001",
+          "startAtSecond": 12,
+          "clipId": "belly-soft",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-03-legs-release-002",
+          "startAtSecond": 24,
+          "clipId": "legs-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-03-pelvic-floor-release-003",
+          "startAtSecond": 36,
+          "clipId": "pelvic-floor-release",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-03-clean-finish-004",
+          "startAtSecond": 48,
+          "clipId": "clean-finish",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        }
+      ],
+      "audioDurationSeconds": 13.8,
+      "audioSha256": "2da79326077606276df0d514ff538cca7d7224a60bc54d7359a7fa91cd5b5976"
+    }
+  ]
+}

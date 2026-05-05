@@ -61,6 +61,7 @@ test('normalizeTranscriptText 會移除標點空白並把常見簡體 ASR 輸出
     normalizeTranscriptText('感受可控高兴奋，不急着充现。'),
     '感受可控高興奮不急著衝線',
   );
+  assert.equal(normalizeTranscriptText('额头和下巴放松'), '額頭和下巴放鬆');
 });
 
 test('compareTranscriptToExpected 接受標點與簡繁差異，不要求文字完全相等', () => {
