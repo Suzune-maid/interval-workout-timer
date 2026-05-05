@@ -7,6 +7,7 @@ const LIBRARY_INDEX_PATH = new URL('../audio/library/index.json', import.meta.ur
 const GUIDED_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-04-27/manifest.json', import.meta.url);
 const FORMAL_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-01/manifest.json', import.meta.url);
 const W2D1_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-04/manifest.json', import.meta.url);
+const W2D2_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-05/manifest.json', import.meta.url);
 
 async function readJson(url) {
   const raw = await readFile(url, 'utf8');
@@ -77,6 +78,77 @@ test('2026-05-04 library manifest 會以新日期 metadata 指向 2026-04-27 的
   assert.equal(libraryItem.sessionTitle, '凱格爾普通日');
   assert.equal(libraryItem.manifestFile, 'audio/library/2026-05-04/manifest.json');
   assert.equal(libraryItem.entryCount, 5);
+});
+
+test('2026-05-05 library manifest 會完整保存 W2D2 高原維持專用語音與語氣設定', async () => {
+  const [raw, libraryIndex] = await Promise.all([
+    readJson(W2D2_LIBRARY_MANIFEST_PATH),
+    readJson(LIBRARY_INDEX_PATH),
+  ]);
+  const phase01 = findEntry(raw, 'phase-01');
+  const phase02 = findEntry(raw, 'phase-02');
+  const phase03 = findEntry(raw, 'phase-03');
+  const phase04 = findEntry(raw, 'phase-04');
+  const phase05 = findEntry(raw, 'phase-05');
+  const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-05-05');
+
+  assert.equal(raw.schemaVersion, 'timeline-events-v1');
+  assert.equal(raw.sourceDate, '2026-05-05');
+  assert.equal(raw.programStartDate, '2026-04-27');
+  assert.equal(raw.weekNumber, 2);
+  assert.equal(raw.dayNumber, 2);
+  assert.equal(raw.weekdayLabel, '二');
+  assert.equal(raw.sessionTitle, '正式訓練日');
+  assert.equal(raw.entries.length, 5);
+
+  assert.deepEqual(
+    raw.entries.map((item) => item.phaseLabel),
+    ['準備期', '第 1 回：6 分維持 1 分鐘', '第 2 回：6～6.5 分維持', '第 3 回：接近 7 分停再回 6 分', '收尾放鬆'],
+  );
+  assert.deepEqual(raw.entries.map((item) => item.durationSeconds), [120, 240, 300, 300, 180]);
+
+  assert.equal(phase01.audioFile, 'audio/library/2026-05-05/generated/phase-01.wav');
+  assert.equal(phase02.audioFile, 'audio/library/2026-05-05/generated/phase-02.wav');
+  assert.equal(phase03.audioFile, 'audio/library/2026-05-05/generated/phase-03.wav');
+  assert.equal(phase04.audioFile, 'audio/library/2026-05-05/generated/phase-04.wav');
+  assert.equal(phase05.audioFile, 'audio/library/2026-05-05/generated/phase-05.wav');
+
+  assert.deepEqual(phase01.timelineEvents.map((item) => item.startAtSecond), [4, 35, 70, 100]);
+  assert.deepEqual(phase02.timelineEvents.map((item) => item.startAtSecond), [4, 40, 80, 115, 150, 190, 220]);
+  assert.deepEqual(phase03.timelineEvents.map((item) => item.startAtSecond), [4, 55, 95, 135, 180, 225, 270]);
+  assert.deepEqual(phase04.timelineEvents.map((item) => item.startAtSecond), [4, 45, 90, 135, 180, 225, 270]);
+  assert.deepEqual(phase05.timelineEvents.map((item) => item.startAtSecond), [4, 45, 90, 135]);
+
+  assert.equal(phase01.timelineEvents[0].clipId, 'score-under-four-check');
+  assert.equal(phase02.timelineEvents[0].clipId, 'score-six-target');
+  assert.equal(phase03.timelineEvents[0].clipId, 'score-six-half-zone');
+  assert.equal(phase04.timelineEvents[0].clipId, 'score-seven-boundary');
+  assert.equal(phase05.timelineEvents[0].clipId, 'settle-below-four');
+
+  assert.equal(phase03.timelineClips['score-six-half-zone']?.text, '這一回停在 6 到 6.5 分：清楚、有熱度，但還不到必須停的邊界。');
+  assert.equal(phase04.timelineClips['stop-on-urgency']?.text, '如果急迫感出現，現在就停，手停、呼吸放慢、骨盆底放鬆。');
+  assert.equal(phase05.timelineClips['finish-cleanly']?.text, '很好，今天到這裡就可以收尾，讓身體乾淨地結束。');
+
+  assert.equal(phase01.countdownGuidance?.summary, '啟動前掃描與 4 分以下暖機，共 4 句');
+  assert.equal(phase02.countdownGuidance?.summary, '6 分定位與 1 分鐘高原維持，共 7 句');
+  assert.equal(phase03.countdownGuidance?.summary, '6～6.5 分高原維持與防暴衝，共 7 句');
+  assert.equal(phase04.countdownGuidance?.summary, '接近 7 分辨識、停止、回到 6 分，共 7 句');
+  assert.equal(phase05.countdownGuidance?.summary, '回降到 4 分以下與收尾放鬆，共 4 句');
+
+  assert.match(phase01.ttsStyle, /Controlled Plateau Companion/);
+  assert.match(phase03.timelineClips['score-six-half-zone']?.ttsStyle, /near-field/);
+  assert.match(phase04.timelineClips['score-seven-boundary']?.ttsStyle, /boundary reset mode/);
+  assert.match(phase05.timelineClips['settle-below-four']?.ttsStyle, /cooldown mode/);
+
+  assert.ok(libraryItem, 'library index 應包含 2026-05-05 正式訓練日條目');
+  assert.equal(libraryItem.sourceDate, '2026-05-05');
+  assert.equal(libraryItem.weekNumber, 2);
+  assert.equal(libraryItem.dayNumber, 2);
+  assert.equal(libraryItem.sessionTitle, '正式訓練日');
+  assert.equal(libraryItem.manifestFile, 'audio/library/2026-05-05/manifest.json');
+  assert.equal(libraryItem.entryCount, 5);
+  assert.equal(libraryItem.schemaVersion, 'timeline-events-v1');
+  assert.equal(libraryItem.timelineSchemaFile, 'audio/schema/timeline-event.schema.json');
 });
 
 test('2026-05-01 library manifest 會保留每段 countdown 開場的分數判斷 guidance', async () => {

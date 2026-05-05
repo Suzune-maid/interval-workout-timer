@@ -531,6 +531,32 @@ test('當今天已有對應 library manifest 時，初始化會直接載入 2026
   }
 });
 
+test('當今天已有 2026-05-05 library manifest 時，初始化會直接載入 W2D2 專用語音', async () => {
+  const { document, fetchCalls, restoreDate } = await bootApp({
+    isoString: '2026-05-05T08:00:00Z',
+    libraryDays: [8],
+    libraryManifestOptionsByDay: {
+      8: {
+        audioDurations: {
+          'phase-01': 8.6,
+        },
+      },
+    },
+  });
+  try {
+    const narrationStatus = document.querySelector('#narration-status');
+    const narrationText = document.querySelector('#narration-text');
+
+    assert.ok(fetchCalls.includes('./audio/library/index.json'));
+    assert.ok(fetchCalls.includes('./audio/library/2026-05-05/manifest.json'));
+    assert.ok(!fetchCalls.includes('./audio/today/narration-manifest.json'));
+    assert.equal(narrationStatus.textContent, '語音起點：00:00 ｜ 音檔長度：約 8.6 秒');
+    assert.match(narrationText.textContent, /現在開始：準備期。這一段約 2 分鐘。/);
+  } finally {
+    restoreDate();
+  }
+});
+
 test('切回今天但今天沒有 library manifest 時，狀態文案會改成開始音效 fallback 模式', async () => {
   const { document, fetchCalls, restoreDate } = await bootApp({
     isoString: '2026-05-02T08:00:00Z',
