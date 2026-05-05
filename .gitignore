@@ -1,0 +1,4 @@
+# TTS generation intermediates (local-only)
+audio/library/*/tts-batches/
+audio/library/*/tts-experiments/
+audio/library/*/tts-reports/
