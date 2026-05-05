@@ -97,10 +97,17 @@ python3 -m http.server 8124
 
 ## 測試
 
-目前測試基線為 **69/69 通過**。
+目前測試基線為 **73/73 通過**。
 
 ```bash
 npm test
+```
+
+語音素材的 deterministic QA 可檢查 manifest 引用、WAV header、sha256、duration、靜音與 clipping：
+
+```bash
+npm run audio:qa
+npm run audio:qa:date -- 2026-05-05
 ```
 
 ## GitHub Pages
