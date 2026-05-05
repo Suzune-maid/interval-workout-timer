@@ -6,7 +6,10 @@ export function createTimelineOrchestrator({
   hasNarrationAudio = () => false,
   setIntervalFn = globalThis.window?.setInterval?.bind(globalThis.window),
   clearIntervalFn = globalThis.window?.clearInterval?.bind(globalThis.window),
+  setTimeoutFn = globalThis.window?.setTimeout?.bind(globalThis.window),
+  clearTimeoutFn = globalThis.window?.clearTimeout?.bind(globalThis.window),
   nowFn = () => globalThis.window?.performance?.now?.() ?? Date.now(),
+  initialGuidanceDelayMs = 300,
   onPhasePreparing,
   onPhaseStarted,
   onTick,
@@ -23,6 +26,7 @@ export function createTimelineOrchestrator({
   let isPreparingPhase = false;
   let phaseSequenceId = 0;
   let countdownClock = null;
+  let initialGuidanceTimeoutId = null;
 
   function getState() {
     return sessionController.getState();
@@ -43,6 +47,15 @@ export function createTimelineOrchestrator({
 
     clearIntervalFn?.(timerId);
     timerId = null;
+  }
+
+  function clearInitialGuidanceTimeout() {
+    if (initialGuidanceTimeoutId === null) {
+      return;
+    }
+
+    clearTimeoutFn?.(initialGuidanceTimeoutId);
+    initialGuidanceTimeoutId = null;
   }
 
   function resetCountdownClock() {
@@ -84,6 +97,7 @@ export function createTimelineOrchestrator({
     phaseSequenceId += 1;
     isPreparingPhase = false;
     stopTimer();
+    clearInitialGuidanceTimeout();
     resetCountdownClock();
 
     const player = getPlayer();
@@ -142,6 +156,25 @@ export function createTimelineOrchestrator({
       }
       return null;
     }
+  }
+
+  function scheduleInitialCountdownGuidance(sequenceId) {
+    if (!hasNarrationAudio()) {
+      return;
+    }
+
+    const phaseIndex = getState().currentPhaseIndex;
+    const delayMs = Math.max(0, Number(initialGuidanceDelayMs) || 0);
+    if (!setTimeoutFn || delayMs === 0) {
+      void maybePlayCountdownGuidance(phaseIndex, 0, sequenceId);
+      return;
+    }
+
+    clearInitialGuidanceTimeout();
+    initialGuidanceTimeoutId = setTimeoutFn(() => {
+      initialGuidanceTimeoutId = null;
+      void maybePlayCountdownGuidance(phaseIndex, 0, sequenceId);
+    }, delayMs);
   }
 
   async function start({ playbackMode = 'full' } = {}) {
@@ -225,7 +258,7 @@ export function createTimelineOrchestrator({
     });
 
     if (narrationEnabled) {
-      void maybePlayCountdownGuidance(getState().currentPhaseIndex, 0, sequenceId);
+      scheduleInitialCountdownGuidance(sequenceId);
     }
 
     syncCountdownClock(getState());

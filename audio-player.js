@@ -56,8 +56,9 @@ export function createNarrationPlayer(manifest, options = {}) {
     }
 
     if (startCueFile) {
+      const startCueTrack = playbackMode === 'full' && entry?.audioFile ? 'narration' : 'cue';
       const cueResult = await engine.playClip({
-        track: 'cue',
+        track: startCueTrack,
         src: startCueFile,
         priority: 'high',
         interruptPolicy: 'replace-track',

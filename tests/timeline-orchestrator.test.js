@@ -20,17 +20,54 @@ function createDeferred() {
 
 function createScheduler({ startMs = 0 } = {}) {
   let nextIntervalId = 1;
+  let nextTimeoutId = 1;
   let nowMs = startMs;
   const intervals = new Map();
+  const timeouts = new Map();
+
+  function nextDueEntry(targetMs) {
+    let nextEntry = null;
+
+    for (const [id, interval] of intervals.entries()) {
+      if (interval.nextRunAt > targetMs) {
+        continue;
+      }
+      if (!nextEntry || interval.nextRunAt < nextEntry.runAt || (interval.nextRunAt === nextEntry.runAt && id < nextEntry.id)) {
+        nextEntry = { type: 'interval', id, runAt: interval.nextRunAt, entry: interval };
+      }
+    }
+
+    for (const [id, timeout] of timeouts.entries()) {
+      if (timeout.runAt > targetMs) {
+        continue;
+      }
+      if (!nextEntry || timeout.runAt < nextEntry.runAt || (timeout.runAt === nextEntry.runAt && id < nextEntry.id)) {
+        nextEntry = { type: 'timeout', id, runAt: timeout.runAt, entry: timeout };
+      }
+    }
+
+    return nextEntry;
+  }
 
   async function runDueCallbacksUntil(targetMs, { coalesce = false } = {}) {
     if (coalesce) {
       nowMs = targetMs;
-      const dueEntries = [...intervals.entries()]
+      const dueIntervalEntries = [...intervals.entries()]
         .filter(([, interval]) => interval.nextRunAt <= targetMs)
         .sort((a, b) => a[1].nextRunAt - b[1].nextRunAt || a[0] - b[0]);
+      const dueTimeoutEntries = [...timeouts.entries()]
+        .filter(([, timeout]) => timeout.runAt <= targetMs)
+        .sort((a, b) => a[1].runAt - b[1].runAt || a[0] - b[0]);
 
-      for (const [id, interval] of dueEntries) {
+      for (const [id, timeout] of dueTimeoutEntries) {
+        if (!timeouts.has(id)) {
+          continue;
+        }
+        timeouts.delete(id);
+        await timeout.callback();
+      }
+
+      for (const [id, interval] of dueIntervalEntries) {
         if (!intervals.has(id)) {
           continue;
         }
@@ -41,24 +78,22 @@ function createScheduler({ startMs = 0 } = {}) {
     }
 
     while (true) {
-      let nextEntry = null;
-      for (const [id, interval] of intervals.entries()) {
-        if (interval.nextRunAt > targetMs) {
-          continue;
-        }
-        if (!nextEntry || interval.nextRunAt < nextEntry.interval.nextRunAt || (interval.nextRunAt === nextEntry.interval.nextRunAt && id < nextEntry.id)) {
-          nextEntry = { id, interval };
-        }
-      }
+      const dueEntry = nextDueEntry(targetMs);
 
-      if (!nextEntry) {
+      if (!dueEntry) {
         nowMs = targetMs;
         return;
       }
 
-      nowMs = nextEntry.interval.nextRunAt;
-      nextEntry.interval.nextRunAt += nextEntry.interval.delay;
-      await nextEntry.interval.callback();
+      nowMs = dueEntry.runAt;
+      if (dueEntry.type === 'timeout') {
+        timeouts.delete(dueEntry.id);
+        await dueEntry.entry.callback();
+        continue;
+      }
+
+      dueEntry.entry.nextRunAt += dueEntry.entry.delay;
+      await dueEntry.entry.callback();
     }
   }
 
@@ -75,8 +110,20 @@ function createScheduler({ startMs = 0 } = {}) {
     clearInterval(id) {
       intervals.delete(id);
     },
+    setTimeout(callback, delay) {
+      const id = nextTimeoutId;
+      nextTimeoutId += 1;
+      timeouts.set(id, { callback, delay, runAt: nowMs + delay });
+      return id;
+    },
+    clearTimeout(id) {
+      timeouts.delete(id);
+    },
     getActiveIntervalIds() {
       return [...intervals.keys()];
+    },
+    getActiveTimeoutIds() {
+      return [...timeouts.keys()];
     },
     async tick(id) {
       const interval = intervals.get(id);
@@ -283,6 +330,55 @@ test('timeline orchestrator 在 skip 時會取消舊 sequence，不讓舊 intro 
   assert.deepEqual(
     narration.calls.filter((call) => call.type === 'reset').length,
     1,
+  );
+});
+
+test('timeline orchestrator 會把 start cue 後的第 0 秒 guidance 延後一小段，但不延後倒數啟動', async () => {
+  const session = createSessionHarness([
+    { label: '準備放鬆', seconds: 5 },
+  ]);
+  const scheduler = createScheduler();
+  const narration = createNarrationPlayerHarness({
+    guidanceByElapsedSecond: {
+      0: { text: '吸氣' },
+    },
+  });
+  const guidanceCalls = [];
+
+  const orchestrator = createTimelineOrchestrator({
+    sessionController: session,
+    getNarrationPlayer: () => narration.player,
+    hasNarrationAudio: () => true,
+    setIntervalFn: scheduler.setInterval,
+    clearIntervalFn: scheduler.clearInterval,
+    setTimeoutFn: scheduler.setTimeout,
+    clearTimeoutFn: scheduler.clearTimeout,
+    nowFn: scheduler.now,
+    initialGuidanceDelayMs: 300,
+    onGuidance({ elapsedSecond }) {
+      guidanceCalls.push(elapsedSecond);
+    },
+  });
+
+  await orchestrator.start();
+
+  assert.equal(session.getState().isRunning, true);
+  assert.equal(scheduler.getActiveIntervalIds().length, 1);
+  assert.equal(scheduler.getActiveTimeoutIds().length, 1);
+  assert.deepEqual(guidanceCalls, []);
+  assert.deepEqual(
+    narration.calls.filter((call) => call.type === 'guidance'),
+    [],
+  );
+
+  await scheduler.advance(299);
+  assert.deepEqual(guidanceCalls, []);
+
+  await scheduler.advance(1);
+  assert.deepEqual(guidanceCalls, [0]);
+  assert.deepEqual(
+    narration.calls.filter((call) => call.type === 'guidance').map((call) => call.elapsedSecond),
+    [0],
   );
 });
 

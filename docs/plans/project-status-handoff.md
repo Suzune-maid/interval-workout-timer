@@ -2,14 +2,14 @@
 
 > 這是目前的 **單一追蹤 handoff**。之後若要更新專案現況，請優先更新這份檔案。
 >
-> Last updated: **2026-05-05 13:40 CST**
+> Last updated: **2026-05-05 14:11 CST**
 >
 > 本次 dated 記錄：`docs/plans/2026-05-05-project-status-handoff.md`
 
 ## TL;DR
 
 - **主要分支**：`main`
-- **測試基線**：`npm test` → **65/65 pass**
+- **測試基線**：`npm test` → **67/67 pass**
 - **語音庫覆蓋**：第一週 W1D1～W1D7（`2026-04-27`～`2026-05-03`）＋ `2026-05-04`（W2D1）
 - **正式站**：<https://suzune-maid.github.io/interval-workout-timer/>
 - **部署方式**：GitHub Pages branch-based deployment；push 到 `main` 後自動上線（有 propagation delay）
@@ -68,6 +68,7 @@
 - 日程表改為位於「今日流程預覽」下方，且支援單週切換瀏覽
 - monotonic countdown scheduling
 - phase intro / cue / end cue 流程
+- full intro 模式的 start cue 與第 0 秒 countdown guidance 已錯開約 300ms，避免手機上聽感太擠或互相蓋住
 - 倒數中 guidance 的 `timeline-events-v1` 資料驅動播放
 - 完整第一週語音庫（W1D1～W1D7）
 - `2026-05-04`（W2D1）library manifest 已建立，沿用 `2026-04-27` 的凱格爾普通日資產
@@ -249,7 +250,7 @@ audio/library/<date>/
 npm test
 ```
 
-結果：**65/65 pass**
+結果：**67/67 pass**
 
 ### 本機 smoke test 建議
 
