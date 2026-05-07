@@ -9,6 +9,10 @@ const FORMAL_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-01/manife
 const W2D1_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-04/manifest.json', import.meta.url);
 const W2D2_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-05/manifest.json', import.meta.url);
 const W2D3_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-06/manifest.json', import.meta.url);
+const W2D4_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-07/manifest.json', import.meta.url);
+const W2D5_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-08/manifest.json', import.meta.url);
+const W2D6_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-09/manifest.json', import.meta.url);
+const W2D7_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-10/manifest.json', import.meta.url);
 
 async function readJson(url) {
   const raw = await readFile(url, 'utf8');
@@ -212,6 +216,127 @@ test('2026-05-06 library manifest 會以全新 W2D3 放鬆日素材落在自己�
   assert.equal(libraryItem.sessionTitle, '放鬆日');
   assert.equal(libraryItem.manifestFile, 'audio/library/2026-05-06/manifest.json');
   assert.equal(libraryItem.entryCount, 3);
+});
+
+test('2026-05-07 library manifest 會補齊 W2D4，並只為開場旁白新增變化音檔', async () => {
+  const [raw, libraryIndex] = await Promise.all([
+    readJson(W2D4_LIBRARY_MANIFEST_PATH),
+    readJson(LIBRARY_INDEX_PATH),
+  ]);
+  const phase01 = findEntry(raw, 'phase-01');
+  const phase02 = findEntry(raw, 'phase-02');
+  const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-05-07');
+
+  assert.equal(raw.sourceDate, '2026-05-07');
+  assert.equal(raw.libraryKey, '2026-05-07');
+  assert.equal(raw.assetSourceDay, '2026-04-27');
+  assert.equal(raw.weekNumber, 2);
+  assert.equal(raw.dayNumber, 4);
+  assert.equal(raw.weekdayLabel, '四');
+  assert.equal(raw.sessionTitle, '凱格爾普通日');
+  assert.equal(raw.entries.length, 5);
+  assert.equal(phase01.textFile, 'audio/library/2026-05-07/texts/phase-01.txt');
+  assert.equal(phase01.audioFile, 'audio/library/2026-05-07/generated/phase-01.wav');
+  assert.equal(phase01.text, '現在開始：準備放鬆。今天不用急著進入狀態，先把腹部、臀部和大腿鬆開。等呼吸穩了，再把注意力放回骨盆底。');
+  assert.equal(phase02.audioFile, 'audio/library/2026-04-27/generated/phase-02.wav');
+  assert.equal(phase02.timelineClips.contract?.audioFile, 'audio/library/2026-04-27/guidance/phase-02-contract.wav');
+
+  assert.ok(libraryItem, 'library index 應包含 2026-05-07 條目');
+  assert.equal(libraryItem.weekNumber, 2);
+  assert.equal(libraryItem.dayNumber, 4);
+  assert.equal(libraryItem.manifestFile, 'audio/library/2026-05-07/manifest.json');
+});
+
+test('2026-05-08 library manifest 會補齊 W2D5，並為正式日加入兩個分數控制變化 cue', async () => {
+  const [raw, libraryIndex] = await Promise.all([
+    readJson(W2D5_LIBRARY_MANIFEST_PATH),
+    readJson(LIBRARY_INDEX_PATH),
+  ]);
+  const phase01 = findEntry(raw, 'phase-01');
+  const phase03 = findEntry(raw, 'phase-03');
+  const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-05-08');
+
+  assert.equal(raw.sourceDate, '2026-05-08');
+  assert.equal(raw.libraryKey, '2026-05-08');
+  assert.equal(raw.assetSourceDay, '2026-05-05');
+  assert.equal(raw.weekNumber, 2);
+  assert.equal(raw.dayNumber, 5);
+  assert.equal(raw.weekdayLabel, '五');
+  assert.equal(raw.sessionTitle, '正式訓練日');
+  assert.deepEqual(raw.entries.map((item) => item.durationSeconds), [120, 240, 300, 300, 180]);
+  assert.equal(phase01.audioFile, 'audio/library/2026-05-05/generated/phase-01.wav');
+  assert.equal(phase01.timelineClips['score-under-four-check']?.textFile, 'audio/library/2026-05-08/texts/phase-01-guidance-01.txt');
+  assert.equal(phase01.timelineClips['score-under-four-check']?.audioFile, 'audio/library/2026-05-08/guidance/phase-01-guidance-01.wav');
+  assert.equal(phase01.timelineClips['score-under-four-check']?.text, '先掃描分數：如果還在 4 分以下，就只暖身，不追刺激。');
+  assert.equal(phase01.timelineEvents[0].startAtSecond, 4);
+  assert.equal(phase03.timelineClips['breathe-down-small']?.textFile, 'audio/library/2026-05-08/texts/phase-03-guidance-mid-135.txt');
+  assert.equal(phase03.timelineClips['breathe-down-small']?.audioFile, 'audio/library/2026-05-08/guidance/phase-03-guidance-mid-135.wav');
+  assert.equal(phase03.timelineClips['breathe-down-small']?.text, '留在 6 到 6.5 分就好；有熱度，但你還能慢下來，這才是今天要練的控制。');
+  assert.equal(phase03.timelineEvents.find((item) => item.startAtSecond === 135)?.clipId, 'breathe-down-small');
+
+  assert.ok(libraryItem, 'library index 應包含 2026-05-08 條目');
+  assert.equal(libraryItem.manifestFile, 'audio/library/2026-05-08/manifest.json');
+});
+
+test('2026-05-09 library manifest 會補齊 adaptive W2D6，並只替換反向與收尾兩個 cue', async () => {
+  const [raw, libraryIndex] = await Promise.all([
+    readJson(W2D6_LIBRARY_MANIFEST_PATH),
+    readJson(LIBRARY_INDEX_PATH),
+  ]);
+  const phase04 = findEntry(raw, 'phase-04');
+  const phase05 = findEntry(raw, 'phase-05');
+  const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-05-09');
+
+  assert.equal(raw.sourceDate, '2026-05-09');
+  assert.equal(raw.libraryKey, '2026-05-09');
+  assert.equal(raw.assetSourceDay, '2026-04-27');
+  assert.equal(raw.weekNumber, 2);
+  assert.equal(raw.dayNumber, 6);
+  assert.equal(raw.weekdayLabel, '六');
+  assert.equal(raw.sessionTitle, '凱格爾普通日（可依狀態改放鬆）');
+  assert.equal(phase04.audioFile, 'audio/library/2026-04-27/generated/phase-04.wav');
+  assert.equal(phase04.timelineEvents.find((item) => item.startAtSecond === 4)?.clipId, 'adaptiveReverseOpen');
+  assert.equal(phase04.timelineClips.adaptiveReverseOpen?.textFile, 'audio/library/2026-05-09/texts/phase-04-guidance-01.txt');
+  assert.equal(phase04.timelineClips.adaptiveReverseOpen?.audioFile, 'audio/library/2026-05-09/guidance/phase-04-guidance-01.wav');
+  assert.equal(phase04.timelineClips.adaptiveReverseOpen?.text, '吸氣時往下鬆，不要推、不要憋；只是讓骨盆底自己打開。');
+  assert.equal(phase04.timelineClips.exhaleSoft?.audioFile, 'audio/library/2026-04-27/guidance/phase-04-exhale-soft.wav');
+  assert.equal(phase05.timelineEvents.find((item) => item.startAtSecond === 48)?.clipId, 'adaptiveCleanFinish');
+  assert.equal(phase05.timelineClips.adaptiveCleanFinish?.textFile, 'audio/library/2026-05-09/texts/phase-05-guidance-final.txt');
+  assert.equal(phase05.timelineClips.adaptiveCleanFinish?.audioFile, 'audio/library/2026-05-09/guidance/phase-05-guidance-final.wav');
+  assert.equal(phase05.timelineClips.adaptiveCleanFinish?.text, '今天不用硬撐；如果身體已經放鬆，就把這份鬆感留下來，乾淨收尾。');
+
+  assert.ok(libraryItem, 'library index 應包含 2026-05-09 條目');
+  assert.equal(libraryItem.sessionTitle, '凱格爾普通日（可依狀態改放鬆）');
+});
+
+test('2026-05-10 library manifest 會補齊休息日，並只替換循環吸吐兩個 cue', async () => {
+  const [raw, libraryIndex] = await Promise.all([
+    readJson(W2D7_LIBRARY_MANIFEST_PATH),
+    readJson(LIBRARY_INDEX_PATH),
+  ]);
+  const phase01 = findEntry(raw, 'phase-01');
+  const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-05-10');
+
+  assert.equal(raw.sourceDate, '2026-05-10');
+  assert.equal(raw.libraryKey, '2026-05-10');
+  assert.equal(raw.assetSourceDay, '2026-05-03');
+  assert.equal(raw.weekNumber, 2);
+  assert.equal(raw.dayNumber, 7);
+  assert.equal(raw.weekdayLabel, '日');
+  assert.equal(raw.sessionTitle, '休息／輕放鬆日');
+  assert.equal(raw.entries.length, 1);
+  assert.equal(phase01.timelineEvents.length, 36);
+  assert.equal(phase01.timelineClips.inhale?.textFile, 'audio/library/2026-05-10/texts/phase-01-inhale.txt');
+  assert.equal(phase01.timelineClips.inhale?.audioFile, 'audio/library/2026-05-10/guidance/phase-01-inhale.wav');
+  assert.equal(phase01.timelineClips.inhale?.text, '吸氣，讓身體慢慢安靜。');
+  assert.equal(phase01.timelineClips.exhale?.textFile, 'audio/library/2026-05-10/texts/phase-01-exhale.txt');
+  assert.equal(phase01.timelineClips.exhale?.audioFile, 'audio/library/2026-05-10/guidance/phase-01-exhale.wav');
+  assert.equal(phase01.timelineClips.exhale?.text, '吐氣，把骨盆底一起放掉。');
+  assert.deepEqual(phase01.timelineEvents.map((item) => item.clipId).slice(0, 4), ['inhale', 'exhale', 'inhale', 'exhale']);
+
+  assert.ok(libraryItem, 'library index 應包含 2026-05-10 條目');
+  assert.equal(libraryItem.entryCount, 1);
+  assert.equal(libraryItem.manifestFile, 'audio/library/2026-05-10/manifest.json');
 });
 
 test('2026-05-01 library manifest 會保留每段 countdown 開場的分數判斷 guidance', async () => {

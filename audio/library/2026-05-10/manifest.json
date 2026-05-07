@@ -1,0 +1,433 @@
+{
+  "generatedAt": "2026-05-07T20:01:33+08:00",
+  "sourceDate": "2026-05-10",
+  "libraryKey": "2026-05-10",
+  "programStartDate": "2026-04-27",
+  "weekNumber": 2,
+  "dayNumber": 7,
+  "weekdayLabel": "日",
+  "sessionTitle": "休息／輕放鬆日",
+  "voiceTool": {
+    "command": "uv run gemini-tts",
+    "project": "gemini-tts-cli",
+    "model": "google/gemini-3.1-flash-tts-preview",
+    "voice": "Leda"
+  },
+  "entries": [
+    {
+      "id": "phase-01",
+      "phaseIndex": 0,
+      "phaseLabel": "短版呼吸放鬆",
+      "startsAtSecond": 0,
+      "durationSeconds": 180,
+      "text": "現在開始：短版呼吸放鬆。這一段約 3 分鐘。用 3 分鐘把骨盆底、臀部與腹部慢慢放鬆。",
+      "textFile": "audio/library/2026-05-03/texts/phase-01.txt",
+      "audioFile": "audio/library/2026-05-03/generated/phase-01.wav",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，但不要拖太慢。",
+      "countdownGuidance": {
+        "summary": "4 秒吸氣、6 秒吐氣，共 18 輪",
+        "mode": "timed-breathing",
+        "breathPattern": {
+          "inhaleSeconds": 4,
+          "exhaleSeconds": 6,
+          "cycles": 18
+        }
+      },
+      "timelineClips": {
+        "inhale": {
+          "id": "inhale",
+          "text": "吸氣，讓身體慢慢安靜。",
+          "textFile": "audio/library/2026-05-10/texts/phase-01-inhale.txt",
+          "audioFile": "audio/library/2026-05-10/guidance/phase-01-inhale.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Very soft rest-day breathing guidance. Short, slow, clear, audible on phone speakers.",
+          "audioDurationSeconds": 5.0,
+          "audioSha256": "2262810067aa86f9ed254f7c5ec0990c90be6bcad4e9afcf9b2f2a52aa425554",
+          "ttsActualStyle": "Natural Taiwan Mandarin. Very soft rest-day breathing cue, short and clear."
+        },
+        "exhale": {
+          "id": "exhale",
+          "text": "吐氣，把骨盆底一起放掉。",
+          "textFile": "audio/library/2026-05-10/texts/phase-01-exhale.txt",
+          "audioFile": "audio/library/2026-05-10/guidance/phase-01-exhale.wav",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Very soft rest-day breathing guidance. Short, slow, grounded, audible on phone speakers.",
+          "audioDurationSeconds": 3.96,
+          "audioSha256": "3c8e10e0d656d25e0c58e116154588da0ffb47435f44b4213ca1eb8ffc22b8e9",
+          "ttsActualStyle": "Natural Taiwan Mandarin. Calm clear breathing coach voice, normal audible volume, not whispering; short and grounded."
+        }
+      },
+      "timelineEvents": [
+        {
+          "id": "phase-01-inhale-000",
+          "startAtSecond": 0,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-001",
+          "startAtSecond": 4,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-002",
+          "startAtSecond": 10,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-003",
+          "startAtSecond": 14,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-004",
+          "startAtSecond": 20,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-005",
+          "startAtSecond": 24,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-006",
+          "startAtSecond": 30,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-007",
+          "startAtSecond": 34,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-008",
+          "startAtSecond": 40,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-009",
+          "startAtSecond": 44,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-010",
+          "startAtSecond": 50,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-011",
+          "startAtSecond": 54,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-012",
+          "startAtSecond": 60,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-013",
+          "startAtSecond": 64,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-014",
+          "startAtSecond": 70,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-015",
+          "startAtSecond": 74,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-016",
+          "startAtSecond": 80,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-017",
+          "startAtSecond": 84,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-018",
+          "startAtSecond": 90,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-019",
+          "startAtSecond": 94,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-020",
+          "startAtSecond": 100,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-021",
+          "startAtSecond": 104,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-022",
+          "startAtSecond": 110,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-023",
+          "startAtSecond": 114,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-024",
+          "startAtSecond": 120,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-025",
+          "startAtSecond": 124,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-026",
+          "startAtSecond": 130,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-027",
+          "startAtSecond": 134,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-028",
+          "startAtSecond": 140,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-029",
+          "startAtSecond": 144,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-030",
+          "startAtSecond": 150,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-031",
+          "startAtSecond": 154,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-032",
+          "startAtSecond": 160,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-033",
+          "startAtSecond": 164,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-inhale-034",
+          "startAtSecond": 170,
+          "clipId": "inhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exhale-035",
+          "startAtSecond": 174,
+          "clipId": "exhale",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        }
+      ],
+      "audioDurationSeconds": 12.52,
+      "audioSha256": "4764beb69af32082c291720bedd1e84726efd5f3dfd9d92cdbcc2c70414ba56d"
+    }
+  ],
+  "schemaVersion": "timeline-events-v1",
+  "assetSourceDay": "2026-05-03",
+  "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+}
