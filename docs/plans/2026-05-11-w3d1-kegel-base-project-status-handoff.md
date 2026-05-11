@@ -1,3 +1,5 @@
+> Snapshot note: 最新狀態以 `docs/plans/project-status-handoff.md` 為主；此檔保留 2026-05-11 W3D1 凱格爾 base 完成時點。
+
 # Project status handoff
 
 > 這是目前的 **單一追蹤 handoff**。之後若要更新專案現況，請優先更新這份檔案。

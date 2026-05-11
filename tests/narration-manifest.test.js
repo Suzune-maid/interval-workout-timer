@@ -13,6 +13,7 @@ const W2D4_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-07/manifest
 const W2D5_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-08/manifest.json', import.meta.url);
 const W2D6_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-09/manifest.json', import.meta.url);
 const W2D7_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-10/manifest.json', import.meta.url);
+const W3D1_LIBRARY_MANIFEST_PATH = new URL('../audio/library/2026-05-11/manifest.json', import.meta.url);
 
 async function readJson(url) {
   const raw = await readFile(url, 'utf8');
@@ -21,6 +22,43 @@ async function readJson(url) {
 
 function findEntry(document, id) {
   return document.entries.find((item) => item.id === id);
+}
+
+function assertReplaceTrackClipsFit(entry) {
+  const eventsByTrack = new Map();
+  for (const event of entry.timelineEvents ?? []) {
+    if (event.interruptPolicy !== 'replace-track') {
+      continue;
+    }
+    const events = eventsByTrack.get(event.track) ?? [];
+    events.push(event);
+    eventsByTrack.set(event.track, events);
+  }
+
+  for (const [track, events] of eventsByTrack) {
+    events.sort((a, b) => a.startAtSecond - b.startAtSecond);
+    for (let index = 0; index < events.length - 1; index += 1) {
+      const event = events[index];
+      const nextEvent = events[index + 1];
+      const clip = entry.timelineClips?.[event.clipId];
+      assert.ok(clip, `${entry.id} ${event.id} should reference an existing clip`);
+      assert.ok(
+        clip.audioDurationSeconds <= entry.durationSeconds - event.startAtSecond,
+        `${entry.id} ${track} ${event.clipId} duration ${clip.audioDurationSeconds}s should fit before phase ends at ${entry.durationSeconds}s`,
+      );
+      assert.ok(
+        clip.audioDurationSeconds <= nextEvent.startAtSecond - event.startAtSecond,
+        `${entry.id} ${track} ${event.clipId} duration ${clip.audioDurationSeconds}s should fit before next replace-track event at ${nextEvent.startAtSecond}s`,
+      );
+    }
+    const finalEvent = events.at(-1);
+    const finalClip = entry.timelineClips?.[finalEvent.clipId];
+    assert.ok(finalClip, `${entry.id} ${finalEvent.id} should reference an existing clip`);
+    assert.ok(
+      finalClip.audioDurationSeconds <= entry.durationSeconds - finalEvent.startAtSecond,
+      `${entry.id} ${track} ${finalEvent.clipId} duration ${finalClip.audioDurationSeconds}s should fit before phase ends at ${entry.durationSeconds}s`,
+    );
+  }
 }
 
 test('2026-05-04 library manifest 會以新日期 metadata 指向 2026-04-27 的凱格爾普通日資產', async () => {
@@ -337,6 +375,89 @@ test('2026-05-10 library manifest 會補齊休息日，並只替換循環吸吐�
   assert.ok(libraryItem, 'library index 應包含 2026-05-10 條目');
   assert.equal(libraryItem.entryCount, 1);
   assert.equal(libraryItem.manifestFile, 'audio/library/2026-05-10/manifest.json');
+});
+
+test('2026-05-11 library manifest 會建立 W3D1 全新凱格爾 base，不沿用 W1/W2 節奏資產', async () => {
+  const [raw, libraryIndex] = await Promise.all([
+    readJson(W3D1_LIBRARY_MANIFEST_PATH),
+    readJson(LIBRARY_INDEX_PATH),
+  ]);
+  const phase01 = findEntry(raw, 'phase-01');
+  const phase02 = findEntry(raw, 'phase-02');
+  const phase03 = findEntry(raw, 'phase-03');
+  const phase04 = findEntry(raw, 'phase-04');
+  const phase05 = findEntry(raw, 'phase-05');
+  const libraryItem = libraryIndex.items.find((item) => item.libraryKey === '2026-05-11');
+
+  assert.equal(raw.schemaVersion, 'timeline-events-v1');
+  assert.equal(raw.sourceDate, '2026-05-11');
+  assert.equal(raw.libraryKey, '2026-05-11');
+  assert.equal(raw.assetSourceDay, undefined);
+  assert.equal(raw.programStartDate, '2026-04-27');
+  assert.equal(raw.weekNumber, 3);
+  assert.equal(raw.dayNumber, 1);
+  assert.equal(raw.weekdayLabel, '一');
+  assert.equal(raw.sessionTitle, '凱格爾普通日');
+  assert.equal(raw.entries.length, 5);
+
+  assert.deepEqual(raw.entries.map((item) => item.phaseLabel), ['準備放鬆', '慢速凱格爾（10 次）', '快速凱格爾（12 次）', '反向凱格爾', '收尾掃描']);
+  assert.deepEqual(raw.entries.map((item) => item.durationSeconds), [60, 130, 24, 150, 60]);
+
+  for (const entry of raw.entries) {
+    assert.match(entry.textFile, /^audio\/library\/2026-05-11\/texts\//);
+    assert.match(entry.audioFile, /^audio\/library\/2026-05-11\/generated\//);
+    assert.equal(entry.ttsModel, 'google/gemini-3.1-flash-tts-preview');
+    assert.equal(entry.ttsVoice, 'Leda');
+    assert.ok(entry.audioDurationSeconds > 0);
+    assert.match(entry.audioSha256, /^[a-f0-9]{64}$/);
+    for (const clip of Object.values(entry.timelineClips ?? {})) {
+      assert.match(clip.textFile, /^audio\/library\/2026-05-11\/texts\//);
+      assert.match(clip.audioFile, /^audio\/library\/2026-05-11\/guidance\//);
+      assert.ok(clip.audioDurationSeconds > 0);
+      assert.match(clip.audioSha256, /^[a-f0-9]{64}$/);
+    }
+  }
+
+  assert.equal(phase01.countdownGuidance?.summary, '4 秒吸氣、6 秒吐氣，共 6 輪');
+  assert.equal(phase02.countdownGuidance?.summary, '5 秒輕收、8 秒完整放掉，共 10 次');
+  assert.equal(phase03.countdownGuidance?.summary, '1 秒輕點、1 秒全放，共 12 次');
+  assert.equal(phase04.countdownGuidance?.summary, '4 秒吸氣下沉、8 秒吐氣保持鬆，共 12 輪，最後 6 秒安靜放鬆');
+  assert.equal(phase05.countdownGuidance?.summary, '每 12 秒帶一次放鬆檢查，共 5 個提示');
+
+  assert.deepEqual(phase01.timelineEvents.map((item) => item.startAtSecond), [0, 4, 10, 14, 20, 24, 30, 34, 40, 44, 50, 54]);
+  assert.deepEqual(phase02.timelineEvents.map((item) => item.startAtSecond).slice(0, 8), [0, 5, 13, 18, 26, 31, 39, 44]);
+  assert.deepEqual(phase02.timelineEvents.map((item) => item.startAtSecond).slice(-2), [117, 122]);
+  assert.deepEqual(phase03.timelineEvents.map((item) => item.startAtSecond).slice(0, 8), [0, 1, 2, 3, 4, 5, 6, 7]);
+  assert.equal(phase03.timelineEvents.length, 24);
+  assert.deepEqual(phase04.timelineEvents.map((item) => item.startAtSecond).slice(0, 8), [0, 4, 12, 16, 24, 28, 36, 40]);
+  assert.deepEqual(phase04.timelineEvents.map((item) => item.startAtSecond).slice(-2), [132, 136]);
+  assert.equal(phase04.timelineEvents.length, phase04.countdownGuidance.breathPattern.cycles * 2);
+  assert.equal(
+    Math.max(...phase04.timelineEvents.map((item) => item.startAtSecond)),
+    phase04.durationSeconds - phase04.countdownGuidance.breathPattern.trailingRelaxSeconds - phase04.countdownGuidance.breathPattern.exhaleSeconds,
+  );
+  assert.deepEqual(phase05.timelineEvents.map((item) => item.startAtSecond), [0, 12, 24, 36, 48]);
+  for (const entry of raw.entries) {
+    assertReplaceTrackClipsFit(entry);
+  }
+
+  assert.equal(phase02.timelineClips.contract?.text, '輕輕收住，維持五秒。');
+  assert.equal(phase02.timelineClips.release?.text, '完整放掉，讓骨盆底回到柔軟。');
+  assert.equal(phase03.timelineClips.contract?.text, '點一下。');
+  assert.equal(phase03.timelineClips.release?.text, '放掉。');
+  assert.equal(phase04.timelineClips.inhaleDrop?.text, '吸氣，往下鬆開。');
+  assert.equal(phase04.timelineClips.exhaleSoft?.text, '吐氣，保持打開，不要夾緊。');
+  assert.equal(phase05.timelineClips.cleanFinish?.text, '很好，身體乾淨放鬆，就停在這裡。');
+
+  assert.ok(libraryItem, 'library index 應包含 2026-05-11 條目');
+  assert.equal(libraryItem.sourceDate, '2026-05-11');
+  assert.equal(libraryItem.weekNumber, 3);
+  assert.equal(libraryItem.dayNumber, 1);
+  assert.equal(libraryItem.sessionTitle, '凱格爾普通日');
+  assert.equal(libraryItem.manifestFile, 'audio/library/2026-05-11/manifest.json');
+  assert.equal(libraryItem.entryCount, 5);
+  assert.equal(libraryItem.schemaVersion, 'timeline-events-v1');
+  assert.equal(libraryItem.timelineSchemaFile, 'audio/schema/timeline-event.schema.json');
 });
 
 test('2026-05-01 library manifest 會保留每段 countdown 開場的分數判斷 guidance', async () => {
