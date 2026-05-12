@@ -1,9 +1,9 @@
 {
   "schemaVersion": "timeline-events-v1",
-  "generatedAt": "2026-04-29T13:48:21+08:00",
-  "sourceDate": "2026-04-29",
+  "generatedAt": "2026-05-12T19:23:55+08:00",
+  "sourceDate": "2026-05-13",
   "programStartDate": "2026-04-27",
-  "weekNumber": 1,
+  "weekNumber": 3,
   "dayNumber": 3,
   "weekdayLabel": "三",
   "sessionTitle": "放鬆日",
@@ -778,5 +778,8 @@
         }
       ]
     }
-  ]
+  ],
+  "libraryKey": "2026-05-13",
+  "assetSourceDay": "2026-04-29",
+  "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
 }

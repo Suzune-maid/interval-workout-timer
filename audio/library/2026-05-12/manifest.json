@@ -1,0 +1,515 @@
+{
+  "schemaVersion": "timeline-events-v1",
+  "timelineSchemaFile": "audio/schema/timeline-event.schema.json",
+  "generatedAt": "2026-05-12T19:23:55+08:00",
+  "sourceDate": "2026-05-12",
+  "libraryKey": "2026-05-12",
+  "programStartDate": "2026-04-27",
+  "weekNumber": 3,
+  "dayNumber": 2,
+  "weekdayLabel": "二",
+  "sessionTitle": "正式訓練日",
+  "sessionSummary": "第三週第一次乾式波峰嘗試：靠近 7 分就停，練停得住、退得回來。",
+  "voiceTool": {
+    "command": "uv run gemini-tts",
+    "project": "gemini-tts-cli",
+    "model": "google/gemini-3.1-flash-tts-preview",
+    "voice": "Leda"
+  },
+  "entries": [
+    {
+      "id": "phase-01",
+      "phaseIndex": 0,
+      "phaseLabel": "準備期",
+      "startsAtSecond": 0,
+      "durationSeconds": 120,
+      "text": "現在開始：準備期。這一段約 2 分鐘。呼吸、放鬆並確認今天不追求硬成功。",
+      "textFile": "audio/library/2026-05-12/texts/phase-01.txt",
+      "audioFile": "audio/library/2026-05-12/generated/phase-01.wav",
+      "audioDurationSeconds": 11.4,
+      "audioSha256": "34b2dc64efe0c5ff68db554afb6aecf88ca272ecd9ac4db85fb08a81b10803fe",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，語速中等偏慢；完整唸出每一句，不要省略或截斷。",
+      "timelineClips": {
+        "score-map-setup": {
+          "id": "score-map-setup",
+          "text": "先確認今天的目標：不是硬追成功，而是能在 7 分停得住。",
+          "textFile": "audio/library/2026-05-12/texts/phase-01-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-01-guidance-01.wav",
+          "audioDurationSeconds": 6.88,
+          "audioSha256": "dc82b70d9cb734f7145009dea4d21aaf671cff6e6242069142c8de8f82bdb904",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "body-scan": {
+          "id": "body-scan",
+          "text": "腹部、臀部和大腿都放軟；身體越鬆，越容易控制。",
+          "textFile": "audio/library/2026-05-12/texts/phase-01-guidance-02.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-01-guidance-02.wav",
+          "audioDurationSeconds": 7.64,
+          "audioSha256": "07a7fe032d904851df4883425af214ed2c8ea2e4a051832f0b3bbeb2cc58bd31",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "exit-rule": {
+          "id": "exit-rule",
+          "text": "如果會陰緊、排尿怪或有悶痛，今天直接改放鬆。",
+          "textFile": "audio/library/2026-05-12/texts/phase-01-guidance-03.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-01-guidance-03.wav",
+          "audioDurationSeconds": 7.0,
+          "audioSha256": "b1dad923c0f3ebb6afc69bf3961e3fbe6a28359eb5d97b9deb69f33cb0279533",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        }
+      },
+      "timelineEvents": [
+        {
+          "id": "phase-01-score-map-setup-000",
+          "startAtSecond": 4,
+          "clipId": "score-map-setup",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-body-scan-001",
+          "startAtSecond": 45,
+          "clipId": "body-scan",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-01-exit-rule-002",
+          "startAtSecond": 90,
+          "clipId": "exit-rule",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        }
+      ],
+      "countdownGuidance": {
+        "summary": "啟動前目標確認、身體掃描與退出規則，共 3 句",
+        "eventCount": 3
+      }
+    },
+    {
+      "id": "phase-02",
+      "phaseIndex": 1,
+      "phaseLabel": "第 1 回：6 分暖身",
+      "startsAtSecond": 120,
+      "durationSeconds": 180,
+      "text": "現在開始：第 1 回：6 分暖身。這一段約 3 分鐘。先用可控高原暖身。",
+      "textFile": "audio/library/2026-05-12/texts/phase-02.txt",
+      "audioFile": "audio/library/2026-05-12/generated/phase-02.wav",
+      "audioDurationSeconds": 10.52,
+      "audioSha256": "b611a89adbbd1361d73de4b309f3b2a264f14ced18fc850bfda01ec14dac0339",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，語速中等偏慢；完整唸出每一句，不要省略或截斷。",
+      "timelineClips": {
+        "six-warmup-start": {
+          "id": "six-warmup-start",
+          "text": "慢慢升到 6 分就好，還能說停就停。",
+          "textFile": "audio/library/2026-05-12/texts/phase-02-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-02-guidance-01.wav",
+          "audioDurationSeconds": 4.76,
+          "audioSha256": "36eddc6ae9ef82ff4fb0b02e55825725e4f72b3ab9deb95ef915236ca155f846",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "hold-not-chase": {
+          "id": "hold-not-chase",
+          "text": "維持，不追更高；讓身體記得高原不是衝刺。",
+          "textFile": "audio/library/2026-05-12/texts/phase-02-guidance-02.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-02-guidance-02.wav",
+          "audioDurationSeconds": 6.6,
+          "audioSha256": "0df08fef8ea795101a93cc51659bd35d0e54c30be66fa3f2740409dc220c250b",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "downshift-check": {
+          "id": "downshift-check",
+          "text": "如果開始急，就停手吐氣，讓分數回一點。",
+          "textFile": "audio/library/2026-05-12/texts/phase-02-guidance-03.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-02-guidance-03.wav",
+          "audioDurationSeconds": 5.52,
+          "audioSha256": "d892b83b868c3e651ff85a90c2b6e4aa57d1b576afcec2bcc68b501c63d6d331",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        }
+      },
+      "timelineEvents": [
+        {
+          "id": "phase-02-six-warmup-start-000",
+          "startAtSecond": 4,
+          "clipId": "six-warmup-start",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-hold-not-chase-001",
+          "startAtSecond": 60,
+          "clipId": "hold-not-chase",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-02-downshift-check-002",
+          "startAtSecond": 130,
+          "clipId": "downshift-check",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        }
+      ],
+      "countdownGuidance": {
+        "summary": "6 分暖身定位、維持與回降提醒，共 3 句",
+        "eventCount": 3
+      }
+    },
+    {
+      "id": "phase-03",
+      "phaseIndex": 2,
+      "phaseLabel": "第 2 回：6.5 分維持",
+      "startsAtSecond": 300,
+      "durationSeconds": 300,
+      "text": "現在開始：第 2 回：6.5 分維持。這一段約 5 分鐘。把高原拉長到 1～2 分鐘。",
+      "textFile": "audio/library/2026-05-12/texts/phase-03.txt",
+      "audioFile": "audio/library/2026-05-12/generated/phase-03.wav",
+      "audioDurationSeconds": 10.68,
+      "audioSha256": "b09bc4cb89a0569300674018b760d87939b0b11107c0b03c26963c662ae31a74",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，語速中等偏慢；完整唸出每一句，不要省略或截斷。",
+      "timelineClips": {
+        "six-half-boundary": {
+          "id": "six-half-boundary",
+          "text": "這回合停在 6.5 分附近，有熱度，但不要越線。",
+          "textFile": "audio/library/2026-05-12/texts/phase-03-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-03-guidance-01.wav",
+          "audioDurationSeconds": 6.4,
+          "audioSha256": "d2198b37965a1cf69f58c28a4b0230142e1ab5faf51dd10248feba9463ef5ab0",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "plateau-breath": {
+          "id": "plateau-breath",
+          "text": "吐氣時把骨盆底往下鬆，不要用夾緊撐住感覺。",
+          "textFile": "audio/library/2026-05-12/texts/phase-03-guidance-02.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-03-guidance-02.wav",
+          "audioDurationSeconds": 6.76,
+          "audioSha256": "c3870517d2dd3f967255e24ebad878a129c158b4a7dd587e4a6dbd5963d4beff",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "one-to-two-minute": {
+          "id": "one-to-two-minute",
+          "text": "把高原拉長，而不是把分數拉高。",
+          "textFile": "audio/library/2026-05-12/texts/phase-03-guidance-03.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-03-guidance-03.wav",
+          "audioDurationSeconds": 4.84,
+          "audioSha256": "ce1b33bcadb8da80a498b3764ed009e55ed514ff088c98947624396c3192d794",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "pre-seven-warning": {
+          "id": "pre-seven-warning",
+          "text": "如果射精感冒頭，先停，不要等它變大。",
+          "textFile": "audio/library/2026-05-12/texts/phase-03-guidance-04.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-03-guidance-04.wav",
+          "audioDurationSeconds": 5.04,
+          "audioSha256": "b84ee875ef217577959d52bef9673d7ced147e957b9a9839959b0616c6c9e059",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        }
+      },
+      "timelineEvents": [
+        {
+          "id": "phase-03-six-half-boundary-000",
+          "startAtSecond": 4,
+          "clipId": "six-half-boundary",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-03-plateau-breath-001",
+          "startAtSecond": 75,
+          "clipId": "plateau-breath",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-03-one-to-two-minute-002",
+          "startAtSecond": 150,
+          "clipId": "one-to-two-minute",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-03-pre-seven-warning-003",
+          "startAtSecond": 230,
+          "clipId": "pre-seven-warning",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        }
+      ],
+      "countdownGuidance": {
+        "summary": "6.5 分高原維持與提前停下提醒，共 4 句",
+        "eventCount": 4
+      }
+    },
+    {
+      "id": "phase-04",
+      "phaseIndex": 3,
+      "phaseLabel": "第 3 回：7 分放鬆觀察",
+      "startsAtSecond": 600,
+      "durationSeconds": 240,
+      "text": "現在開始：第 3 回：7 分放鬆觀察。這一段約 4 分鐘。剛出現射精感就停，觀察 30～60 秒。",
+      "textFile": "audio/library/2026-05-12/texts/phase-04.txt",
+      "audioFile": "audio/library/2026-05-12/generated/phase-04.wav",
+      "audioDurationSeconds": 12.24,
+      "audioSha256": "6a17834d97321748f8396077fe5e2eac1ac52a83bb4326f97ed9c29565035caf",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，語速中等偏慢；完整唸出每一句，不要省略或截斷。",
+      "timelineClips": {
+        "seven-stop-rule": {
+          "id": "seven-stop-rule",
+          "text": "接近 7 分就停，今天練的是停下後讓波峰自己滑過。",
+          "textFile": "audio/library/2026-05-12/texts/phase-04-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-04-guidance-01.wav",
+          "audioDurationSeconds": 6.36,
+          "audioSha256": "4d18bcc275e94a5ed8ffb3acfa8fe449ebf6276c3f622c5ae5941b5bc8ec218f",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "hands-off-observe": {
+          "id": "hands-off-observe",
+          "text": "停下來，只吐氣，不加刺激，不硬夾。",
+          "textFile": "audio/library/2026-05-12/texts/phase-04-guidance-02.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-04-guidance-02.wav",
+          "audioDurationSeconds": 6.08,
+          "audioSha256": "4598ad5acd0c27505821463c5d047e4fc6a6730160e83ec3021e7e42614e2b8f",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "pelvic-drop": {
+          "id": "pelvic-drop",
+          "text": "吸氣下沉，吐氣保持鬆開，讓反射不要接手。",
+          "textFile": "audio/library/2026-05-12/texts/phase-04-guidance-03.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-04-guidance-03.wav",
+          "audioDurationSeconds": 8.2,
+          "audioSha256": "df0fa47e40791e83a2450e5126c91db753a7175a95650bb2f0e8171110a8a407",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation.",
+          "ttsActualStyle": "Natural Taiwan Mandarin. Read the complete sentence exactly once, clearly and calmly. Medium-slow pace. Do not omit the final phrase 讓反射不要接手."
+        },
+        "observe-window": {
+          "id": "observe-window",
+          "text": "觀察 30 到 60 秒；能退回來，就是今天的成功。",
+          "textFile": "audio/library/2026-05-12/texts/phase-04-guidance-04.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-04-guidance-04.wav",
+          "audioDurationSeconds": 6.12,
+          "audioSha256": "e9c4d09d810ef7a1bb17401e85c34a9decab75f641282186f8d4b40f4eb24a1e",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "no-chase-after-wave": {
+          "id": "no-chase-after-wave",
+          "text": "就算有波感，也不要追第二下，先保留乾淨控制。",
+          "textFile": "audio/library/2026-05-12/texts/phase-04-guidance-05.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-04-guidance-05.wav",
+          "audioDurationSeconds": 5.96,
+          "audioSha256": "88dece271c45adea0fd52ed898dde71ba2a3642252aebd65b4efcfbef60c2cc6",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        }
+      },
+      "timelineEvents": [
+        {
+          "id": "phase-04-seven-stop-rule-000",
+          "startAtSecond": 4,
+          "clipId": "seven-stop-rule",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-04-hands-off-observe-001",
+          "startAtSecond": 45,
+          "clipId": "hands-off-observe",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-04-pelvic-drop-002",
+          "startAtSecond": 90,
+          "clipId": "pelvic-drop",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-04-observe-window-003",
+          "startAtSecond": 150,
+          "clipId": "observe-window",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-04-no-chase-after-wave-004",
+          "startAtSecond": 205,
+          "clipId": "no-chase-after-wave",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        }
+      ],
+      "countdownGuidance": {
+        "summary": "7 分停下、放鬆觀察與不追第二波，共 5 句",
+        "eventCount": 5
+      }
+    },
+    {
+      "id": "phase-05",
+      "phaseIndex": 4,
+      "phaseLabel": "收尾放鬆",
+      "startsAtSecond": 840,
+      "durationSeconds": 180,
+      "text": "現在開始：收尾放鬆。這一段約 3 分鐘。可正常結束並做恢復放鬆。",
+      "textFile": "audio/library/2026-05-12/texts/phase-05.txt",
+      "audioFile": "audio/library/2026-05-12/generated/phase-05.wav",
+      "audioDurationSeconds": 9.4,
+      "audioSha256": "15b006c30cbca59c34bcf8f05b9a8e27662c84f3aeeae6da2ee2282544dc664d",
+      "ttsModel": "google/gemini-3.1-flash-tts-preview",
+      "ttsVoice": "Leda",
+      "ttsStyle": "請用自然、穩定、清楚的台灣中文口吻朗讀，像訓練引導語音。句子之間稍微停頓，語速中等偏慢；完整唸出每一句，不要省略或截斷。",
+      "timelineClips": {
+        "clean-finish": {
+          "id": "clean-finish",
+          "text": "現在收尾，讓身體從高原慢慢退回安靜。",
+          "textFile": "audio/library/2026-05-12/texts/phase-05-guidance-01.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-05-guidance-01.wav",
+          "audioDurationSeconds": 5.32,
+          "audioSha256": "7e1e054b2e94a495b9d8fddfe7c9868af69e59b7a062a2f57258ce33d9bee607",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "release-check": {
+          "id": "release-check",
+          "text": "會陰、臀部、大腿都放掉，不把練習留成緊繃。",
+          "textFile": "audio/library/2026-05-12/texts/phase-05-guidance-02.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-05-guidance-02.wav",
+          "audioDurationSeconds": 8.32,
+          "audioSha256": "a44dd924d06a1a66f9ce943e59e656bfa8153b036dc09ef1604bd70d328ad195",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        },
+        "success-definition": {
+          "id": "success-definition",
+          "text": "今天成功的標準是停得住、退得回來，而且沒有不適。",
+          "textFile": "audio/library/2026-05-12/texts/phase-05-guidance-03.txt",
+          "audioFile": "audio/library/2026-05-12/guidance/phase-05-guidance-03.wav",
+          "audioDurationSeconds": 6.6,
+          "audioSha256": "a5efec6e390b6091ea5f6ac367b1b2244af4fbb91091216ce0d7638839dd5374",
+          "ttsModel": "google/gemini-3.1-flash-tts-preview",
+          "ttsVoice": "Leda",
+          "ttsStyle": "Natural Taiwan Mandarin. Calm and clear training guidance. Medium-slow pace, audible on phone speakers. Read each complete sentence exactly once; no omission, no truncation."
+        }
+      },
+      "timelineEvents": [
+        {
+          "id": "phase-05-clean-finish-000",
+          "startAtSecond": 4,
+          "clipId": "clean-finish",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-05-release-check-001",
+          "startAtSecond": 70,
+          "clipId": "release-check",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        },
+        {
+          "id": "phase-05-success-definition-002",
+          "startAtSecond": 135,
+          "clipId": "success-definition",
+          "track": "guidance-primary",
+          "priority": "primary",
+          "interruptPolicy": "replace-track",
+          "duckingGroup": "speech",
+          "volume": 1
+        }
+      ],
+      "countdownGuidance": {
+        "summary": "高原退回安靜與乾淨收尾，共 3 句",
+        "eventCount": 3
+      }
+    }
+  ]
+}

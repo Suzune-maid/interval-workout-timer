@@ -1,3 +1,5 @@
+> 最新狀態以 `docs/plans/project-status-handoff.md` 為主；本檔是 2026-05-12 W3 library coverage 的 dated snapshot。
+
 # Project status handoff
 
 > 這是目前的 **單一追蹤 handoff**。之後若要更新專案現況，請優先更新這份檔案。

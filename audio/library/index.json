@@ -164,6 +164,72 @@
       "entryCount": 5,
       "schemaVersion": "timeline-events-v1",
       "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-05-12",
+      "sourceDate": "2026-05-12",
+      "weekNumber": 3,
+      "dayNumber": 2,
+      "sessionTitle": "正式訓練日",
+      "manifestFile": "audio/library/2026-05-12/manifest.json",
+      "entryCount": 5,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-05-13",
+      "sourceDate": "2026-05-13",
+      "weekNumber": 3,
+      "dayNumber": 3,
+      "sessionTitle": "放鬆日",
+      "manifestFile": "audio/library/2026-05-13/manifest.json",
+      "entryCount": 3,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-05-14",
+      "sourceDate": "2026-05-14",
+      "weekNumber": 3,
+      "dayNumber": 4,
+      "sessionTitle": "凱格爾普通日",
+      "manifestFile": "audio/library/2026-05-14/manifest.json",
+      "entryCount": 5,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-05-15",
+      "sourceDate": "2026-05-15",
+      "weekNumber": 3,
+      "dayNumber": 5,
+      "sessionTitle": "正式訓練日",
+      "manifestFile": "audio/library/2026-05-15/manifest.json",
+      "entryCount": 5,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-05-16",
+      "sourceDate": "2026-05-16",
+      "weekNumber": 3,
+      "dayNumber": 6,
+      "sessionTitle": "凱格爾普通日（可依狀態改放鬆）",
+      "manifestFile": "audio/library/2026-05-16/manifest.json",
+      "entryCount": 5,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
+    },
+    {
+      "libraryKey": "2026-05-17",
+      "sourceDate": "2026-05-17",
+      "weekNumber": 3,
+      "dayNumber": 7,
+      "sessionTitle": "休息／輕放鬆日",
+      "manifestFile": "audio/library/2026-05-17/manifest.json",
+      "entryCount": 1,
+      "schemaVersion": "timeline-events-v1",
+      "timelineSchemaFile": "audio/schema/timeline-event.schema.json"
     }
   ],
   "schemaVersion": "timeline-events-v1",
